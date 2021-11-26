@@ -1,8 +1,7 @@
 plugins {
 	id 'com.android.application'
 	id 'pmd'
-    id 'checkstyle'
-    id 'com.github.spotbugs' version '4.7.10'
+    	id 'checkstyle'
 }
 
 android {
@@ -40,6 +39,5 @@ dependencies {
 	androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 }
 
-apply from: "tools/spotbugs.gradle"
 apply from: "tools/checkstyle.gradle"
 apply from: "tools/pmd.gradle"
