@@ -16,7 +16,6 @@ public class MainActivity extends AppCompatActivity {
 	@SuppressLint("SetJavaScriptEnabled")
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
 
 		try{
 			this.getSupportActionBar().hide();
@@ -27,20 +26,16 @@ public class MainActivity extends AppCompatActivity {
 			WebView.setWebContentsDebuggingEnabled(true);
 		}
 
-		webView = (WebView) findViewById(R.id.webview);
+		webView = new WebView(getApplicationContext());
 		webView.setWebViewClient(new WebViewClient());
-
+		webView.addJavascriptInterface(new JavascriptHandler(),"Java");
 		webView.loadUrl("file:///android_asset/index.html");
 
 		WebSettings webSettings = webView.getSettings();
 		webSettings.setJavaScriptEnabled(true);
 		webSettings.setAllowFileAccess(true);
 
-		/*final WebViewAssetLoader assetLoader = new WebViewAssetLoader.Builder()
-				.addPathHandler("/assets/", new WebViewAssetLoader.AssetsPathHandler(this))
-				.addPathHandler("/res/", new WebViewAssetLoader.ResourcesPathHandler(this))
-				.build();
-		webView.setWebViewClient(new LocalContentWebViewClient(assetLoader));*/
+		setContentView(webView);
 	}
 
 	@Override
