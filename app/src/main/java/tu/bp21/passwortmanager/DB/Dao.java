@@ -29,7 +29,7 @@ public interface Dao {
     @Delete
     int deletePassword(Password password);
 
-    @Query("SELECT website, loginName, password FROM Password WHERE uid = :uid")
+    @Query("SELECT * FROM Password WHERE uid = :uid")
     List<Password> getPasswordList(int uid);
 
     @Query("SELECT * FROM Password WHERE uid = :uid AND website = :website")
