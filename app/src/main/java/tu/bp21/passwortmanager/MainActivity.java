@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
 		WebSettings webSettings = webView.getSettings();
 		webSettings.setJavaScriptEnabled(true);
 		webSettings.setAllowFileAccess(true);
+		
 
 		setContentView(webView);
 	}
