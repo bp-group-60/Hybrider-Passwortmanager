@@ -11,12 +11,12 @@ public class JavascriptHandler {
     }
 
     @JavascriptInterface
-    public boolean checkUserPasswd(String user, String hash){
+    public boolean checkUser(String user, String hash){
         return true;
     }
 
     @JavascriptInterface
-    public boolean createUserPasswd(String user, String hash){
+    public boolean createUser(String user, String hash){
         return true;
     }
 

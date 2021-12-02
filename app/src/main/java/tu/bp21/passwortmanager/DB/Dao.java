@@ -16,11 +16,8 @@ public interface Dao {
     @Delete
     int deleteUser(User user);
 
-    @Query("SELECT uid FROM user WHERE password = :password AND (username = :loginName OR email = :loginName)")
-    int getUID(String password, String loginName);
-
-    @Query("SELECT * FROM User WHERE uid = :uid")
-    User getUser(int uid);
+    @Query("SELECT * FROM User WHERE username = :user")
+    User getUser(String user);
 
     //Für Entität Password
     @Insert
@@ -29,11 +26,11 @@ public interface Dao {
     @Delete
     int deletePassword(Password password);
 
-    @Query("SELECT * FROM Password WHERE uid = :uid")
-    List<Password> getPasswordList(int uid);
+    @Query("SELECT * FROM Password WHERE user = :user")
+    List<Password> getPasswordList(String user);
 
-    @Query("SELECT * FROM Password WHERE uid = :uid AND website = :website")
-    Password getPassword(int uid, String website);
+    @Query("SELECT * FROM Password WHERE user = :user AND website = :website")
+    Password getPassword(String user, String website);
 
     @Update
     int updatePassword(Password password);
