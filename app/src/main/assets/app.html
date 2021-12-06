@@ -31,6 +31,28 @@
 			#Tabelle tr:hover {
 				background-color: #f1f1f1;
 			}
+
+			.button {
+				width: 100%;
+				padding: 1rem 2rem;
+				margin-bottom: 16px;
+				font-weight: bold;
+				font-size: 1.1rem;
+				color: #ffffff;
+				border: none;
+				border-radius: var(--border-radius);
+				outline: none;
+				cursor: pointer;
+				background: #0F8D2C;
+			}
+
+			.button:hover {
+				background: #0D7A26;
+			}
+
+			.button:active {
+				transform: scale(0.98);
+			}
 		</style>
 		<script src="./src/appScript.js"></script>
 	</head>
@@ -45,9 +67,8 @@
 				</tr>
 			</thead>
 		</table>
-		<div class="button-groupC">
-			<button type="button" class="form__button">Neues Passwort erstellen</button>
-			<button type="button" class="form__button">Liste bearbeiten</button>
-		</div>
+		<br>
+		<button type="button" class="button">Neues Passwort erstellen</button>
+		<button type="button" class="button">Liste bearbeiten</button>
 	</body>
 </html>

@@ -17,7 +17,6 @@ body{
 	background: #35363E;
 	background-size: cover;
 }
-/* new */ 
 
 .container{
 	width:	400px;
@@ -36,7 +35,7 @@ body{
 	font: 500 1rem 'Quicksand',sans-serif;
 }
 
-
+/* new */ 
 
 #myInput {
 	background-position: 10px 10px;
@@ -69,13 +68,6 @@ body{
 }
 #myTable tr.header, #myTable tr:hover {
 	background-color: #f1f1f1;
-}
-
-#button-groupC{
-	/*..*/
-}
-*{
-	box-sizing: border-box;
 }
 
 /*new	till here */ 
