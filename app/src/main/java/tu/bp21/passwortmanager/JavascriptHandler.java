@@ -5,7 +5,7 @@ import tu.bp21.passwortmanager.DB.PasswortDao;
 import tu.bp21.passwortmanager.DB.User;
 
 public class JavascriptHandler {
-    PasswortDao passwortDao;
+    private PasswortDao passwortDao;
 
     public JavascriptHandler(PasswortDao dao){
         passwortDao = dao;
@@ -14,18 +14,13 @@ public class JavascriptHandler {
     //methoden für Anmeldung
     @JavascriptInterface
     public boolean existUser(String user){
-        if(passwortDao.getUser(user) == null)
-            return false;
-        return true;
+        return passwortDao.getUser(user) != null;
     }
 
     @JavascriptInterface
     public boolean checkUser(String username, String hash){
         User user = passwortDao.getUser(username);
-
-        if(user != null && user.password == hash)
-            return true;
-        return false;
+        return user != null && user.password.equals(hash);
     }
 
     @JavascriptInterface
