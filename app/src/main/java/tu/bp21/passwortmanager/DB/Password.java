@@ -23,7 +23,6 @@ public class Password {
     @NonNull
     public String user;
 
-    @PrimaryKey
     @NonNull
     public String website;
 

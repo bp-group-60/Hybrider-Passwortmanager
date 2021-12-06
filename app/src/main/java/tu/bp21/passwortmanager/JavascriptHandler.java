@@ -50,6 +50,12 @@ public class JavascriptHandler {
     //methoden für Datenbankabfragen
     @JavascriptInterface
     public String getPasswordList(String user){
-        return "<p>Hello World!<p/>";
+        String data = "admin";
+        String output = "{\"length\":," + 1 +
+                "\"websites\":[" + data + "]," +
+                "\"loginnames\":[" + data + "]," +
+                "\"passwords\":[" + data + "]}";
+
+        return output;
     }
 }
