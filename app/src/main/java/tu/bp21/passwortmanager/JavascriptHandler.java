@@ -22,25 +22,25 @@ public class JavascriptHandler {
     @JavascriptInterface
     public boolean checkUser(String username, String hash){
         User user = passwortDao.getUser(username);
-        if(user.password != hash)
-            return false;
-        return true;
+
+        if(user != null && user.password == hash)
+            return true;
+        return false;
     }
 
     @JavascriptInterface
     public boolean createUser(String user, String email, String hash){
         User newUser = new User(user, email, hash);
-        boolean userAdded;
 
         try {
-            userAdded = passwortDao.addUser(newUser);
+            passwortDao.addUser(newUser);
         }
         catch (Exception e){
             e.printStackTrace();
             return false;
         }
 
-        return userAdded;
+        return true;
     }
 
     //methoden für Datenbankabfragen

@@ -12,7 +12,7 @@ import java.util.List;
 public interface PasswortDao {
     //Für Entität User
     @Insert
-    boolean addUser(User user);
+    void addUser(User user);
 
     @Delete
     int deleteUser(User user);
