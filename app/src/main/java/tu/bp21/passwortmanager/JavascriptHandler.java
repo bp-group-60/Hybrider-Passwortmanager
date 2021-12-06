@@ -4,7 +4,7 @@ import android.webkit.JavascriptInterface;
 
 public class JavascriptHandler {
 
-    //methoden für Anmeldung
+    //Methoden für Anmeldung
     @JavascriptInterface
     public boolean existUser(String user){
         return true;
@@ -20,7 +20,7 @@ public class JavascriptHandler {
         return true;
     }
 
-    //methoden für Datenbankabfragen
+    //Methoden für Datenbankabfragen
     @JavascriptInterface
     public String getPasswds(){
         return "<p>Hello World!<p/>";
