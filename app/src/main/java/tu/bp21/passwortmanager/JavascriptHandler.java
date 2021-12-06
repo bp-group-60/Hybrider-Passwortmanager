@@ -1,11 +1,6 @@
 package tu.bp21.passwortmanager;
 
-import android.content.Context;
 import android.webkit.JavascriptInterface;
-
-import androidx.room.Room;
-
-import tu.bp21.passwortmanager.DB.PasswordDatabase;
 import tu.bp21.passwortmanager.DB.PasswortDao;
 import tu.bp21.passwortmanager.DB.User;
 
@@ -19,7 +14,8 @@ public class JavascriptHandler {
     //methoden für Anmeldung
     @JavascriptInterface
     public boolean existUser(String user){
-
+        if(passwortDao.getUser(user) == null)
+            return false;
         return true;
     }
 
