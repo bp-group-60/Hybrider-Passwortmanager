@@ -17,10 +17,11 @@ body{
   background: #35363E;
   background-size: cover;
 }
+/* new */ 
 
 .container{
-  width: 400px;
-  max-width: 400px;
+  max-width: 500px;
+  max-height: content;
   margin: 1rem;
   padding: 2rem;
   box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
@@ -33,6 +34,50 @@ body{
 .form__button{
   font: 500 1rem 'Quicksand',sans-serif;
 }
+
+
+
+#myInput {
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+#myTable {
+  border-collapse: collapse;
+  width: 100%;
+  border: 1px solid #ddd;
+  font-size: 18px;
+  
+}
+
+#myTable th, #myTable td {
+  text-align: left;
+  padding: 12px;
+}
+
+#myTable tr {
+  border-bottom: 1px solid #ddd;
+}
+#myTable td {
+  word-break: break-all;
+}
+#myTable tr.header, #myTable tr:hover {
+  background-color: #f1f1f1;
+}
+
+#button-groupC{
+  /*..*/
+}
+*{
+  box-sizing: border-box;
+}
+
+/*new  till here */ 
 
 .form--hidden{
   display: none;
