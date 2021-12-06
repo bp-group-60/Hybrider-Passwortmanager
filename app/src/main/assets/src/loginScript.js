@@ -59,6 +59,7 @@ function hashPasswd(passwd){
 	//hashedPasswd = C.hashPasswd(passwd);
 }
 
+var li = false;
 document.addEventListener("DOMContentLoaded", () => {
 	//const loginForm = document.querySelector("#Anmeldung");
 	const loginForm = document.getElementById('Anmeldung');
@@ -83,8 +84,13 @@ document.addEventListener("DOMContentLoaded", () => {
 			e.preventDefault();
 
 			// hier müsste username und password Kombination überprüft werden...
-
-			setFormMessage(loginForm, "error", "Ungültiger Benutzername oder falsches Passwort");
+			if(!li){
+				setFormMessage(loginForm, "error", "Ungültiger Benutzername oder falsches Passwort");
+				li = !li;
+			}
+			else {
+				window.location.href = "./app.html";
+			}
 		});
 	}
 
