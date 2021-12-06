@@ -10,7 +10,7 @@ import androidx.room.PrimaryKey;
         parentColumns = "username",
         childColumns = "user",
         onDelete = ForeignKey.CASCADE,
-        onUpdate = ForeignKey.CASCADE)})
+        onUpdate = ForeignKey.CASCADE)}) // wird sehr warscheinlich nie vorkommen
 public class Password {
 
     public Password(@NonNull String user, @NonNull String website, String loginName, String password){
