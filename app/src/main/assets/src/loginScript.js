@@ -1,3 +1,5 @@
+var errorCount = 0;
+
 function setFormMessage(formElement, type, message) {
 	const messageElement = formElement.querySelector(".form__message");
 
@@ -9,11 +11,13 @@ function setFormMessage(formElement, type, message) {
 function setInputError(inputElement, message) {
 	inputElement.classList.add("form__input--error");
 	inputElement.parentElement.querySelector(".form__input-error-message").textContent = message;
+	errorCount++;
 }
 
 function clearInputError(inputElement) {
 	inputElement.classList.remove("form__input--error");
 	inputElement.parentElement.querySelector(".form__input-error-message").textContent = "";
+	errorCount--;
 }
 
 function clearAllErrorMessages(formElement) {
@@ -41,6 +45,8 @@ function checkUserPassswd(user, passwd){
 	sessionStorage.setItem("user", user);
 	sessionStorage.setItem("passwd", hashPasswd(passwd));
 
+	const loginForm = document.getElementById('Anmeldung');
+
 	//ZUGRIFF AUF JAVA
 	var login = Java.checkUser(user, passwd);
 	if(login){
@@ -52,6 +58,9 @@ function checkUserPassswd(user, passwd){
 }
 
 function createUserPasswd(user, email, passwd){
+	const loginForm = document.getElementById('Anmeldung');
+	const createAccountForm = document.getElementById("KontoErstellen");
+
     //ZUGRIFF AUF JAVA
     var regist = Java.createUser(user, email, passwd);
     if (regist){
@@ -111,6 +120,15 @@ document.addEventListener("DOMContentLoaded", () => {
 	if (createAccountForm) {
 		createAccountForm.addEventListener("submit", e => {
 			e.preventDefault();
+            if(errorCount == 0){
+                var user = document.getElementById('signupUsername').value;
+                var email = document.getElementById('signupEmail').value;
+                var passwd = document.getElementById('signupPasswort').value;
+                createUserPasswd(user, email, passwd);
+            }
+            else {
+                setFormMessage(createAccountForm, "error", "Konto konnte nicht erstellt werden");
+            }
 		});
 	}
 
