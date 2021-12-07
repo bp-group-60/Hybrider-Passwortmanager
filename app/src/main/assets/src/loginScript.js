@@ -1,11 +1,3 @@
-var globalVariable={
-	user: '',
-	passwd: ''
-}
-
-sessionStorage.setItem("user", '');
-sessionStorage.setItem("passwd", '');
-
 function setFormMessage(formElement, type, message) {
 	const messageElement = formElement.querySelector(".form__message");
 
@@ -38,7 +30,11 @@ function clearAllErrorMessages(formElement) {
 
 //Schnittstellen
 function existUser(user){
-
+	var euser = Java.existUser(user);
+	if (euser){
+		var e = document.getElementById("signupUsername");
+		setInputError(e, "Benutzername bereits vergeben");
+	}
 }
 
 function checkUserPassswd(user, passwd){
@@ -48,6 +44,15 @@ function checkUserPassswd(user, passwd){
 	// Oder
 	sessionStorage.setItem("user", user);
 	sessionStorage.setItem("passwd", hashPasswd(passwd));
+
+	//ZUGRIFF AUF JAVA
+	var login = Java.checkUserPassswd(user, passwd);
+	if(login){
+		window.location.href = "./app.html";
+	}
+	else{
+		setFormMessage(loginForm, "error", "Ungültiger Benutzername oder falsches Passwort");
+	}
 }
 
 function createUserPasswd(user, passwd){
@@ -83,7 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		loginForm.addEventListener("submit", e => {
 			e.preventDefault();
 
-			// hier müsste username und password Kombination überprüft werden...
+			// Demo erster Versuch Error, dann Login...
 			if(!li){
 				setFormMessage(loginForm, "error", "Ungültiger Benutzername oder falsches Passwort");
 				li = !li;
