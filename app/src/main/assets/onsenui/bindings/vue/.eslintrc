@@ -1,9 +1,0 @@
-{
-  extends: [
-    '../../.eslintrc',
-    'plugin:vue/recommended',
-  ],
-  rules: {
-    // override if necessary
-  }
-}
