@@ -1,6 +1,7 @@
 package tu.bp21.passwortmanager;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
 import android.annotation.SuppressLint;
 import android.content.pm.ApplicationInfo;
@@ -8,6 +9,8 @@ import android.os.Bundle;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import tu.bp21.passwortmanager.DB.PasswordDatabase;
 
 public class MainActivity extends AppCompatActivity {
 	private WebView webView;
@@ -26,9 +29,12 @@ public class MainActivity extends AppCompatActivity {
 			WebView.setWebContentsDebuggingEnabled(true);
 		}
 
+		PasswordDatabase database = Room.databaseBuilder(getApplicationContext(),
+				PasswordDatabase.class, "database").allowMainThreadQueries().build();
+
 		webView = new WebView(getApplicationContext());
 		webView.setWebViewClient(new WebViewClient());
-		webView.addJavascriptInterface(new JavascriptHandler(),"Java");
+		webView.addJavascriptInterface(new JavascriptHandler(database.getDao()),"Java");
 		webView.loadUrl("file:///android_asset/index.html");
 
 		WebSettings webSettings = webView.getSettings();
