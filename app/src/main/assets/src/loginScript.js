@@ -11,13 +11,12 @@ function setFormMessage(formElement, type, message) {
 function setInputError(inputElement, message) {
 	inputElement.classList.add("form__input--error");
 	inputElement.parentElement.querySelector(".form__input-error-message").textContent = message;
-	errorCount++;
+	//errorCount++;
 }
 
 function clearInputError(inputElement) {
 	inputElement.classList.remove("form__input--error");
 	inputElement.parentElement.querySelector(".form__input-error-message").textContent = "";
-	errorCount--;
 }
 
 function clearAllErrorMessages(formElement) {
@@ -46,6 +45,8 @@ function checkUserPassswd(user, passwd){
 	sessionStorage.setItem("passwd", hashPasswd(passwd));
 
 	const loginForm = document.getElementById('Anmeldung');
+    console.log(user);
+    console.log(passwd);
 
 	//ZUGRIFF AUF JAVA
 	var login = Java.checkUser(user, passwd);
@@ -58,15 +59,16 @@ function checkUserPassswd(user, passwd){
 }
 
 function createUserPasswd(user, email, passwd){
-	const loginForm = document.getElementById('Anmeldung');
 	const createAccountForm = document.getElementById("KontoErstellen");
 
+    console.log(user);
+    console.log(passwd);
     //ZUGRIFF AUF JAVA
     var regist = Java.createUser(user, email, passwd);
     if (regist){
         window.location.href = "./index.html";
         var e = document.getElementById('Anmeldung');
-        setFormMessage(loginForm, "error", "Benutzerkonto wurde erfolgreich erstellt.");
+        setFormMessage(e, "error", "Benutzerkonto wurde erfolgreich erstellt.");
     }
     else {
         setFormMessage(createAccountForm, "error", "Konto konnte nicht erstellt werden");
@@ -102,18 +104,18 @@ document.addEventListener("DOMContentLoaded", () => {
 	if (loginForm) {
 		loginForm.addEventListener("submit", e => {
 			e.preventDefault();
-            var user = document.getElementById('user');
-            var passwd = document.getElementById('password');
-            checkUserPassswd(user, password);
+            var user = document.getElementById('user').value;
+            var passwd = document.getElementById('password').value;
+            checkUserPassswd(user, passwd);
 
-			// Demo erster Versuch Error, dann Login...
+			/* Demo erster Versuch Error, dann Login...
 			if(!li){
 				setFormMessage(loginForm, "error", "Ungültiger Benutzername oder falsches Passwort");
 				li = !li;
 			}
 			else {
 				window.location.href = "./app.html";
-			}
+			}*/
 		});
 	}
 
@@ -124,6 +126,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 var user = document.getElementById('signupUsername').value;
                 var email = document.getElementById('signupEmail').value;
                 var passwd = document.getElementById('signupPasswort').value;
+                console.log(user);
+                console.log(passwd);
                 createUserPasswd(user, email, passwd);
             }
             else {
