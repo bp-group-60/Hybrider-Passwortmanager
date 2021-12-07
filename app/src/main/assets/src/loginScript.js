@@ -66,9 +66,8 @@ function createUserPasswd(user, email, passwd){
     //ZUGRIFF AUF JAVA
     var regist = Java.createUser(user, email, passwd);
     if (regist){
-        window.location.href = "./index.html";
-        var e = document.getElementById('Anmeldung');
-        setFormMessage(e, "error", "Benutzerkonto wurde erfolgreich erstellt.");
+        sessionStorage.setItem("regist", true);
+        window.location.href = "./index.html";;
     }
     else {
         setFormMessage(createAccountForm, "error", "Konto konnte nicht erstellt werden");
@@ -102,6 +101,10 @@ document.addEventListener("DOMContentLoaded", () => {
 	});*/
 
 	if (loginForm) {
+	    var ereg = sessionStorage.getItem("regist");
+	    if(sessionStorage.getItem("regist") === "true"){
+	        setFormMessage(loginForm, "error", "Benutzerkonto erfolgreich erstellt.");
+	    }
 		loginForm.addEventListener("submit", e => {
 			e.preventDefault();
             var user = document.getElementById('user').value;
@@ -139,8 +142,13 @@ document.addEventListener("DOMContentLoaded", () => {
 	document.querySelectorAll(".form__input").forEach(inputElement => {
 		inputElement.addEventListener("blur", e => {
 			//Mindestlänge Benutzername
-			if (e.target.id === "signupUsername" && e.target.value.length > 0 && e.target.value.length < 3) {
-				setInputError(inputElement, "Benutzername muss mindestens 3 Zeichen haben");
+			if (e.target.id === "signupUsername") {
+			    if (e.target.value.length > 0 && e.target.value.length < 3) {
+				    setInputError(inputElement, "Benutzername muss mindestens 3 Zeichen haben");
+			    }
+			    else {
+			        existUser(e.target.value);
+			    }
 			}
 			//E-mail-Kriterien (TEXT @ TEXT . DOMAIN)
 			if (e.target.id === "signupEmail" && e.target.value.length > 0) {
