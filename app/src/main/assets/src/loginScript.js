@@ -38,15 +38,11 @@ function existUser(user){
 }
 
 function checkUserPassswd(user, passwd){
-	// Entweder
-	globalVariable.user = user;
-	globalVariable.passwd = hashPasswd(passwd);
-	// Oder
 	sessionStorage.setItem("user", user);
 	sessionStorage.setItem("passwd", hashPasswd(passwd));
 
 	//ZUGRIFF AUF JAVA
-	var login = Java.checkUserPassswd(user, passwd);
+	var login = Java.checkUser(user, passwd);
 	if(login){
 		window.location.href = "./app.html";
 	}
@@ -55,13 +51,23 @@ function checkUserPassswd(user, passwd){
 	}
 }
 
-function createUserPasswd(user, passwd){
-
+function createUserPasswd(user, email, passwd){
+    //ZUGRIFF AUF JAVA
+    var regist = Java.createUser(user, email, passwd);
+    if (regist){
+        window.location.href = "./index.html";
+        var e = document.getElementById('Anmeldung');
+        setFormMessage(loginForm, "error", "Benutzerkonto wurde erfolgreich erstellt.");
+    }
+    else {
+        setFormMessage(createAccountForm, "error", "Konto konnte nicht erstellt werden");
+    }
 }
 
 function hashPasswd(passwd){
 	//Anfrage an C
 	//hashedPasswd = C.hashPasswd(passwd);
+	return passwd;
 }
 
 var li = false;
@@ -87,6 +93,9 @@ document.addEventListener("DOMContentLoaded", () => {
 	if (loginForm) {
 		loginForm.addEventListener("submit", e => {
 			e.preventDefault();
+            var user = document.getElementById('user');
+            var passwd = document.getElementById('password');
+            checkUserPassswd(user, password);
 
 			// Demo erster Versuch Error, dann Login...
 			if(!li){
@@ -102,10 +111,6 @@ document.addEventListener("DOMContentLoaded", () => {
 	if (createAccountForm) {
 		createAccountForm.addEventListener("submit", e => {
 			e.preventDefault();
-
-			// hier müsste man Kontoerstellungskriterien einfügen...
-
-			setFormMessage(createAccountForm, "error", "Konto konnte nicht erstellt werden");
 		});
 	}
 
