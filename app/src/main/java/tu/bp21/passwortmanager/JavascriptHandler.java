@@ -11,7 +11,7 @@ public class JavascriptHandler {
         passwortDao = dao;
     }
 
-    //methoden für Anmeldung
+    //Methoden für Anmeldung
     @JavascriptInterface
     public boolean existUser(String user){
         return passwortDao.getUser(user) != null;
@@ -38,7 +38,7 @@ public class JavascriptHandler {
         return true;
     }
 
-    //methoden für Datenbankabfragen
+    //Methoden für Datenbankabfragen
     @JavascriptInterface
     public String getPasswordList(String user){
         String data = "admin";

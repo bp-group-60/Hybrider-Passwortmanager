@@ -7,7 +7,6 @@ function getPasswds(user, password) {
 	//Anfrage an Java
 	//List Arraylist(website, user, passwd) = Java.getPasswds(user, password)
 
-
 	/*  input
 	"{\"length\":," + 1 +
 				"\"websites\":[" + data + "]," +
@@ -18,6 +17,7 @@ function getPasswds(user, password) {
 	//console.log(JSON.parse(json).website);
 	//console.log(JSON.parse(json).user);
 	//console.log(JSON.parse(json).passwort);
+
 	return array = [
 		["https://....01", "User01", "Passwort01"],
 		["https://....02", "User02", "Passwort02"],
@@ -66,7 +66,8 @@ function createTable(array){
 	var table = document.getElementById('Tabelle');
 	var tableBody = document.createElement('tbody');
 
-	var i = 1;
+	var i = 0;
+
 	array.forEach(function (rowData) {
 		var row = document.createElement('tr');
 		row.setAttribute("id", i);
