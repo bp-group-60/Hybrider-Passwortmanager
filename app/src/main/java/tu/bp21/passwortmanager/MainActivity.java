@@ -8,7 +8,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
-import tu.bp21.passwortmanager.DB.PasswordDatabase;
+import tu.bp21.passwortmanager.db.PasswordDatabase;
 
 /** Main entry point for app. */
 public class MainActivity extends AppCompatActivity {

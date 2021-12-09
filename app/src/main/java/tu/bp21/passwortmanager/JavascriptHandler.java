@@ -1,8 +1,8 @@
 package tu.bp21.passwortmanager;
 
 import android.webkit.JavascriptInterface;
-import tu.bp21.passwortmanager.DB.PasswortDao;
-import tu.bp21.passwortmanager.DB.User;
+import tu.bp21.passwortmanager.db.PasswortDao;
+import tu.bp21.passwortmanager.db.User;
 
 /** Framework that can be used in JavaScript. */
 public class JavascriptHandler {
