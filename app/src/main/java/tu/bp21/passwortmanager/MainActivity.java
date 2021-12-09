@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
       getSupportActionBar().hide();
     }
 
-    // if your build is in debug mode, enable webviews inspection
+    // if your build is in debug mode, enable WebViews inspection
     if (0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE)) {
       WebView.setWebContentsDebuggingEnabled(true);
     }
