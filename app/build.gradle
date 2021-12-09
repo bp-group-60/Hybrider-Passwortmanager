@@ -1,7 +1,5 @@
 plugins {
 	id 'com.android.application'
-	id 'pmd'
-	id 'checkstyle'
 }
 
 android {
@@ -42,5 +40,3 @@ dependencies {
 	annotationProcessor "androidx.room:room-compiler:$room_version"
 }
 
-apply from: "tools/checkstyle.gradle"
-apply from: "tools/pmd.gradle"
