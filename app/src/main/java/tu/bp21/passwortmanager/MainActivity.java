@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
     webView = new WebView(getApplicationContext());
     webView.setWebViewClient(new WebViewClient());
+    
     webView.addJavascriptInterface(new JavascriptHandler(database.getDao()), "Java");
     webView.loadUrl("file:///android_asset/index.html");
 
