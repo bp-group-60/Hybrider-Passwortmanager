@@ -29,7 +29,7 @@ public class Password {
     this.password = password;
   }
 
-  public String toSecureString(){
+  public String toSecureString() {
     return "[\"" + website + "\",\"" + loginName + "\"]";
   }
 

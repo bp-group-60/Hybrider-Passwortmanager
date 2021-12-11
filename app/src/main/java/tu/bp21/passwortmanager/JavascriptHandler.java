@@ -41,7 +41,7 @@ public class JavascriptHandler {
   @JavascriptInterface
   public String getPasswordList(String user, String hash) {
     ArrayList<String> list = new ArrayList<>();
-    passwortDao.getPasswordList(user).forEach(x->list.add(x.toString()));
-    return "{\"overview\":"+list.toString()+"}";
+    passwortDao.getPasswordList(user).forEach(x -> list.add(x.toString()));
+    return "{\"overview\":" + list.toString() + "}";
   }
 }
