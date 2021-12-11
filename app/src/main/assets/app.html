@@ -11,40 +11,41 @@
 </head>
 
 <body>
-    <ons-navigator swipeable id="myNavigator" page="page1.html"></ons-navigator>
-    <template id="page1.html">
-        <ons-page id="page1">
-            <ons-toolbar>
-                <div class="center">Page 1</div>
-            </ons-toolbar>
-            <ons-list-header>Webseite / Nutername</ons-list-header>
-        </ons-page>
-    </template>
-    <template id="page2.html">
-        <ons-page id="page2">
-            <ons-toolbar>
-                <div class="left">
-                    <ons-back-button>Zurück zu Liste</ons-back-button>
-                </div>
-                <div class="center"></div>
-            </ons-toolbar>
-
-            <div style="text-align: center; margin-top: 30px;">
-                <p>
-                    <ons-input id="Webseite" modifier="underbar" float></ons-input>
-                </p>
-                <p>
-                    <ons-input id="username" modifier="underbar" float></ons-input>
-                </p>
-                <p>
-                    <ons-input id="passwort" modifier="underbar" type="password" value="" float></ons-input>
-                </p>
-
-                <ons-button onclick="Cancel()">Abbrechen</ons-button>
-                <ons-button onclick="Commit()">Fertig</ons-button>
+<ons-navigator swipeable id="myNavigator" page="page1.html"></ons-navigator>
+<template id="page1.html">
+    <ons-page id="page1">
+        <ons-toolbar>
+            <div class="center">Passwortübersicht</div>
+        </ons-toolbar>
+        <ons-list-header>Webseite / Nutername</ons-list-header>
+    </ons-page>
+</template>
+<template id="page2.html">
+    <ons-page id="page2">
+        <ons-toolbar>
+            <div class="left">
+                <ons-back-button>Zurück zu Liste</ons-back-button>
             </div>
-        </ons-page>
-    </template>
-    <script src="./src/appScript.js"></script>
+            <div class="center"></div>
+        </ons-toolbar>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <p>
+                <ons-input id="Webseite" modifier="underbar" float></ons-input>
+            </p>
+            <p>
+                <ons-input id="username" modifier="underbar" float></ons-input>
+            </p>
+            <p>
+                <ons-input id="passwort" modifier="underbar" type="password" value=""
+                           float></ons-input>
+            </p>
+
+            <ons-button onclick="Cancel()">Abbrechen</ons-button>
+            <ons-button onclick="Commit()">Fertig</ons-button>
+        </div>
+    </ons-page>
+</template>
+<script src="./src/appScript.js"></script>
 </body>
 </html>

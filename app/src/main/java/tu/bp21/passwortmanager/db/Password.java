@@ -28,4 +28,13 @@ public class Password {
     this.loginName = loginName;
     this.password = password;
   }
+
+  public String toSecureString(){
+    return "[\"" + website + "\",\"" + loginName + "\"]";
+  }
+
+  @Override
+  public String toString() {
+    return "[\"" + website + "\",\"" + loginName + "\",\"" + password + "\"]";
+  }
 }

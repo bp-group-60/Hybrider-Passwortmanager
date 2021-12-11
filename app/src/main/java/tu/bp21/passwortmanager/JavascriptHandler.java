@@ -1,6 +1,7 @@
 package tu.bp21.passwortmanager;
 
 import android.webkit.JavascriptInterface;
+import java.util.ArrayList;
 import tu.bp21.passwortmanager.db.PasswortDao;
 import tu.bp21.passwortmanager.db.User;
 
@@ -38,18 +39,9 @@ public class JavascriptHandler {
   }
 
   @JavascriptInterface
-  public String getPasswordList(String user) {
-    String data = "admin";
-    return "{\"length\":,"
-        + 1
-        + "\"websites\":["
-        + data
-        + "],"
-        + "\"loginnames\":["
-        + data
-        + "],"
-        + "\"passwords\":["
-        + data
-        + "]}";
+  public String getPasswordList(String user, String hash) {
+    ArrayList<String> list = new ArrayList<>();
+    passwortDao.getPasswordList(user).forEach(x->list.add(x.toString()));
+    return "{\"overview\":"+list.toString()+"}";
   }
 }
