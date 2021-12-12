@@ -41,10 +41,10 @@ public class JavascriptHandler {
   }
 
   @JavascriptInterface
-  public boolean createPassword(String user, String website, String loginName, String password){
+  public boolean createPassword(String user, String website, String loginName, String password) {
     Password newPassword = new Password(user, website, loginName, password);
 
-    try{
+    try {
       passwortDao.addPassword(newPassword);
     } catch (Exception e) {
       e.printStackTrace();
