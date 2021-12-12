@@ -2,6 +2,8 @@ package tu.bp21.passwortmanager;
 
 import android.webkit.JavascriptInterface;
 import java.util.ArrayList;
+
+import tu.bp21.passwortmanager.db.Password;
 import tu.bp21.passwortmanager.db.PasswortDao;
 import tu.bp21.passwortmanager.db.User;
 
@@ -39,9 +41,23 @@ public class JavascriptHandler {
   }
 
   @JavascriptInterface
+  public boolean createPassword(String user, String website, String loginName, String password){
+    Password newPassword = new Password(user, website, loginName, password);
+
+    try{
+      passwortDao.addPassword(newPassword);
+    } catch (Exception e) {
+      e.printStackTrace();
+      return false;
+    }
+
+    return true;
+  }
+
+  @JavascriptInterface
   public String getPasswordList(String user, String hash) {
     ArrayList<String> list = new ArrayList<>();
     passwortDao.getPasswordList(user).forEach(x -> list.add(x.toString()));
-    return "{\"overview\":" + list.toString() + "}";
+    return "{\"dataArray\":" + list.toString() + "}";
   }
 }

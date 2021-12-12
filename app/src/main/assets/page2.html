@@ -1,0 +1,24 @@
+<ons-page id="page2">
+    <ons-toolbar>
+        <div class="left">
+            <ons-back-button>Zurück zu Liste</ons-back-button>
+        </div>
+        <div class="center"></div>
+    </ons-toolbar>
+
+    <div style="text-align: center; margin-top: 30px;">
+        <p>
+            <ons-input id="website" modifier="underbar" float></ons-input>
+        </p>
+        <p>
+            <ons-input id="username" modifier="underbar" float></ons-input>
+        </p>
+        <p>
+            <ons-input id="password" modifier="underbar" type="password" value=""
+                       float></ons-input>
+        </p>
+
+        <ons-button onclick="Cancel()">Löschen</ons-button>
+        <ons-button onclick="Commit()">Speichern</ons-button>
+    </div>
+</ons-page>

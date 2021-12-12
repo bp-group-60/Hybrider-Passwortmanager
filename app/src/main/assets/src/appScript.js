@@ -1,15 +1,15 @@
 const user = sessionStorage.getItem("user")
 const password = sessionStorage.getItem("password")
-var BreakException = {}
+var passwords = getPasswords()
 
 //Schnittstellen
-function getPasswords(user, password) {
-    // array structure: [[website, loginname, password], ...]
-	return JSON.parse(Java.getPasswordList(user, password)).overview
+function getPasswords() {
+    // array structure: [[website, loginName, password], ...]
+	return JSON.parse(Java.getPasswordList(user, password)).dataArray
 }
 
-function createPassword(password) {
-
+function createPassword(user, website, loginName,  password) {
+    return Java.createPassword(user, website, loginName,  password)
 }
 
 function editPassword(i) {
@@ -22,76 +22,66 @@ function hashPassword(password) {
 }
 
 function createList(){
-	var list = document.getElementById('page1')
-	var list2 = document.getElementsByTagName('div')
-	var i = 1
-	var array = getPasswords(user, password)
+	var array = getPasswords()
 
-	array.forEach(function (rowData) {
-		var row = document.createElement('ons-list-item')
-		row.setAttribute("modifier", "chevron")
-		row.setAttribute("tappable")
-		row.setAttribute("id", i)
-		row.setAttribute("onClick", "UpdatePassword(this.id)")
-
-		var txt = `${rowData[0]} / ${rowData[1]}`
-		
-		row.innerText = txt
-		list2[2].appendChild(row)
-
-		i++
-	})
+	for(var i = 0; i < array.length; i++){
+		addToList(`${array[i][0]} / ${array[i][1]}`,i)
+	}
 }
+function addToList(name, id) {
+	let listItem = ons.createElement('<ons-list-item modifier="chevron" tappable>')
 
-function createTable(array){
-	var table = document.getElementById('Tabelle')
-	var tableBody = document.createElement('tbody')
+	listItem.setAttribute("id", id)
+	listItem.setAttribute("onClick", "UpdatePassword(this.id)")
 
-	var i = 0
+	listItem.innerText = name
 
-	array.forEach(function (rowData) {
-		var row = document.createElement('tr')
-		row.setAttribute("id", i)
-
-		var j = 0
-		rowData.forEach(function (cellData) {
-			var cell = document.createElement('td')
-			cell.setAttribute("id", j)
-			cell.appendChild(document.createTextNode(cellData))
-			row.appendChild(cell)
-			j++
-		})
-
-		tableBody.appendChild(row)
-		i++
-	})
-
-	table.appendChild(tableBody)
+	document.getElementById('overview').append(listItem)
 }
-
-document.addEventListener("DOMContentLoaded", () => {
-	const passForm = document.getElementById('Tabelle')
-	const user = sessionStorage.getItem("user")
-	const password = sessionStorage.getItem("password")
-
-	if(document.getElementById('Tabelle'))createTable(getPasswords(user, password))
-	else createList(getPasswords(user, password))
-})
 
 ons.ready(function() {
 	// Cordova APIs are ready
-	console.log(window.device)
 })
 
 document.addEventListener('init', function(event) {
 	var page = event.target
+
+	if (page.id === 'page1') {
+		createList()
+	}
   
 	if (page.id === 'page2') {
 	  	page.querySelector('ons-toolbar .center').innerHTML = page.data.title
 		var v = document.getElementById(page.data.id).textContent
-		document.getElementById('page2').querySelector('#Webseite').value = v
-		document.getElementById('page2').querySelector('#username').value = v
-		document.getElementById('page2').querySelector('#passwort').value = v
+		page.querySelector('#website').value = passwords[parseInt(page.data.id)][0]
+		page.querySelector('#username').value = passwords[parseInt(page.data.id)][1]
+		page.querySelector('#password').value = passwords[parseInt(page.data.id)][2]
+	}
+
+	if (page.id === 'addPassword') {
+		page.querySelector('#commitButton').onclick = () => {
+
+		    console.log('TODO: validate data')
+
+			let website = document.getElementById('website').value
+			console.log(website)
+			let loginName = document.getElementById('username').value
+			console.log(loginName)
+			let password = document.getElementById('password').value
+			console.log(password)
+			let successful = createPassword(user, website, loginName, password)
+
+			if(successful){
+			    document.querySelector('#myNavigator').popPage()
+			    ons.notification.toast('Passwort hinzugefügt!', {
+                    timeout: 2000
+                  })
+			} else {
+			    console.log('TODO: error message')
+			}
+
+		}
+
 	}
   })
 
@@ -99,3 +89,8 @@ function UpdatePassword(EintragID){
 	document.querySelector('#myNavigator').pushPage('page2.html', 
 						{data: {title: 'Passwort ändern', id: EintragID}})
 }
+
+document.addEventListener('destroy', function(event) {
+    console.log('TODO: update view')
+
+})
