@@ -1,17 +1,19 @@
 import {clearInputError, setFormMessage, setInputError} from "./loginMessages.js"
+import {checkUser, createUser, existUser} from "../app/database/userOperations.js"
+import {hashPassword} from "../app/database/passwordOperations.js"
 
-function existUser(user){
-	if (Java.existUser(user)){
+function checkUserAvailable(user){
+	if (existUser(user)){
 		let e = document.getElementById("signupUsername")
 		setInputError(e, "Benutzername bereits vergeben")
 	}
 }
 
-function checkUserPassword(user, password){
+function checkLoginInformation(user, password){
 	sessionStorage.setItem("user", user)
 	sessionStorage.setItem("password", hashPassword(password))
 
-	if(Java.checkUser(user, password)){
+	if(checkUser(user, password)){
 		window.location.href = "./app.html"
 	}
 	else{
@@ -20,8 +22,8 @@ function checkUserPassword(user, password){
 	}
 }
 
-function createUser(user, email, password){
-    if (Java.createUser(user, email, password)){
+function registerNewUser(user, email, password){
+    if (createUser(user, email, password)){
         sessionStorage.setItem("regist", true)
         window.location.href = "./index.html"
     }
@@ -31,19 +33,12 @@ function createUser(user, email, password){
     }
 }
 
-function hashPassword(password){
-	//Anfrage an C
-	//hashedPassword = C.hashPassword(password)
-	return password
-}
-
 document.addEventListener("DOMContentLoaded", () => {
 	//const loginForm = document.querySelector("#Anmeldung")
 	const loginForm = document.getElementById('Anmeldung')
 	const createAccountForm = document.getElementById("KontoErstellen")
 
 	if (loginForm) {
-	    let ereg = sessionStorage.getItem("regist")
 	    if(sessionStorage.getItem("regist") === "true"){
 	        setFormMessage(loginForm, "info", "Benutzerkonto erfolgreich erstellt.")
 	    }
@@ -51,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			e.preventDefault()
             let user = document.getElementById('user').value
             let password = document.getElementById('password').value
-            checkUserPassword(user, password)
+            checkLoginInformation(user, password)
 		})
 	}
 
@@ -63,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 let email = document.getElementById('signupEmail').value
                 let password = document.getElementById('signupPasswort').value
 
-                createUser(user, email, password)
+			registerNewUser(user, email, password)
 		})
 	}
 
@@ -75,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				    setInputError(inputElement, "Benutzername muss mindestens 3 Zeichen haben")
 			    }
 			    else {
-			        existUser(e.target.value)
+			        checkUserAvailable(e.target.value)
 			    }
 			}
 			//E-mail-Kriterien (TEXT @ TEXT . DOMAIN)
