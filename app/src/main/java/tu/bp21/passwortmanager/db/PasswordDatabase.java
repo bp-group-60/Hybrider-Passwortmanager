@@ -7,5 +7,5 @@ import androidx.room.RoomDatabase;
     entities = {User.class, Password.class},
     version = 1)
 public abstract class PasswordDatabase extends RoomDatabase {
-  public abstract PasswortDao getDao();
+  public abstract PasswordDao getDao();
 }

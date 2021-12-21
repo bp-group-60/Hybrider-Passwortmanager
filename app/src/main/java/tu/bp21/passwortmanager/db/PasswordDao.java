@@ -8,7 +8,7 @@ import androidx.room.Update;
 import java.util.List;
 
 @Dao
-public interface PasswortDao {
+public interface PasswordDao {
   // Für Entität User
   @Insert
   void addUser(User user);
