@@ -18,7 +18,7 @@ function addToList(name, id) {
 
     listItem.setAttribute("id", id)
     listItem.setAttribute("onClick",
-        "document.querySelector('#myNavigator').pushPage('onsPages/page2.html',{data: {title: 'Passwort ändern', id: "+ id +"}})")
+        "document.querySelector('#myNavigator').pushPage('onsPages/passwordDetailed.html',{data: {title: 'Passwort ändern', id: "+ id +"}})")
 
     listItem.innerText = name
 

@@ -11,22 +11,30 @@ document.addEventListener('show', function(event) {
 		updateList(user, password)
 	}
 
-	if (page.id === 'page2') {
+	if (page.id === 'passwordDetailed') {
 	  	page.querySelector('ons-toolbar .center').innerHTML = page.data.title
-		page.querySelector('#website').value = passwords[parseInt(page.data.id)][0]
+		page.querySelector('#name').innerText = passwords[parseInt(page.data.id)][0]
 		page.querySelector('#username').value = passwords[parseInt(page.data.id)][1]
 		page.querySelector('#password').value = passwords[parseInt(page.data.id)][2]
 	}
 
 	if (page.id === 'addPassword') {
+		page.querySelector('#addUrl').onclick = () => {
+			let newItem = ons.createElement('<ons-list-item modifier="nodivider">')
+			let	urlInput = ons.createElement('<ons-input modifier="underbar" placeholder="Url" float>')
+
+			newItem.append(urlInput)
+			page.querySelector('#urlItems').append(newItem)
+		}
+
 		page.querySelector('#commitButton').onclick = () => {
 
 		    console.log('TODO: validate data')
 
-			let website = document.getElementById('website').value
+			let name = document.getElementById('name').value
 			let loginName = document.getElementById('username').value
 			let password = document.getElementById('password').value
-			let successful = createPassword(user, website, loginName, password)
+			let successful = createPassword(user, name, loginName, password)
 
 			if(successful){
 			    document.querySelector('#myNavigator').popPage()
