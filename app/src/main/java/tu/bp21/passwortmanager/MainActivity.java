@@ -11,12 +11,15 @@ import tu.bp21.passwortmanager.db.PasswordDatabase;
 /** Main entry point for app. */
 public class MainActivity extends AppCompatActivity {
   private WebView webView;
+  static {
+       System.loadLibrary("Crypto");
+    }
 
   @Override
   @SuppressLint("SetJavaScriptEnabled")
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
+    System.out.println("abcdxzy" + new Crypto().stringFromJNI());
     if (getSupportActionBar() != null) {
       getSupportActionBar().hide();
     }
@@ -39,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     webView.loadUrl("https://appassets.androidplatform.net/assets/src/html/index.html");
 
     setContentView(webView);
+
   }
 
   @Override
@@ -49,4 +53,6 @@ public class MainActivity extends AppCompatActivity {
       super.onBackPressed();
     }
   }
+
+
 }
