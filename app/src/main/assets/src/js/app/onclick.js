@@ -1,4 +1,4 @@
-import {createPassword, passwords} from "./database/passwordOperations.js";
+import {createPassword, updatePassword, passwords} from "./database/passwordOperations.js";
 
 export function addPasswordCommitButtonOnclick() {
     return () => {
@@ -13,6 +13,7 @@ export function addPasswordCommitButtonOnclick() {
         if (successful) {
             document.querySelector('#myNavigator').popPage()
             ons.notification.toast('Passwort hinzugefügt!', {timeout: 3000})
+            //TODO: url speichern
         } else {
             //TODO: error message
             console.log('TODO: error message')
@@ -23,10 +24,20 @@ export function addPasswordCommitButtonOnclick() {
 
 export function addUrlOnclick(page) {
     return () => {
-        let newItem = ons.createElement('<ons-list-item modifier="nodivider">')
+        let newItem = ons.createElement('<ons-list-item data-unsaved="true" data-removed="false" modifier="nodivider">')
         let urlInput = ons.createElement('<ons-input modifier="underbar" placeholder="Url" float>')
 
+        let rightContent = ons.createElement('<div class="right">')
+        let removeIcon = ons.createElement('<ons-icon class="removeIcon" icon="md-minus-circle">')
+            removeIcon.style.color = 'red'
+            removeIcon.onclick = () => {
+                newItem.remove()
+            }
+
+        rightContent.append(removeIcon)
+
         newItem.append(urlInput)
+        newItem.append(rightContent)
         page.querySelector('#urlItems').append(newItem)
     };
 }
@@ -68,15 +79,10 @@ export function editAbortOnclick(page) {
 }
 
 function restoreUrl (element){
-console.log(element.innerHTML)
     if(element.getAttribute('data-unsaved')==='true'){
-        console.log(1)
-        console.log(element.getAttribute('data-removed'))
         if(element.getAttribute('data-removed')==='true'){
-        console.log(2)
             element.style.display = ''
         }else{
-        console.log(3)
             element.remove()
         }
     }
@@ -84,12 +90,38 @@ console.log(element.innerHTML)
 
 export function showPasswordOnclick(page){
     return () => {
-        console.log(page.querySelector('#passwordCheckbox').checked)
         if(page.querySelector('#passwordCheckbox').checked){
             page.querySelector('#password').children[0].type = 'text'
         }else{
             page.querySelector('#password').children[0].type = 'password'
         }
+    };
+}
 
+export function createUrlItem(url){
+    let listItem = ons.createElement('<ons-list-item data-unsaved="false" data-removed="false" modifier="nodivider">')
+    listItem.innerText = url
+    let rightContent = ons.createElement('<div class="right">')
+    let removeIcon = ons.createElement('<ons-icon class="removeIcon" icon="md-minus-circle">')
+    removeIcon.style.display = 'none'
+    removeIcon.style.color = 'red'
+    removeIcon.onclick = () => {
+        listItem.style.display = 'none'
+        listItem.setAttribute('data-unsaved','true')
+        listItem.setAttribute('data-removed','true')
+    }
+
+    rightContent.append(removeIcon)
+    listItem.append(rightContent)
+    return listItem
+}
+
+export function onclickEdit(){
+    return () => {
+                let name = document.getElementsByClassName('toolbar__title').innerText
+                let loginName = document.getElementById('username').value
+                let password = document.getElementById('password').value
+                let successful = updatePassword(sessionStorage.getItem("user"), name, loginName, password)
+                //TODO: Fertig schreiben + testen
     };
 }

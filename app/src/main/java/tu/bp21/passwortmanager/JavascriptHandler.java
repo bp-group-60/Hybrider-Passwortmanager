@@ -55,6 +55,20 @@ public class JavascriptHandler {
   }
 
   @JavascriptInterface
+  public boolean updatePassword(String user, String website, String loginName, String password) {
+    Password newPassword = new Password(user, website, loginName, password);
+
+    try {
+      passwordDao.updatePassword(newPassword);
+    } catch (Exception e) {
+      e.printStackTrace();
+      return false;
+    }
+
+    return true;
+  }
+
+  @JavascriptInterface
   public String getPasswordList(String user, String hash) {
     ArrayList<String> list = new ArrayList<>();
     passwordDao.getPasswordList(user).forEach(x -> list.add(x.toString()));

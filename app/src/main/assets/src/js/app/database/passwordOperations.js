@@ -10,8 +10,8 @@ export function createPassword(user, website, loginName, password) {
     return Java.createPassword(user, website, loginName, password)
 }
 
-export function editPassword(i) {
-    //Anfrage an Java, um Eintrag i zu bearbeiten
+export function updatePassword(user, website, loginName, password) {
+    return Java.updatePassword(user, website, loginName, password)
 }
 
 export function hashPassword(password) {
