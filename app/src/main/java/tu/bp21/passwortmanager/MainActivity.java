@@ -28,9 +28,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     PasswordDatabase database =
-        Room.databaseBuilder(this, PasswordDatabase.class, "database")
-            .allowMainThreadQueries()
-            .build();
+      Room.databaseBuilder(this, PasswordDatabase.class, "database")
+        .allowMainThreadQueries()
+        .build();
 
     webView = new WebView(this);
     webView.setWebViewClient(new AssetWebViewClient(this));
