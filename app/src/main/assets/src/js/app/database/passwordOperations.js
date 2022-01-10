@@ -14,6 +14,10 @@ export function updatePassword(user, website, loginName, password) {
     return Java.updatePassword(user, website, loginName, password)
 }
 
+export function deletePassword(user, website, loginName, password) {
+    return Java.deletePassword(user, website, loginName, password)
+}
+
 export function hashPassword(password) {
     //Anfrage an C
     //hashedPassword = C.hashPassword(password)

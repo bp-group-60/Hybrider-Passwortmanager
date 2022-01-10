@@ -1,19 +1,19 @@
-export function loadUrlList(list){
-    list.foreach(elm => loadUrl(elm))
+export function getUrlList(user, website){
+    return JSON.parse(Java.getUrlList(user, website)).dataArray
 }
 
-export function loadUrl(url){
-
+export function saveUrlList(user, website, list){
+    list.forEach(elm => saveUrl(user, website, elm))
 }
 
-export function saveUrlList(list){
-    list.foreach(elm => saveUrl(elm))
+export function saveUrl(user, website, url){
+    Java.saveUrl(user, website, url)
 }
 
-export function saveUrl(url){
-
+export function deleteUrlList(user, website, list){
+    list.forEach(elm => deleteUrl(user, website, elm))
 }
 
-export function deleteUrl(url){
-
+export function deleteUrl(user, website, url){
+    Java.deleteUrl(user, website, url)
 }

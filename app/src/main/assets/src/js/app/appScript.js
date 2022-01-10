@@ -3,10 +3,13 @@ import {passwords} from "./database/passwordOperations.js";
 import {
 	addPasswordCommitButtonOnclick,
 	addUrlOnclick,
+	createUrlItem,
 	editAbortOnclick,
+	onclickEditSave,
 	editButtonOnclick,
-	showPasswordOnclick, createUrlItem
+	showPasswordOnclick
 } from "./onclick.js";
+import {getUrlList} from "./database/websiteOperations.js";
 
 const user = sessionStorage.getItem("user")
 const password = sessionStorage.getItem("password")
@@ -21,9 +24,10 @@ document.addEventListener('show', function(event) {
 	if (page.id === 'passwordDetailed') {
 	  	page.querySelector('ons-toolbar .center').innerHTML = passwords[parseInt(page.data.id)][0]
 	  	//TODO: load Url from DB
-	  	        page.querySelector('#urlItems').append(createUrlItem('url 1'))
-	  	        page.querySelector('#urlItems').append(createUrlItem('url 2'))
-	  	        page.querySelector('#urlItems').append(createUrlItem('url 3'))
+		getUrlList(user, passwords[parseInt(page.data.id)][0]).forEach(url =>{
+			page.querySelector('#urlItems').append(createUrlItem(url))
+		})
+
 		page.querySelector('#username').value = passwords[parseInt(page.data.id)][1]
 		page.querySelector('#password').value = passwords[parseInt(page.data.id)][2]
         page.querySelector('#passwordCheckbox').onclick = showPasswordOnclick(page)
@@ -32,21 +36,13 @@ document.addEventListener('show', function(event) {
 
 		page.querySelector('#addUrl').onclick = addUrlOnclick(page)
 		page.querySelector('#abortButton').onclick = editAbortOnclick(page)
+		page.querySelector('#commitButton').onclick = onclickEditSave(page)
 
 	}
 
 	if (page.id === 'addPassword') {
 		page.querySelector('#addUrl').onclick = addUrlOnclick(page)
-		page.querySelector('#commitButton').onclick = addPasswordCommitButtonOnclick()
+		page.querySelector('#commitButton').onclick = addPasswordCommitButtonOnclick(page)
 
 	}
   })
-
-function getAddedUrls(page){
-    let a = []
-    page.querySelector('#urlItems').childNodes.forEach(item => {
-        if(item.getAttribute('data-unsaved') === 'true' &&
-           item.getAttribute('data-removed') === 'false')
-            a.push(item.querySelector('ons-input').value)})
-    return a.filter(elm => elm !== '')
-}

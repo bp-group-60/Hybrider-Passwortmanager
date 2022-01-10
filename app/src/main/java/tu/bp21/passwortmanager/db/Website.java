@@ -3,7 +3,6 @@ package tu.bp21.passwortmanager.db;
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
-import androidx.room.PrimaryKey;
 
 @Entity(
         primaryKeys = {"user", "website", "url"},
@@ -22,9 +21,14 @@ public class Website {
 
     @NonNull public String url;
 
-    public Website(@NonNull String website, @NonNull String url, @NonNull String user){
+    public Website(@NonNull String user, @NonNull String website, @NonNull String url){
+        this.user = user;
         this.website = website;
         this.url = url;
-        this.user = user;
+    }
+
+    @Override
+    public String toString(){
+        return "\"" + url + "\"";
     }
 }

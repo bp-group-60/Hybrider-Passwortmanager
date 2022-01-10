@@ -1,6 +1,7 @@
-import {createPassword, updatePassword, passwords} from "./database/passwordOperations.js";
+import {createPassword, passwords, updatePassword} from "./database/passwordOperations.js"
+import {saveUrlList, deleteUrlList} from "./database/websiteOperations.js"
 
-export function addPasswordCommitButtonOnclick() {
+export function addPasswordCommitButtonOnclick(page) {
     return () => {
 
         console.log('TODO: validate data')
@@ -11,9 +12,9 @@ export function addPasswordCommitButtonOnclick() {
         let successful = createPassword(sessionStorage.getItem("user"), name, loginName, password)
 
         if (successful) {
+            saveUrlList(sessionStorage.getItem("user"), name, getAddedUrls(page))
             document.querySelector('#myNavigator').popPage()
             ons.notification.toast('Passwort hinzugefügt!', {timeout: 3000})
-            //TODO: url speichern
         } else {
             //TODO: error message
             console.log('TODO: error message')
@@ -116,12 +117,61 @@ export function createUrlItem(url){
     return listItem
 }
 
-export function onclickEdit(){
+export function onclickEditSave(page){
     return () => {
-                let name = document.getElementsByClassName('toolbar__title').innerText
-                let loginName = document.getElementById('username').value
-                let password = document.getElementById('password').value
-                let successful = updatePassword(sessionStorage.getItem("user"), name, loginName, password)
-                //TODO: Fertig schreiben + testen
+        let name = passwords[parseInt(page.data.id)][0]
+        let loginName = document.getElementById('username').value
+        let password = document.getElementById('password').value
+        let successful = updatePassword(sessionStorage.getItem("user"), name, loginName, password)
+
+        if (successful) {
+            saveUrlList(sessionStorage.getItem("user"), name, getAddedUrls(page))
+            deleteUrlList(sessionStorage.getItem("user"), name, getRemovedUrls(page))
+            ons.notification.toast('Änderungen gespeichert!', {timeout: 3000})
+
+            passwords[parseInt(page.data.id)][1] = loginName
+            passwords[parseInt(page.data.id)][2] = password
+
+            console.log(page.querySelector('#urlItems').childNodes.length)
+            Array.from(page.querySelector('#urlItems').childNodes).forEach(item => {
+                if (item.getAttribute('data-unsaved') === 'true'){
+                    if(item.getAttribute('data-removed') === 'true' ||
+                       item.querySelector('ons-input').value === ''){
+                        item.remove()
+                    } else{
+                        item.replaceWith(createUrlItem(item.querySelector('ons-input').value))
+                    }
+                }
+            })
+
+            editAbortOnclick(page)()
+
+        } else {
+            ons.notification.toast('Fehler beim speichern!', {timeout: 3000})
+            //TODO: error message
+            console.log('TODO: error message')
+        }
     };
+}
+
+function getAddedUrls(page) {
+    let a = []
+    page.querySelector('#urlItems').childNodes.forEach(item => {
+        if (item.getAttribute('data-unsaved') === 'true' &&
+            item.getAttribute('data-removed') === 'false') {
+            a.push(item.querySelector('ons-input').value)
+        }
+    })
+    return a.filter(elm => elm !== '')
+}
+
+function getRemovedUrls(page) {
+    let a = []
+    page.querySelector('#urlItems').childNodes.forEach(item => {
+        if (item.getAttribute('data-unsaved') === 'true' &&
+            item.getAttribute('data-removed') === 'true') {
+            a.push(item.innerText)
+        }
+    })
+    return a
 }
