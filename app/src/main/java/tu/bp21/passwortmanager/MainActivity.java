@@ -11,6 +11,7 @@ import tu.bp21.passwortmanager.db.PasswordDatabase;
 /** Main entry point for app. */
 public class MainActivity extends AppCompatActivity {
   private WebView webView;
+  private JavascriptHandler jsHandler;
 
   @Override
   @SuppressLint("SetJavaScriptEnabled")
@@ -35,7 +36,8 @@ public class MainActivity extends AppCompatActivity {
     webView.setWebViewClient(new AssetWebViewClient(this));
 
     webView.getSettings().setJavaScriptEnabled(true);
-    webView.addJavascriptInterface(new JavascriptHandler(database.getDao()), "Java");
+    jsHandler = new JavascriptHandler(database.getDao());
+    webView.addJavascriptInterface(jsHandler, "Java");
     webView.loadUrl("https://appassets.androidplatform.net/assets/src/html/index.html");
 
     setContentView(webView);
@@ -48,5 +50,9 @@ public class MainActivity extends AppCompatActivity {
     } else {
       super.onBackPressed();
     }
+  }
+
+  public JavascriptHandler getJavascriptHandler(){
+    return jsHandler;
   }
 }
