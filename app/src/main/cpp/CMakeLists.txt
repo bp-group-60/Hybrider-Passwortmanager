@@ -41,9 +41,22 @@ find_library( # Sets the name of the path variable.
 # can link multiple libraries, such as libraries you define in this
 # build script, prebuilt third-party libraries, or system libraries.
 
+add_library(sslcrypto STATIC IMPORTED)
+set_target_properties(sslcrypto
+        PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/libs/${ANDROID_ABI}/lib/libcrypto.a)
+
+add_library(ssl STATIC IMPORTED)
+set_target_properties(ssl
+        PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/libs/${ANDROID_ABI}/lib/libssl.a)
+
+include_directories( ${CMAKE_SOURCE_DIR}/include/ )
+
 target_link_libraries( # Specifies the target library.
                        Crypto
 
                        # Links the target library to the log library
                        # included in the NDK.
-                       ${log-lib} )
+                        ssl
+                        sslcrypto
+                       ${log-lib}
+                        )
