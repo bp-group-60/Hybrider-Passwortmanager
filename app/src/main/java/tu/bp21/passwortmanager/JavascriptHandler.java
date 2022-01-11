@@ -1,6 +1,8 @@
 package tu.bp21.passwortmanager;
 
 import android.webkit.JavascriptInterface;
+
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import tu.bp21.passwortmanager.db.Password;
@@ -42,7 +44,7 @@ public class JavascriptHandler {
 
   @JavascriptInterface
   public boolean createPassword(String user, String website, String loginName, String password) {
-    Password newPassword = new Password(user, website, loginName, password);
+    Password newPassword = new Password(user, website, loginName, Crypto.encrypt(password));
 
     try {
       passwordDao.addPassword(newPassword);
@@ -54,10 +56,15 @@ public class JavascriptHandler {
     return true;
   }
 
+
+
   @JavascriptInterface
   public String getPasswordList(String user, String hash) {
     ArrayList<String> list = new ArrayList<>();
-    passwordDao.getPasswordList(user).forEach(x -> list.add(x.toString()));
+    passwordDao.getPasswordList(user).forEach(x -> {
+      //x.loginName = new String(new Crypto().crypt(x.password, new String("abababababababababababababababab").getBytes(StandardCharsets.UTF_8), false));
+      list.add(x.toString());
+    });
     return "{\"dataArray\":" + list.toString() + "}";
   }
 }

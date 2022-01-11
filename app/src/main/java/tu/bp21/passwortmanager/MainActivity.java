@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.webkit.WebView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
+
+import java.nio.charset.StandardCharsets;
+
 import tu.bp21.passwortmanager.db.PasswordDatabase;
 
 /** Main entry point for app. */
@@ -19,7 +22,16 @@ public class MainActivity extends AppCompatActivity {
   @SuppressLint("SetJavaScriptEnabled")
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    System.out.println("abcdxzy" + new Crypto().stringFromJNI());
+
+    String input = "Rightig verschluesselt";
+    String password = "abcdef123";
+    Crypto.setSalt(Crypto.generateSalt(16));
+    Crypto.setKey(password);
+
+    byte[] cipher = Crypto.encrypt(input);
+    String text = Crypto.decrypt(cipher);
+    System.out.println(text);
+
     if (getSupportActionBar() != null) {
       getSupportActionBar().hide();
     }
