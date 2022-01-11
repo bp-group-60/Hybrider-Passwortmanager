@@ -61,7 +61,7 @@ public class JavascriptHandler {
 
   @JavascriptInterface
   public boolean updatePassword(String user, String website, String loginName, String password) {
-    Password newPassword = new Password(user, website, loginName, password);
+    Password newPassword = new Password(user, website, loginName, Crypto.encrypt(password));
 
     try {
       passwordDao.updatePassword(newPassword);
@@ -75,7 +75,8 @@ public class JavascriptHandler {
 
   @JavascriptInterface
   public boolean deletePassword(String user, String website) {
-    Password newPassword = new Password(user, website, "", "");
+    byte[] password = {};
+    Password newPassword = new Password(user, website, "", password);
     try {
       passwordDao.deletePassword(newPassword);//TODO: DELETE gibt int zurück
     } catch (Exception e) {
@@ -89,10 +90,7 @@ public class JavascriptHandler {
   @JavascriptInterface
   public String getPasswordList(String user, String hash) {
     ArrayList<String> list = new ArrayList<>();
-    passwordDao.getPasswordList(user).forEach(x -> {
-      //x.loginName = new String(new Crypto().crypt(x.password, new String("abababababababababababababababab").getBytes(StandardCharsets.UTF_8), false));
-      list.add(x.toString());
-    });
+    passwordDao.getPasswordList(user).forEach(x -> list.add(x.toString()));
     return "{\"dataArray\":" + list.toString() + "}";
   }
 
