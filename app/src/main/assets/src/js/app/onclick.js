@@ -1,5 +1,5 @@
-import {createPassword, passwords, updatePassword} from "./database/passwordOperations.js"
-import {saveUrlList, deleteUrlList} from "./database/websiteOperations.js"
+import {createPassword, getPasswords, passwords, updatePassword, deletePassword} from "./database/passwordOperations.js"
+import {saveUrlList, deleteUrlList, getUrlList} from "./database/websiteOperations.js"
 
 export function addPasswordCommitButtonOnclick(page) {
     return () => {
@@ -46,10 +46,11 @@ export function addUrlOnclick(page) {
 export function editButtonOnclick(page) {
     return () => {
         page.querySelector('#editButton').style.display = 'none'
-        page.querySelector('#abortButton').style.display = 'inline-block'
-        page.querySelector('#commitButton').style.display = 'inline-block'
+        page.querySelector('#abortButton').style.display = ''
+        page.querySelector('#commitButton').style.display = ''
+        page.querySelector('#deleteWrapper').style.display = ''
 
-        page.querySelector('#addUrl').style.display = 'inline-block'
+        page.querySelector('#addUrl').style.display = ''
         page.querySelectorAll('.removeIcon').forEach(icon => icon.style.display = '')
 
         page.querySelector('#username').children[0].readOnly = false
@@ -62,9 +63,10 @@ export function editButtonOnclick(page) {
 
 export function editAbortOnclick(page) {
     return () => {
-        page.querySelector('#editButton').style.display = 'inline-block'
+        page.querySelector('#editButton').style.display = ''
         page.querySelector('#abortButton').style.display = 'none'
         page.querySelector('#commitButton').style.display = 'none'
+        page.querySelector('#deleteWrapper').style.display = 'none'
 
         page.querySelector('#addUrl').style.display = 'none'
         page.querySelector('#username').children[0].readOnly = true
@@ -82,6 +84,8 @@ export function editAbortOnclick(page) {
 function restoreUrl (element){
     if(element.getAttribute('data-unsaved')==='true'){
         if(element.getAttribute('data-removed')==='true'){
+            element.setAttribute('data-unsaved', 'false')
+            element.setAttribute('data-removed', 'false')
             element.style.display = ''
         }else{
             element.remove()
@@ -129,19 +133,11 @@ export function onclickEditSave(page){
             deleteUrlList(sessionStorage.getItem("user"), name, getRemovedUrls(page))
             ons.notification.toast('Änderungen gespeichert!', {timeout: 3000})
 
-            passwords[parseInt(page.data.id)][1] = loginName
-            passwords[parseInt(page.data.id)][2] = password
+            getPasswords(sessionStorage.getItem("user"), sessionStorage.getItem("password"))
 
-            console.log(page.querySelector('#urlItems').childNodes.length)
-            Array.from(page.querySelector('#urlItems').childNodes).forEach(item => {
-                if (item.getAttribute('data-unsaved') === 'true'){
-                    if(item.getAttribute('data-removed') === 'true' ||
-                       item.querySelector('ons-input').value === ''){
-                        item.remove()
-                    } else{
-                        item.replaceWith(createUrlItem(item.querySelector('ons-input').value))
-                    }
-                }
+            page.querySelector('#urlItems').innerHTML = ''
+            getUrlList(sessionStorage.getItem("user"), passwords[parseInt(page.data.id)][0]).forEach(url =>{
+                page.querySelector('#urlItems').append(createUrlItem(url))
             })
 
             editAbortOnclick(page)()
@@ -174,4 +170,24 @@ function getRemovedUrls(page) {
         }
     })
     return a
+}
+
+export function onclickDelete(page){
+    return () => {
+        ons.notification.confirm('Passwort wirklich löschen?')
+            .then(function (input) {
+                if (input===1){
+                    let name = passwords[parseInt(page.data.id)][0]
+                    deletePassword(sessionStorage.getItem("user"), name)
+                    document.querySelector('#myNavigator').popPage()
+                    ons.notification.toast('Passwort wurde gelöscht!', {timeout: 3000})
+                }
+            })
+    }
+}
+
+export function onclickMoreButton(page){
+    return () => {
+        page.querySelector('#popover').show(page.querySelector('#moreButton'))
+    }
 }

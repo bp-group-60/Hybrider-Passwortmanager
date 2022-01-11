@@ -70,8 +70,8 @@ public class JavascriptHandler {
   }
 
   @JavascriptInterface
-  public boolean deletePassword(String user, String website, String loginName, String password) {
-    Password newPassword = new Password(user, website, loginName, password);
+  public boolean deletePassword(String user, String website) {
+    Password newPassword = new Password(user, website, "", "");
     try {
       passwordDao.deletePassword(newPassword);//TODO: DELETE gibt int zurück
     } catch (Exception e) {

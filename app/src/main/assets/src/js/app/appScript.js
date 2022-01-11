@@ -7,7 +7,9 @@ import {
 	editAbortOnclick,
 	onclickEditSave,
 	editButtonOnclick,
-	showPasswordOnclick
+	onclickDelete,
+	showPasswordOnclick,
+	onclickMoreButton
 } from "./onclick.js";
 import {getUrlList} from "./database/websiteOperations.js";
 
@@ -19,11 +21,13 @@ document.addEventListener('show', function(event) {
 
 	if (page.id === 'page1') {
 		updateList(user, password)
+		page.querySelector('#moreButton').onclick = onclickMoreButton(page)
 	}
 
 	if (page.id === 'passwordDetailed') {
 	  	page.querySelector('ons-toolbar .center').innerHTML = passwords[parseInt(page.data.id)][0]
-	  	//TODO: load Url from DB
+	  	page.querySelector('#moreButton').onclick = onclickMoreButton(page)
+
 		getUrlList(user, passwords[parseInt(page.data.id)][0]).forEach(url =>{
 			page.querySelector('#urlItems').append(createUrlItem(url))
 		})
@@ -37,7 +41,7 @@ document.addEventListener('show', function(event) {
 		page.querySelector('#addUrl').onclick = addUrlOnclick(page)
 		page.querySelector('#abortButton').onclick = editAbortOnclick(page)
 		page.querySelector('#commitButton').onclick = onclickEditSave(page)
-
+		page.querySelector('#deleteButton').onclick = onclickDelete(page)
 	}
 
 	if (page.id === 'addPassword') {

@@ -14,8 +14,8 @@ export function updatePassword(user, website, loginName, password) {
     return Java.updatePassword(user, website, loginName, password)
 }
 
-export function deletePassword(user, website, loginName, password) {
-    return Java.deletePassword(user, website, loginName, password)
+export function deletePassword(user, website) {
+    return Java.deletePassword(user, website)
 }
 
 export function hashPassword(password) {
