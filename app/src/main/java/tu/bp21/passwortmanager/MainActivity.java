@@ -40,8 +40,11 @@ public class MainActivity extends AppCompatActivity {
     webView.addJavascriptInterface(jsHandler, "Java");
     webView.loadUrl("https://appassets.androidplatform.net/assets/src/html/index.html");
 
+
     setContentView(webView);
+
   }
+
 
   @Override
   public void onBackPressed() {
