@@ -20,11 +20,11 @@ public class Password {
   @NonNull public String user;
   @NonNull public String websiteName;
   public String loginName;
-  public String password;
+  public byte[] password;
 
 
   public Password(
-          @NonNull String user, @NonNull String websiteName, String loginName, String password) {
+      @NonNull String user, @NonNull String websiteName, String loginName, byte[] password) {
     this.user = user;
     this.websiteName = websiteName;
     this.loginName = loginName;
