@@ -90,7 +90,10 @@ public class JavascriptHandler {
   @JavascriptInterface
   public String getPasswordList(String user, String hash) {
     ArrayList<String> list = new ArrayList<>();
-    passwordDao.getPasswordList(user).forEach(x -> list.add(x.toString()));
+    passwordDao.getPasswordList(user).forEach(x -> {
+      x.loginName = Crypto.decrypt(x.password);
+      list.add(x.toString());
+    });
     return "{\"dataArray\":" + list.toString() + "}";
   }
 
