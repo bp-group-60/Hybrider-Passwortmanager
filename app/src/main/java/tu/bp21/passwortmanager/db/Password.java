@@ -19,11 +19,11 @@ public class Password {
   @NonNull public String user;
   @NonNull public String website;
   public String loginName;
-  public String password;
+  public byte[] password;
 
 
   public Password(
-      @NonNull String user, @NonNull String website, String loginName, String password) {
+      @NonNull String user, @NonNull String website, String loginName, byte[] password) {
     this.user = user;
     this.website = website;
     this.loginName = loginName;
