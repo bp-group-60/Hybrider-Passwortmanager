@@ -13,10 +13,6 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
 
 import tu.bp21.passwortmanager.db.Password;
 import tu.bp21.passwortmanager.db.PasswordDao;
@@ -24,6 +20,7 @@ import tu.bp21.passwortmanager.db.PasswordDatabase;
 import tu.bp21.passwortmanager.db.User;
 
 public class JavascriptHandlerTest {
+    static boolean start=true;
     JavascriptHandler jsHandler;
     PasswordDao passwordDao;
 
@@ -38,18 +35,20 @@ public class JavascriptHandlerTest {
     public void initialise(){
         jsHandler = getmMainActivityRule().getActivity().getJavascriptHandler();
         passwordDao = Room.databaseBuilder(getmMainActivityRule().getActivity(), PasswordDatabase.class, "database")
-                    .allowMainThreadQueries()
-                    .build().getDao();
+                        .allowMainThreadQueries()
+                        .build().getDao();
+        //Clear Dummy-Data
+        if(passwordDao.getUser("testuser02Exists") != null)
+            passwordDao.deleteUser(passwordDao.getUser("testuser02Exists"));
+        if(passwordDao.getUser("testuser03Check") != null)
+            passwordDao.deleteUser(passwordDao.getUser("testuser03Check"));
+        if(passwordDao.getUser("testuser04Create") != null)
+            passwordDao.deleteUser(passwordDao.getUser("testuser04Create"));
+        if(passwordDao.getUser("testuser05CreatePwd") != null)
+            passwordDao.deleteUser(passwordDao.getUser("testuser05CreatePwd"));
+        if(passwordDao.getUser("testuser06getPwdList") != null)
+            passwordDao.deleteUser(passwordDao.getUser("testuser06getPwdList"));
     }
-
-    /*@After
-    public void tearDown() throws Exception {
-        passwordDao.deleteUser(passwordDao.getUser("testuser02Exists"));
-        passwordDao.deleteUser(passwordDao.getUser("testuser03Check"));
-        passwordDao.deleteUser(passwordDao.getUser("testuser04Create"));
-        passwordDao.deleteUser(passwordDao.getUser("testuser05CreatePwd"));
-        passwordDao.deleteUser(passwordDao.getUser("testuser06getPwdList"));
-    }*/
 
     @Test
     public void existUser() {
