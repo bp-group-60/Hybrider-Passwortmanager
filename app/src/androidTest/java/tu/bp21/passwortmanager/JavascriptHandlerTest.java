@@ -2,13 +2,10 @@ package tu.bp21.passwortmanager;
 
 import static org.junit.Assert.*;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.room.Room;
 import androidx.test.rule.ActivityTestRule;
 
 import org.junit.Before;
-import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -20,7 +17,6 @@ import tu.bp21.passwortmanager.db.PasswordDatabase;
 import tu.bp21.passwortmanager.db.User;
 
 public class JavascriptHandlerTest {
-    static boolean start=true;
     JavascriptHandler jsHandler;
     PasswordDao passwordDao;
 
@@ -51,14 +47,14 @@ public class JavascriptHandlerTest {
     }
 
     @Test
-    public void existUser() {
+    public void testExistUser() {
         passwordDao.addUser(new User("testuser02Exists", "testuser02@Exists.de", "023456789012"));
         assertFalse(jsHandler.existUser("testuser01NExist"));
         assertTrue(jsHandler.existUser("testuser02Exists"));
     }
 
     @Test
-    public void checkUser() {
+    public void testCheckUser() {
         passwordDao.addUser(new User("testuser03Check", "testuser03@Check.de", "034567890123"));
         jsHandler.checkUser("testuser03Check","034567890123");
         assertFalse(jsHandler.checkUser("testuser03Check","12345678012"));
@@ -67,7 +63,7 @@ public class JavascriptHandlerTest {
     }
 
     @Test
-    public void createUser() {
+    public void testCreateUser() {
         assertTrue(passwordDao.getUser("testuser04Create") == null);
         jsHandler.createUser("testuser04Create", "testuser04@Create.de", "045678901234");
         assertTrue(passwordDao.getUser("testuser04Create") != null);
@@ -77,7 +73,7 @@ public class JavascriptHandlerTest {
     }
 
     @Test
-    public void createPassword() {
+    public void testCreatePassword() {
         passwordDao.addUser(new User("testuser05CreatePwd", "testuser05@CreatePwd.de", "056789012345"));
         boolean worked = jsHandler.createPassword("testuser05CreatePwd", "youtube.com", "user05LoginName", "Pwd012345");
         assertTrue(worked);
@@ -87,7 +83,7 @@ public class JavascriptHandlerTest {
     }
 
     @Test
-    public void getPasswordList() {
+    public void testGetPasswordList() {
         passwordDao.addUser(new User("testuser06getPwdList", "testuser06@getPasswordList.de", "067890123456"));
         ArrayList<Password> list = new ArrayList<Password>();
         list.add(new Password("testuser06getPwdList", "App01", "appuser01", "apppassword01"));
