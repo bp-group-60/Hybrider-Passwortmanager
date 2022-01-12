@@ -67,11 +67,13 @@ Java_tu_bp21_passwortmanager_Crypto_crypt(JNIEnv *env, jobject thiz, jbyteArray 
 JNIEXPORT jbyteArray JNICALL
 Java_tu_bp21_passwortmanager_Crypto_generateKey(JNIEnv *env, jobject thiz, jbyteArray input,
                                                 jint input_length, jbyteArray salt, jint salt_length, jint iterations) {
+    jbyte  *input_ptr = (*env)->GetByteArrayElements(env , input, 0);
+    jbyte  *salt_ptr = (*env)->GetByteArrayElements(env , salt, 0);
     int output_length = 32;
     jbyte *output = calloc (output_length, sizeof (jbyte));
 
     //generate key with sha3_256
-    PKCS5_PBKDF2_HMAC(input, input_length, salt, salt_length, iterations, EVP_sha3_256(), output_length, output);
+    PKCS5_PBKDF2_HMAC(input_ptr, input_length, salt_ptr, salt_length, iterations, EVP_sha3_256(), output_length, output);
 
     //store in jbyteArray for return
     jbyteArray output_array = (jbyteArray) (*env)->NewByteArray(env, output_length);
