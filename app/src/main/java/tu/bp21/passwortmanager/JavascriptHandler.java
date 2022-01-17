@@ -42,6 +42,21 @@ public class JavascriptHandler {
   }
 
   @JavascriptInterface
+  public boolean deleteUser(String user, String hash){
+    User newUser = new User(user, hash);
+
+    try {
+      if(passwordDao.deleteUser(newUser) == 0)
+        throw new RuntimeException("nothing was deleted");
+    } catch (Exception e) {
+      e.printStackTrace();
+      return false;
+    }
+
+    return true;
+  }
+
+  @JavascriptInterface
   public boolean createPassword(String user, String website, String loginName, String password) {
     Password newPassword = new Password(user, website, loginName, password);
 
@@ -73,7 +88,8 @@ public class JavascriptHandler {
   public boolean deletePassword(String user, String website) {
     Password newPassword = new Password(user, website, "", "");
     try {
-      passwordDao.deletePassword(newPassword);//TODO: DELETE gibt int zurück
+      if(passwordDao.deletePassword(newPassword) == 0)
+        throw new RuntimeException("nothing was deleted");
     } catch (Exception e) {
       e.printStackTrace();
       return false;
@@ -108,7 +124,8 @@ public class JavascriptHandler {
     Website newUrl = new Website(user, website, url);
 
     try {
-      passwordDao.deleteWebsite(newUrl);//TODO: DELETE gibt int zurück
+      if(passwordDao.deleteWebsite(newUrl) == 0)
+        throw new RuntimeException("nothing was deleted");
     } catch (Exception e) {
       e.printStackTrace();
       return false;

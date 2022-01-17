@@ -1,6 +1,7 @@
 import {createPassword, deletePassword, getPasswords, passwords, updatePassword} from "./database/passwordOperations.js"
 import {deleteUrlList, getUrlList, saveUrlList} from "./database/websiteOperations.js"
 import {createUrlItem, getAddedUrls, getRemovedUrls, restoreUrl} from "./onclick/onclickUrl.js";
+import {deleteUser} from "./database/userOperations.js";
 
 export function addPasswordCommitButtonOnclick(page) {
     return () => {
@@ -108,6 +109,18 @@ export function onclickDeletePassword(page){
                     deletePassword(sessionStorage.getItem("user"), name)
                     document.querySelector('#myNavigator').popPage()
                     ons.notification.toast('Passwort wurde gelöscht!', {timeout: 3000})
+                }
+            })
+    }
+}
+
+export function onclickDeleteUser(page){
+    return () => {
+        ons.notification.confirm('Benutzer wirklich löschen?')
+            .then(function (input) {
+                if (input===1){
+                    deleteUser(sessionStorage.getItem("user"), sessionStorage.getItem("password"))
+                    history.back()
                 }
             })
     }

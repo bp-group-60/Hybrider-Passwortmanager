@@ -7,7 +7,8 @@ import {
 	editButtonOnclick,
 	onclickDeletePassword,
 	showPasswordOnclick,
-	onclickMoreButton
+	onclickMoreButton,
+	onclickDeleteUser
 } from "./onclick.js";
 import {getUrlList} from "./database/websiteOperations.js";
 import {addUrlOnclick, createUrlItem} from "./onclick/onclickUrl.js";
@@ -21,6 +22,7 @@ document.addEventListener('show', function(event) {
 	if (page.id === 'listview') {
 		updateList(user, password)
 		page.querySelector('#moreButton').onclick = onclickMoreButton(page)
+		page.querySelector('#deleteUser').onclick = onclickDeleteUser(page)
 	}
 
 	if (page.id === 'passwordDetailed') {

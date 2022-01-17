@@ -9,3 +9,7 @@ export function checkUser(user, password) {
 export function createUser(user, email, password) {
     return Java.createUser(user, email, password);
 }
+
+export function deleteUser(user, password) {
+    return Java.deleteUser(user, password);
+}
