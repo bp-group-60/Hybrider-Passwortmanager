@@ -2,16 +2,15 @@ import {updateList} from "./listviewHandler.js";
 import {passwords} from "./database/passwordOperations.js";
 import {
 	addPasswordCommitButtonOnclick,
-	addUrlOnclick,
-	createUrlItem,
 	editAbortOnclick,
 	onclickEditSave,
 	editButtonOnclick,
-	onclickDelete,
+	onclickDeletePassword,
 	showPasswordOnclick,
 	onclickMoreButton
 } from "./onclick.js";
 import {getUrlList} from "./database/websiteOperations.js";
+import {addUrlOnclick, createUrlItem} from "./onclick/onclickUrl.js";
 
 const user = sessionStorage.getItem("user")
 const password = sessionStorage.getItem("password")
@@ -19,14 +18,13 @@ const password = sessionStorage.getItem("password")
 document.addEventListener('show', function(event) {
 	let page = event.target
 
-	if (page.id === 'page1') {
+	if (page.id === 'listview') {
 		updateList(user, password)
 		page.querySelector('#moreButton').onclick = onclickMoreButton(page)
 	}
 
 	if (page.id === 'passwordDetailed') {
 	  	page.querySelector('ons-toolbar .center').innerHTML = passwords[parseInt(page.data.id)][0]
-	  	page.querySelector('#moreButton').onclick = onclickMoreButton(page)
 
 		getUrlList(user, passwords[parseInt(page.data.id)][0]).forEach(url =>{
 			page.querySelector('#urlItems').append(createUrlItem(url))
@@ -41,7 +39,7 @@ document.addEventListener('show', function(event) {
 		page.querySelector('#addUrl').onclick = addUrlOnclick(page)
 		page.querySelector('#abortButton').onclick = editAbortOnclick(page)
 		page.querySelector('#commitButton').onclick = onclickEditSave(page)
-		page.querySelector('#deleteButton').onclick = onclickDelete(page)
+		page.querySelector('#deleteButton').onclick = onclickDeletePassword(page)
 	}
 
 	if (page.id === 'addPassword') {

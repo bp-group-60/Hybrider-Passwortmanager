@@ -1,5 +1,6 @@
-import {createPassword, getPasswords, passwords, updatePassword, deletePassword} from "./database/passwordOperations.js"
-import {saveUrlList, deleteUrlList, getUrlList} from "./database/websiteOperations.js"
+import {createPassword, deletePassword, getPasswords, passwords, updatePassword} from "./database/passwordOperations.js"
+import {deleteUrlList, getUrlList, saveUrlList} from "./database/websiteOperations.js"
+import {createUrlItem, getAddedUrls, getRemovedUrls, restoreUrl} from "./onclick/onclickUrl.js";
 
 export function addPasswordCommitButtonOnclick(page) {
     return () => {
@@ -23,32 +24,11 @@ export function addPasswordCommitButtonOnclick(page) {
     };
 }
 
-export function addUrlOnclick(page) {
-    return () => {
-        let newItem = ons.createElement('<ons-list-item data-unsaved="true" data-removed="false" modifier="nodivider">')
-        let urlInput = ons.createElement('<ons-input modifier="underbar" placeholder="Url" float>')
-
-        let rightContent = ons.createElement('<div class="right">')
-        let removeIcon = ons.createElement('<ons-icon class="removeIcon" icon="md-minus-circle">')
-            removeIcon.style.color = 'red'
-            removeIcon.onclick = () => {
-                newItem.remove()
-            }
-
-        rightContent.append(removeIcon)
-
-        newItem.append(urlInput)
-        newItem.append(rightContent)
-        page.querySelector('#urlItems').append(newItem)
-    };
-}
-
 export function editButtonOnclick(page) {
     return () => {
         page.querySelector('#editButton').style.display = 'none'
         page.querySelector('#abortButton').style.display = ''
         page.querySelector('#commitButton').style.display = ''
-        page.querySelector('#deleteWrapper').style.display = ''
 
         page.querySelector('#addUrl').style.display = ''
         page.querySelectorAll('.removeIcon').forEach(icon => icon.style.display = '')
@@ -66,7 +46,6 @@ export function editAbortOnclick(page) {
         page.querySelector('#editButton').style.display = ''
         page.querySelector('#abortButton').style.display = 'none'
         page.querySelector('#commitButton').style.display = 'none'
-        page.querySelector('#deleteWrapper').style.display = 'none'
 
         page.querySelector('#addUrl').style.display = 'none'
         page.querySelector('#username').children[0].readOnly = true
@@ -81,18 +60,6 @@ export function editAbortOnclick(page) {
     };
 }
 
-function restoreUrl (element){
-    if(element.getAttribute('data-unsaved')==='true'){
-        if(element.getAttribute('data-removed')==='true'){
-            element.setAttribute('data-unsaved', 'false')
-            element.setAttribute('data-removed', 'false')
-            element.style.display = ''
-        }else{
-            element.remove()
-        }
-    }
-}
-
 export function showPasswordOnclick(page){
     return () => {
         if(page.querySelector('#passwordCheckbox').checked){
@@ -101,24 +68,6 @@ export function showPasswordOnclick(page){
             page.querySelector('#password').children[0].type = 'password'
         }
     };
-}
-
-export function createUrlItem(url){
-    let listItem = ons.createElement('<ons-list-item data-unsaved="false" data-removed="false" modifier="nodivider">')
-    listItem.innerText = url
-    let rightContent = ons.createElement('<div class="right">')
-    let removeIcon = ons.createElement('<ons-icon class="removeIcon" icon="md-minus-circle">')
-    removeIcon.style.display = 'none'
-    removeIcon.style.color = 'red'
-    removeIcon.onclick = () => {
-        listItem.style.display = 'none'
-        listItem.setAttribute('data-unsaved','true')
-        listItem.setAttribute('data-removed','true')
-    }
-
-    rightContent.append(removeIcon)
-    listItem.append(rightContent)
-    return listItem
 }
 
 export function onclickEditSave(page){
@@ -150,29 +99,7 @@ export function onclickEditSave(page){
     };
 }
 
-function getAddedUrls(page) {
-    let a = []
-    page.querySelector('#urlItems').childNodes.forEach(item => {
-        if (item.getAttribute('data-unsaved') === 'true' &&
-            item.getAttribute('data-removed') === 'false') {
-            a.push(item.querySelector('ons-input').value)
-        }
-    })
-    return a.filter(elm => elm !== '')
-}
-
-function getRemovedUrls(page) {
-    let a = []
-    page.querySelector('#urlItems').childNodes.forEach(item => {
-        if (item.getAttribute('data-unsaved') === 'true' &&
-            item.getAttribute('data-removed') === 'true') {
-            a.push(item.innerText)
-        }
-    })
-    return a
-}
-
-export function onclickDelete(page){
+export function onclickDeletePassword(page){
     return () => {
         ons.notification.confirm('Passwort wirklich löschen?')
             .then(function (input) {
