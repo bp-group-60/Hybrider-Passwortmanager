@@ -91,7 +91,6 @@ public class JavascriptHandler {
   public String getPasswordList(String user, String hash) {
     ArrayList<String> list = new ArrayList<>();
     passwordDao.getPasswordList(user).forEach(x -> {
-      x.loginName = Crypto.decrypt(x.password);
       list.add(x.toString());
     });
     return "{\"dataArray\":" + list.toString() + "}";

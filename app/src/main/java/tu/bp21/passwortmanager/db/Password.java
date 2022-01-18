@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 
+import tu.bp21.passwortmanager.Crypto;
+
 @Entity(
         primaryKeys = {"user", "websiteName"},
         foreignKeys = {
@@ -37,6 +39,6 @@ public class Password {
 
   @Override
   public String toString() {
-    return "[\"" + websiteName + "\",\"" + loginName + "\",\"" + password + "\"]";
+    return "[\"" + websiteName + "\",\"" + loginName + "\",\"" + Crypto.decrypt(password) + "\"]";
   }
 }
