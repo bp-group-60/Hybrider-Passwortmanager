@@ -17,6 +17,7 @@ public class User {
     this.email = email;
     this.password = password;
   }
+
   @Ignore
   public User(@NonNull String username, String password) {
     this.username = username;

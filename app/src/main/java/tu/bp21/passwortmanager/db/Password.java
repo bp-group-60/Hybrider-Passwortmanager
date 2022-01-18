@@ -5,16 +5,15 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 
 @Entity(
-        primaryKeys = {"user", "websiteName"},
-        foreignKeys = {
-                @ForeignKey(
-                        entity = User.class,
-                        parentColumns = "username",
-                        childColumns = "user",
-                        onDelete = ForeignKey.CASCADE,
-                        onUpdate = ForeignKey.CASCADE
-                )
-        })
+    primaryKeys = {"user", "websiteName"},
+    foreignKeys = {
+      @ForeignKey(
+          entity = User.class,
+          parentColumns = "username",
+          childColumns = "user",
+          onDelete = ForeignKey.CASCADE,
+          onUpdate = ForeignKey.CASCADE)
+    })
 public class Password {
 
   @NonNull public String user;
@@ -23,7 +22,7 @@ public class Password {
   public String password;
 
   public Password(
-          @NonNull String user, @NonNull String websiteName, String loginName, String password) {
+      @NonNull String user, @NonNull String websiteName, String loginName, String password) {
     this.user = user;
     this.websiteName = websiteName;
     this.loginName = loginName;

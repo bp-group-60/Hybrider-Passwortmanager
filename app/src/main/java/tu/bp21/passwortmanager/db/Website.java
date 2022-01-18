@@ -5,30 +5,29 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 
 @Entity(
-        primaryKeys = {"user", "website", "url"},
-        foreignKeys = {
-                @ForeignKey(
-                        entity = Password.class,
-                        parentColumns = {"user", "websiteName"},
-                        childColumns = {"user", "website"},
-                        onDelete = ForeignKey.CASCADE,
-                        onUpdate = ForeignKey.CASCADE
-                )
-        })
+    primaryKeys = {"user", "website", "url"},
+    foreignKeys = {
+      @ForeignKey(
+          entity = Password.class,
+          parentColumns = {"user", "websiteName"},
+          childColumns = {"user", "website"},
+          onDelete = ForeignKey.CASCADE,
+          onUpdate = ForeignKey.CASCADE)
+    })
 public class Website {
-    @NonNull public String website;
-    @NonNull public String user;
+  @NonNull public String website;
+  @NonNull public String user;
 
-    @NonNull public String url;
+  @NonNull public String url;
 
-    public Website(@NonNull String user, @NonNull String website, @NonNull String url){
-        this.user = user;
-        this.website = website;
-        this.url = url;
-    }
+  public Website(@NonNull String user, @NonNull String website, @NonNull String url) {
+    this.user = user;
+    this.website = website;
+    this.url = url;
+  }
 
-    @Override
-    public String toString(){
-        return "\"" + url + "\"";
-    }
+  @Override
+  public String toString() {
+    return "\"" + url + "\"";
+  }
 }

@@ -42,12 +42,11 @@ public class JavascriptHandler {
   }
 
   @JavascriptInterface
-  public boolean deleteUser(String user, String hash){
+  public boolean deleteUser(String user, String hash) {
     User newUser = new User(user, hash);
 
     try {
-      if(passwordDao.deleteUser(newUser) == 0)
-        throw new RuntimeException("nothing was deleted");
+      if (passwordDao.deleteUser(newUser) == 0) throw new RuntimeException("nothing was deleted");
     } catch (Exception e) {
       e.printStackTrace();
       return false;
@@ -88,7 +87,7 @@ public class JavascriptHandler {
   public boolean deletePassword(String user, String website) {
     Password newPassword = new Password(user, website, "", "");
     try {
-      if(passwordDao.deletePassword(newPassword) == 0)
+      if (passwordDao.deletePassword(newPassword) == 0)
         throw new RuntimeException("nothing was deleted");
     } catch (Exception e) {
       e.printStackTrace();
@@ -124,8 +123,7 @@ public class JavascriptHandler {
     Website newUrl = new Website(user, website, url);
 
     try {
-      if(passwordDao.deleteWebsite(newUrl) == 0)
-        throw new RuntimeException("nothing was deleted");
+      if (passwordDao.deleteWebsite(newUrl) == 0) throw new RuntimeException("nothing was deleted");
     } catch (Exception e) {
       e.printStackTrace();
       return false;
@@ -135,7 +133,7 @@ public class JavascriptHandler {
   }
 
   @JavascriptInterface
-  public String getUrlList(String user, String website){
+  public String getUrlList(String user, String website) {
     ArrayList<String> list = new ArrayList<>();
     passwordDao.getWebsiteList(user, website).forEach(x -> list.add(x.toString()));
     return "{\"dataArray\":" + list.toString() + "}";
