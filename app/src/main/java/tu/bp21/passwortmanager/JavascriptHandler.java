@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import tu.bp21.passwortmanager.db.Password;
 import tu.bp21.passwortmanager.db.PasswordDao;
 import tu.bp21.passwortmanager.db.User;
+import tu.bp21.passwortmanager.db.Website;
 
 /** Framework that can be used in JavaScript. */
 public class JavascriptHandler {
@@ -41,6 +42,21 @@ public class JavascriptHandler {
   }
 
   @JavascriptInterface
+  public boolean deleteUser(String user, String hash){
+    User newUser = new User(user, hash);
+
+    try {
+      if(passwordDao.deleteUser(newUser) == 0)
+        throw new RuntimeException("nothing was deleted");
+    } catch (Exception e) {
+      e.printStackTrace();
+      return false;
+    }
+
+    return true;
+  }
+
+  @JavascriptInterface
   public boolean createPassword(String user, String website, String loginName, String password) {
     Password newPassword = new Password(user, website, loginName, password);
 
@@ -55,9 +71,73 @@ public class JavascriptHandler {
   }
 
   @JavascriptInterface
+  public boolean updatePassword(String user, String website, String loginName, String password) {
+    Password newPassword = new Password(user, website, loginName, password);
+
+    try {
+      passwordDao.updatePassword(newPassword);
+    } catch (Exception e) {
+      e.printStackTrace();
+      return false;
+    }
+
+    return true;
+  }
+
+  @JavascriptInterface
+  public boolean deletePassword(String user, String website) {
+    Password newPassword = new Password(user, website, "", "");
+    try {
+      if(passwordDao.deletePassword(newPassword) == 0)
+        throw new RuntimeException("nothing was deleted");
+    } catch (Exception e) {
+      e.printStackTrace();
+      return false;
+    }
+
+    return true;
+  }
+
+  @JavascriptInterface
   public String getPasswordList(String user, String hash) {
     ArrayList<String> list = new ArrayList<>();
     passwordDao.getPasswordList(user).forEach(x -> list.add(x.toString()));
+    return "{\"dataArray\":" + list.toString() + "}";
+  }
+
+  @JavascriptInterface
+  public boolean saveUrl(String user, String website, String url) {
+    Website newUrl = new Website(user, website, url);
+
+    try {
+      passwordDao.addWebsite(newUrl);
+    } catch (Exception e) {
+      e.printStackTrace();
+      return false;
+    }
+
+    return true;
+  }
+
+  @JavascriptInterface
+  public boolean deleteUrl(String user, String website, String url) {
+    Website newUrl = new Website(user, website, url);
+
+    try {
+      if(passwordDao.deleteWebsite(newUrl) == 0)
+        throw new RuntimeException("nothing was deleted");
+    } catch (Exception e) {
+      e.printStackTrace();
+      return false;
+    }
+
+    return true;
+  }
+
+  @JavascriptInterface
+  public String getUrlList(String user, String website){
+    ArrayList<String> list = new ArrayList<>();
+    passwordDao.getWebsiteList(user, website).forEach(x -> list.add(x.toString()));
     return "{\"dataArray\":" + list.toString() + "}";
   }
 }

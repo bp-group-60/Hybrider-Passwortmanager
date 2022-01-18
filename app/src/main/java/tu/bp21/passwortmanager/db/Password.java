@@ -5,36 +5,37 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 
 @Entity(
-    primaryKeys = {"user", "website"},
-    foreignKeys = {
-      @ForeignKey(
-          entity = User.class,
-          parentColumns = "username",
-          childColumns = "user",
-          onDelete = ForeignKey.CASCADE,
-          onUpdate = ForeignKey.CASCADE)
-    })
+        primaryKeys = {"user", "websiteName"},
+        foreignKeys = {
+                @ForeignKey(
+                        entity = User.class,
+                        parentColumns = "username",
+                        childColumns = "user",
+                        onDelete = ForeignKey.CASCADE,
+                        onUpdate = ForeignKey.CASCADE
+                )
+        })
 public class Password {
 
   @NonNull public String user;
-  @NonNull public String website;
+  @NonNull public String websiteName;
   public String loginName;
   public String password;
 
   public Password(
-      @NonNull String user, @NonNull String website, String loginName, String password) {
+          @NonNull String user, @NonNull String websiteName, String loginName, String password) {
     this.user = user;
-    this.website = website;
+    this.websiteName = websiteName;
     this.loginName = loginName;
     this.password = password;
   }
 
   public String toSecureString() {
-    return "[\"" + website + "\",\"" + loginName + "\"]";
+    return "[\"" + websiteName + "\",\"" + loginName + "\"]";
   }
 
   @Override
   public String toString() {
-    return "[\"" + website + "\",\"" + loginName + "\",\"" + password + "\"]";
+    return "[\"" + websiteName + "\",\"" + loginName + "\",\"" + password + "\"]";
   }
 }

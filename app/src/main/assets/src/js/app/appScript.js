@@ -1,5 +1,17 @@
 import {updateList} from "./listviewHandler.js";
-import {createPassword, passwords} from "./database/passwordOperations.js";
+import {passwords} from "./database/passwordOperations.js";
+import {
+	addPasswordCommitButtonOnclick,
+	editAbortOnclick,
+	onclickEditSave,
+	editButtonOnclick,
+	onclickDeletePassword,
+	showPasswordOnclick,
+	onclickMoreButton,
+	onclickDeleteUser
+} from "./onclick.js";
+import {getUrlList} from "./database/websiteOperations.js";
+import {addUrlOnclick, createUrlItem} from "./onclick/onclickUrl.js";
 
 const user = sessionStorage.getItem("user")
 const password = sessionStorage.getItem("password")
@@ -7,36 +19,34 @@ const password = sessionStorage.getItem("password")
 document.addEventListener('show', function(event) {
 	let page = event.target
 
-	if (page.id === 'page1') {
+	if (page.id === 'listview') {
 		updateList(user, password)
+		page.querySelector('#moreButton').onclick = onclickMoreButton(page)
+		page.querySelector('#deleteUser').onclick = onclickDeleteUser(page)
 	}
 
-	if (page.id === 'page2') {
-	  	page.querySelector('ons-toolbar .center').innerHTML = page.data.title
-		page.querySelector('#website').value = passwords[parseInt(page.data.id)][0]
+	if (page.id === 'passwordDetailed') {
+	  	page.querySelector('ons-toolbar .center').innerHTML = passwords[parseInt(page.data.id)][0]
+
+		getUrlList(user, passwords[parseInt(page.data.id)][0]).forEach(url =>{
+			page.querySelector('#urlItems').append(createUrlItem(url))
+		})
+
 		page.querySelector('#username').value = passwords[parseInt(page.data.id)][1]
 		page.querySelector('#password').value = passwords[parseInt(page.data.id)][2]
+        page.querySelector('#passwordCheckbox').onclick = showPasswordOnclick(page)
+
+		page.querySelector('#editButton').onclick = editButtonOnclick(page)
+
+		page.querySelector('#addUrl').onclick = addUrlOnclick(page)
+		page.querySelector('#abortButton').onclick = editAbortOnclick(page)
+		page.querySelector('#commitButton').onclick = onclickEditSave(page)
+		page.querySelector('#deleteButton').onclick = onclickDeletePassword(page)
 	}
 
 	if (page.id === 'addPassword') {
-		page.querySelector('#commitButton').onclick = () => {
-
-		    console.log('TODO: validate data')
-
-			let website = document.getElementById('website').value
-			let loginName = document.getElementById('username').value
-			let password = document.getElementById('password').value
-			let successful = createPassword(user, website, loginName, password)
-
-			if(successful){
-			    document.querySelector('#myNavigator').popPage()
-			    ons.notification.toast('Passwort hinzugefügt!', {timeout: 3000})
-			} else {
-				//TODO: error message
-			    console.log('TODO: error message')
-			}
-
-		}
+		page.querySelector('#addUrl').onclick = addUrlOnclick(page)
+		page.querySelector('#commitButton').onclick = addPasswordCommitButtonOnclick(page)
 
 	}
   })
