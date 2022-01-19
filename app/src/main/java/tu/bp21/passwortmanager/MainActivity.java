@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
   @SuppressLint("SetJavaScriptEnabled")
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
+    /*
     String input = "Rightig verschluesselt";
     String password = "abcdef123";
     Crypto.setSalt(Crypto.generateSalt(16));
@@ -31,15 +31,15 @@ public class MainActivity extends AppCompatActivity {
     byte[] cipher = Crypto.encrypt(input);
     String text = Crypto.decrypt(cipher);
     System.out.println(text);
-
+    */
     if (getSupportActionBar() != null) {
       getSupportActionBar().hide();
     }
 
     // if your build is in debug mode, enable WebViews inspection
-    if (0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE)) {
+    /*if (0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE)) {
       WebView.setWebContentsDebuggingEnabled(true);
-    }
+    }*/
 
     PasswordDatabase database =
         Room.databaseBuilder(this, PasswordDatabase.class, "database")

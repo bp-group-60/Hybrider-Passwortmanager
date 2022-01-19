@@ -9,6 +9,7 @@ public class Crypto {
     private static native byte[] crypt(byte[] input, byte[] key, boolean shouldEncrypt);
     private static native byte[] generateKey(byte[] input, int input_length, byte[] salt, int salt_length, int iterations);
     public static native byte[] generateSalt(int size);
+    private static native byte[] hash(byte[] input, int input_length, byte[] salt, int salt_length);
 
     public static void setKey(String password){
         int iterations = 1000000;
@@ -29,4 +30,10 @@ public class Crypto {
         byte[] text = crypt(cipher, key, false);
         return new String(text);
     }
+
+    public static byte[] computeHash(String password){
+        byte[] input = password.getBytes();
+        return hash(input, input.length, salt, salt.length);
+    }
+
 }

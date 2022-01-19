@@ -4,6 +4,7 @@ import android.webkit.JavascriptInterface;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import tu.bp21.passwortmanager.db.Password;
 import tu.bp21.passwortmanager.db.PasswordDao;
@@ -26,12 +27,21 @@ public class JavascriptHandler {
   @JavascriptInterface
   public boolean checkUser(String username, String hash) {
     User user = passwordDao.getUser(username);
-    return user != null && user.password.equals(hash);
+    if(user != null) {
+      Crypto.setSalt(Arrays.copyOf(user.password, 16));
+      if(Arrays.equals(user.password, Crypto.computeHash(hash))) {
+        Crypto.setKey(hash);
+        return true;
+      }
+    }
+    return false;
   }
 
   @JavascriptInterface
   public boolean createUser(String user, String email, String hash) {
-    User newUser = new User(user, email, hash);
+    Crypto.setSalt(Crypto.generateSalt(16));
+    byte[] hashValue = Crypto.computeHash(hash);
+    User newUser = new User(user, email, hashValue);
 
     try {
       passwordDao.addUser(newUser);

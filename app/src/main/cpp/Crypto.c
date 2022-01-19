@@ -1,6 +1,6 @@
 #include <jni.h>
 #include "/include/openssl/aes.h"
-#include "/include/openssl/evp.h"
+//#include "/include/openssl/evp.h"
 #include "include/openssl/ossl_typ.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,6 +9,10 @@
 #include <openssl/rand.h>
 #include <openssl/crypto.h>
 #include <openssl/sha.h>
+#include <openssl/evp.h>
+#include <openssl/kdf.h>
+#include <math.h>
+
 
 
 JNIEXPORT jbyteArray JNICALL
@@ -100,4 +104,41 @@ Java_tu_bp21_passwortmanager_Crypto_generateSalt(JNIEnv *env, jclass clazz, jint
     free( output );
 
     return output_array;
+}
+
+JNIEXPORT jbyteArray JNICALL
+Java_tu_bp21_passwortmanager_Crypto_hash(JNIEnv *env, jclass clazz, jbyteArray input,
+                                         jint input_length, jbyteArray salt, jint salt_length) {
+    jbyte  *input_ptr = (*env)->GetByteArrayElements(env , input, 0);
+    jbyte  *salt_ptr = (*env)->GetByteArrayElements(env , salt, 0);
+    size_t output_length = 64;
+    jbyte *output = calloc (output_length + salt_length, sizeof (jbyte));
+    memcpy(output, salt_ptr, salt_length);
+    unsigned char out[64];
+    int i;
+
+    EVP_PKEY_CTX *ctx = EVP_PKEY_CTX_new_id(EVP_PKEY_SCRYPT, NULL);
+    EVP_PKEY_derive_init(ctx);
+    EVP_PKEY_CTX_set1_pbe_pass(ctx, input_ptr, input_length);
+    EVP_PKEY_CTX_set1_scrypt_salt(ctx, salt_ptr, salt_length);
+
+    EVP_PKEY_CTX_set_scrypt_N(ctx, (int) pow(2, 19));
+    EVP_PKEY_CTX_set_scrypt_r(ctx, 8);
+    EVP_PKEY_CTX_set_scrypt_p(ctx, 1);
+
+    i = EVP_PKEY_derive(ctx, &output[salt_length], &output_length);
+    //__android_log_print(ANDROID_LOG_INFO, "MyTag", "The value is %d", i);
+
+    EVP_PKEY_CTX_free(ctx);
+
+    jbyteArray output_array = (jbyteArray) (*env)->NewByteArray(env, output_length+salt_length);
+    (*env)->SetByteArrayRegion(env, output_array, 0, output_length+salt_length, (jbyte *) output);
+
+    //release memory
+    free( output );
+    free(input_ptr);
+    free(salt_ptr);
+
+    return output_array;
+
 }
