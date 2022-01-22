@@ -21,4 +21,5 @@ export function deletePassword(user, website) {
 export function hashPassword(password) {
     //Anfrage an C
     //hashedPassword = C.hashPassword(password)
+    return password
 }

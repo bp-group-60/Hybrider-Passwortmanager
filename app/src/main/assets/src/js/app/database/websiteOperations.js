@@ -7,7 +7,7 @@ export function saveUrlList(user, website, list){
 }
 
 export function saveUrl(user, website, url){
-    Java.saveUrl(user, website, url)
+    return Java.saveUrl(user, website, url)
 }
 
 export function deleteUrlList(user, website, list){
@@ -15,5 +15,5 @@ export function deleteUrlList(user, website, list){
 }
 
 export function deleteUrl(user, website, url){
-    Java.deleteUrl(user, website, url)
+    return Java.deleteUrl(user, website, url)
 }
