@@ -1,30 +1,30 @@
-import {addOnclickListview, updateListview} from "./ui/listviewHandler.js"
-import {addOnclickPasswordView, updatePasswordView} from "./ui/passwordViewHandler.js"
-import {addOnclickAddPasswordView} from "./ui/addPasswordViewHandler.js"
+import {addOnclickListview, updateListview} from './ui/listviewHandler.js';
+import {addOnclickPasswordView, updatePasswordView} from './ui/passwordViewHandler.js';
+import {addOnclickAddPasswordView} from './ui/addPasswordViewHandler.js';
 
-import {getSessionPassword, getSessionUser} from "./sessionHandler.js"
+import {getSessionPassword, getSessionUser} from './sessionHandler.js';
 
-document.addEventListener('show', function(event) {
-	let page = event.target
+document.addEventListener('show', function (event) {
+  let page = event.target;
 
-	if (page.id === 'listview') {
-		updateListview(getSessionUser(), getSessionPassword())
-	}
-})
+  if (page.id === 'listview') {
+    updateListview(getSessionUser(), getSessionPassword());
+  }
+});
 
-document.addEventListener('init', function(event) {
-	let page = event.target
+document.addEventListener('init', function (event) {
+  let page = event.target;
 
-	if (page.id === 'listview') {
-		addOnclickListview(page)
-	}
+  if (page.id === 'listview') {
+    addOnclickListview(page);
+  }
 
-	if (page.id === 'passwordView') {
-		addOnclickPasswordView(page)
-		updatePasswordView(page)
-	}
+  if (page.id === 'passwordView') {
+    addOnclickPasswordView(page);
+    updatePasswordView(page);
+  }
 
-	if (page.id === 'addPassword') {
-		addOnclickAddPasswordView(page)
-	}
-  })
+  if (page.id === 'addPassword') {
+    addOnclickAddPasswordView(page);
+  }
+});

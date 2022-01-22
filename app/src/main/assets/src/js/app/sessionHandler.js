@@ -1,14 +1,14 @@
 export function getSessionUser() {
-    return sessionStorage.getItem("user")
+  return sessionStorage.getItem("user");
 }
 
 export function getSessionPassword() {
-    return sessionStorage.getItem("password")
+  return sessionStorage.getItem("password");
 }
 
-export function logout(){
-    sessionStorage.clear()
-    history.back()
+export function logout() {
+  sessionStorage.clear();
+  history.back();
 }
 
 //TODO: resolve "passwords" use here
