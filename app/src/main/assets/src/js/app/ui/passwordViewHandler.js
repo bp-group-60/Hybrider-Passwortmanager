@@ -1,5 +1,5 @@
 import {addUrlOnclick} from './onclick/onclickUrl.js';
-import {passwords} from '../database/passwordOperations.js';
+import {getLoginName, getPassword} from '../database/passwordOperations.js';
 import {getUrlList} from '../database/websiteOperations.js';
 import {getSessionUser} from '../sessionHandler.js';
 import {
@@ -31,13 +31,13 @@ export function updatePasswordView(page) {
   page.querySelector('#username').children[0].readOnly = true;
   page.querySelector('#password').children[0].readOnly = true;
 
-  page.querySelector('ons-toolbar .center').innerHTML = passwords[parseInt(page.data.id)][0];
+  page.querySelector('ons-toolbar .center').innerHTML = page.data.id;
 
   page.querySelector('#urlItems').innerHTML = '';
-  getUrlList(getSessionUser(), passwords[parseInt(page.data.id)][0]).forEach(url => {
+  getUrlList(getSessionUser(), page.data.id).forEach(url => {
     page.querySelector('#urlItems').append(createUrlItem(url));
   })
 
-  page.querySelector('#username').value = passwords[parseInt(page.data.id)][1];
-  page.querySelector('#password').value = passwords[parseInt(page.data.id)][2];
+  page.querySelector('#username').value = getLoginName(page.data.id);
+  page.querySelector('#password').value = getPassword(page.data.id);
 }

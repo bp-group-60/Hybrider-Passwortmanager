@@ -31,8 +31,8 @@ export function onclickLogout(page) {
   };
 }
 
-export function onclickListItem(id) {
+export function onclickListItem(title) {
   return () => {
-    document.querySelector('#myNavigator').pushPage('onsPages/passwordView.html', {data: {id: id}});
+    document.querySelector('#myNavigator').pushPage('onsPages/passwordView.html', {data: {id: title}});
   };
 }

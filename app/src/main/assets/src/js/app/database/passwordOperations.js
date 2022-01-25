@@ -1,9 +1,22 @@
-export let passwords
+import {getSessionPassword, getSessionUser} from "../sessionHandler.js";
 
-export function getPasswords(user, password) {
-  // array structure: [[website, loginName, password], ...]
-  passwords = JSON.parse(Java.getPasswordList(user, password)).dataArray;
-  return passwords;
+export function getPasswordList(user, password) {
+  // array structure: [[website, loginName], ...]
+  return JSON.parse(Java.getPasswordList(user, password)).dataArray;
+}
+
+export function getLoginName(id) {
+  let user = getSessionUser();
+  let password = getSessionPassword();
+
+  return Java.getLoginName(user, password, id);
+}
+
+export function getPassword(id) {
+  let user = getSessionUser();
+  let password = getSessionPassword();
+
+  return Java.getPassword(user, password, id);
 }
 
 export function createPassword(user, website, loginName, password) {

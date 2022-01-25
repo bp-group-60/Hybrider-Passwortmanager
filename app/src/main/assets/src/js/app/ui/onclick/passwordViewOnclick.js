@@ -1,4 +1,4 @@
-import {deletePassword, getPasswords, passwords, updatePassword,} from '../../database/passwordOperations.js';
+import {deletePassword, updatePassword,} from '../../database/passwordOperations.js';
 import {getSessionPassword, getSessionUser} from '../../sessionHandler.js';
 import {deleteUrlList, saveUrlList,} from '../../database/websiteOperations.js';
 import {getAddedUrls, getRemovedUrls} from '../urlHandler.js';
@@ -30,7 +30,7 @@ export function editAbortOnclick(page) {
 
 export function onclickEditSave(page) {
   return () => {
-    let name = passwords[parseInt(page.data.id)][0];
+    let name = page.data.id;
     let loginName = document.getElementById('username').value;
     let password = document.getElementById('password').value;
     let successful = updatePassword(
@@ -45,8 +45,6 @@ export function onclickEditSave(page) {
       deleteUrlList(getSessionUser(), name, getRemovedUrls(page));
       ons.notification.toast('Änderungen gespeichert!', {timeout: 3000});
 
-      getPasswords(getSessionUser(), getSessionPassword());
-
       updatePasswordView(page);
     } else {
       ons.notification.toast('Fehler beim speichern!', {timeout: 3000});
@@ -60,7 +58,7 @@ export function onclickDeletePassword(page) {
       .confirm('Passwort wirklich löschen?')
       .then(function (input) {
         if (input === 1) {
-          let name = passwords[parseInt(page.data.id)][0];
+          let name = page.data.id;
           deletePassword(getSessionUser(), name);
           document.querySelector('#myNavigator').popPage();
           ons.notification.toast('Passwort wurde gelöscht!', {timeout: 3000});

@@ -138,4 +138,14 @@ public class JavascriptHandler {
     passwordDao.getWebsiteList(user, website).forEach(x -> list.add(x.toString()));
     return "{\"dataArray\":" + list.toString() + "}";
   }
+
+  @JavascriptInterface
+  public String getLoginName(String user, String password, String id){
+    return passwordDao.getPassword(user, id).loginName;
+  }
+
+  @JavascriptInterface
+  public String getPassword(String user, String password, String id){
+    return passwordDao.getPassword(user, id).password;
+  }
 }

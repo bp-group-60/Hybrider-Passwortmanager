@@ -1,4 +1,4 @@
-import {getPasswords, passwords} from '../database/passwordOperations.js';
+import {getPasswordList} from '../database/passwordOperations.js';
 import {
   onclickAddButton,
   onclickDeleteUser,
@@ -13,10 +13,10 @@ export function updateListview(user, password) {
 }
 
 function createList(user, password) {
-  getPasswords(user, password);
+  let list = getPasswordList(user, password);
 
-  for (let i = 0; i < passwords.length; i++) {
-    addToListview(`${passwords[i][0]} / ${passwords[i][1]}`, i);
+  for (let i = 0; i < list.length; i++) {
+    addToListview(`${list[i][0]} / ${list[i][1]}`, list[i][0]);
   }
 }
 

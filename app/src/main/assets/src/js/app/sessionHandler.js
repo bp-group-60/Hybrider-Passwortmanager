@@ -10,5 +10,3 @@ export function logout() {
   sessionStorage.clear();
   history.back();
 }
-
-//TODO: resolve "passwords" use here
