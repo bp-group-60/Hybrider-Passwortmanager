@@ -30,5 +30,5 @@ document.addEventListener('init', function (event) {
 });
 
 window.back = function() {
-    document.querySelector('#myNavigator').popPage().catch((e)=>history.back())
+    document.querySelector('#myNavigator').popPage().catch((e)=>history.back());
 }
