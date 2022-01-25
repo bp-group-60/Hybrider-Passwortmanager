@@ -56,7 +56,12 @@ public class MainActivity extends AppCompatActivity {
   @Override
   public void onBackPressed() {
     if (webView.canGoBack()) {
-      webView.evaluateJavascript("back()", null);
+      webView.evaluateJavascript(
+          "back()",
+              value -> {
+            if(value!=null)
+              webView.goBack();
+          });
     } else {
       super.onBackPressed();
     }
