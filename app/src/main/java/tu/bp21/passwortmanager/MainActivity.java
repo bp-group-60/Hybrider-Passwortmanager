@@ -6,7 +6,11 @@ import android.os.Bundle;
 import android.webkit.WebView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
-import tu.bp21.passwortmanager.db.PasswordDatabase;
+
+import tu.bp21.passwortmanager.js_interfaces.InterfacePassword;
+import tu.bp21.passwortmanager.js_interfaces.InterfaceUser;
+import tu.bp21.passwortmanager.js_interfaces.InterfaceWebsite;
+import tu.bp21.passwortmanager.db.ApplicationDatabase;
 
 /** Main entry point for app. */
 public class MainActivity extends AppCompatActivity {
@@ -26,8 +30,8 @@ public class MainActivity extends AppCompatActivity {
       WebView.setWebContentsDebuggingEnabled(true);
     }
 
-    PasswordDatabase database =
-        Room.databaseBuilder(this, PasswordDatabase.class, "database")
+    ApplicationDatabase database =
+        Room.databaseBuilder(this, ApplicationDatabase.class, "database")
             .allowMainThreadQueries()
             .build();
 
@@ -35,7 +39,15 @@ public class MainActivity extends AppCompatActivity {
     webView.setWebViewClient(new AssetWebViewClient(this));
 
     webView.getSettings().setJavaScriptEnabled(true);
-    webView.addJavascriptInterface(new JavascriptHandler(database.getDao()), "Java");
+
+    InterfaceUser jsiUser = new InterfaceUser(database.getUserDao());
+    InterfacePassword jsiPassword = new InterfacePassword(database.getPasswordDao());
+    InterfaceWebsite jsiWebsite = new InterfaceWebsite(database.getWebsiteDao());
+
+    webView.addJavascriptInterface(jsiUser, "Java_InterfaceUser");
+    webView.addJavascriptInterface(jsiPassword, "Java_InterfacePassword");
+    webView.addJavascriptInterface(jsiWebsite, "Java_InterfaceWebsite");
+
     webView.loadUrl("https://appassets.androidplatform.net/assets/src/html/index.html");
 
     setContentView(webView);
@@ -44,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
   @Override
   public void onBackPressed() {
     if (webView.canGoBack()) {
-      webView.evaluateJavascript("back()",null);
+      webView.evaluateJavascript("back()", null);
     } else {
       super.onBackPressed();
     }

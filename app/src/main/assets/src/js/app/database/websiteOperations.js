@@ -1,5 +1,5 @@
 export function getUrlList(user, website) {
-  return JSON.parse(Java.getUrlList(user, website)).dataArray;
+  return JSON.parse(Java_InterfaceWebsite.getUrlList(user, website)).dataArray;
 }
 
 export function saveUrlList(user, website, list) {
@@ -7,7 +7,7 @@ export function saveUrlList(user, website, list) {
 }
 
 export function saveUrl(user, website, url) {
-  return Java.saveUrl(user, website, url);
+  return Java_InterfaceWebsite.saveUrl(user, website, url);
 }
 
 export function deleteUrlList(user, website, list) {
@@ -15,5 +15,5 @@ export function deleteUrlList(user, website, list) {
 }
 
 export function deleteUrl(user, website, url) {
-  return Java.deleteUrl(user, website, url);
+  return Java_InterfaceWebsite.deleteUrl(user, website, url);
 }
