@@ -28,3 +28,7 @@ document.addEventListener('init', function (event) {
     addOnclickAddPasswordView(page);
   }
 });
+
+window.back = function() {
+    document.querySelector('#myNavigator').popPage().catch((e)=>history.back())
+}
