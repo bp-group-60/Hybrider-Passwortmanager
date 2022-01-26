@@ -1,7 +1,5 @@
 package tu.bp21.passwortmanager;
 
-import java.nio.charset.StandardCharsets;
-
 public class Crypto {
     private static byte[] salt;
     private static byte[] key;

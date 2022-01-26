@@ -1,13 +1,6 @@
 #include <jni.h>
-#include "/include/openssl/aes.h"
-//#include "/include/openssl/evp.h"
-#include "include/openssl/ossl_typ.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <android/log.h>
-#include <string.h>
+//#include <android/log.h>
 #include <openssl/rand.h>
-#include <openssl/crypto.h>
 #include <openssl/sha.h>
 #include <openssl/evp.h>
 #include <openssl/kdf.h>
@@ -39,7 +32,8 @@ Java_tu_bp21_passwortmanager_Crypto_crypt(JNIEnv *env, jobject thiz, jbyteArray 
         EVP_EncryptUpdate(ctx, &output[iv_length], &len_buffer, input_ptr, input_len);
         output_len = len_buffer;
         EVP_EncryptFinal(ctx, &output[iv_length] + len_buffer, &len_buffer);
-        output_len += len_buffer+iv_length;
+        output_len += len_buffer;
+        output_len += iv_length;
         EVP_CIPHER_CTX_free(ctx);
     }
     //decrypt

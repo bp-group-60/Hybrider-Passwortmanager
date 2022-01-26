@@ -2,7 +2,6 @@ package tu.bp21.passwortmanager;
 
 import android.webkit.JavascriptInterface;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 
