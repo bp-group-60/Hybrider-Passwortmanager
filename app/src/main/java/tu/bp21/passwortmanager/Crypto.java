@@ -9,9 +9,9 @@ public class Crypto {
     public static native byte[] generateSalt(int size);
     private static native byte[] hash(byte[] input, int input_length, byte[] salt, int salt_length);
 
-    public static void setKey(String password){
+    public static void setGeneratedKey(String passwordToDerive){
         int iterations = 1000000;
-        byte[] input = password.getBytes();
+        byte[] input = passwordToDerive.getBytes();
         key = generateKey(input, input.length, salt, salt.length, iterations);
     }
 

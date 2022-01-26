@@ -19,8 +19,7 @@ public class User {
   }
 
   @Ignore
-  public User(@NonNull String username, String password) {
+  public User(@NonNull String username) {
     this.username = username;
-    this.password = password;
   }
 }
