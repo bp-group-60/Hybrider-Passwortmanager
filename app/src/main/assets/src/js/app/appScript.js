@@ -1,52 +1,34 @@
-import {updateList} from "./listviewHandler.js";
-import {passwords} from "./database/passwordOperations.js";
-import {
-	addPasswordCommitButtonOnclick,
-	editAbortOnclick,
-	onclickEditSave,
-	editButtonOnclick,
-	onclickDeletePassword,
-	showPasswordOnclick,
-	onclickMoreButton,
-	onclickDeleteUser
-} from "./onclick.js";
-import {getUrlList} from "./database/websiteOperations.js";
-import {addUrlOnclick, createUrlItem} from "./onclick/onclickUrl.js";
+import {addOnclickListview, updateListview} from './ui/listviewHandler.js';
+import {addOnclickPasswordView, updatePasswordView} from './ui/passwordViewHandler.js';
+import {addOnclickAddPasswordView} from './ui/addPasswordViewHandler.js';
 
-const user = sessionStorage.getItem("user")
-const password = sessionStorage.getItem("password")
+import {getSessionPassword, getSessionUser} from './sessionHandler.js';
 
-document.addEventListener('show', function(event) {
-	let page = event.target
+document.addEventListener('show', function (event) {
+  let page = event.target;
 
-	if (page.id === 'listview') {
-		updateList(user, password)
-		page.querySelector('#moreButton').onclick = onclickMoreButton(page)
-		page.querySelector('#deleteUser').onclick = onclickDeleteUser(page)
-	}
+  if (page.id === 'listview') {
+    updateListview(getSessionUser(), getSessionPassword());
+  }
+});
 
-	if (page.id === 'passwordDetailed') {
-	  	page.querySelector('ons-toolbar .center').innerHTML = passwords[parseInt(page.data.id)][0]
+document.addEventListener('init', function (event) {
+  let page = event.target;
 
-		getUrlList(user, passwords[parseInt(page.data.id)][0]).forEach(url =>{
-			page.querySelector('#urlItems').append(createUrlItem(url))
-		})
+  if (page.id === 'listview') {
+    addOnclickListview(page);
+  }
 
-		page.querySelector('#username').value = passwords[parseInt(page.data.id)][1]
-		page.querySelector('#password').value = passwords[parseInt(page.data.id)][2]
-        page.querySelector('#passwordCheckbox').onclick = showPasswordOnclick(page)
+  if (page.id === 'passwordView') {
+    addOnclickPasswordView(page);
+    updatePasswordView(page);
+  }
 
-		page.querySelector('#editButton').onclick = editButtonOnclick(page)
+  if (page.id === 'addPassword') {
+    addOnclickAddPasswordView(page);
+  }
+});
 
-		page.querySelector('#addUrl').onclick = addUrlOnclick(page)
-		page.querySelector('#abortButton').onclick = editAbortOnclick(page)
-		page.querySelector('#commitButton').onclick = onclickEditSave(page)
-		page.querySelector('#deleteButton').onclick = onclickDeletePassword(page)
-	}
-
-	if (page.id === 'addPassword') {
-		page.querySelector('#addUrl').onclick = addUrlOnclick(page)
-		page.querySelector('#commitButton').onclick = addPasswordCommitButtonOnclick(page)
-
-	}
-  })
+window.back = function() {
+    document.querySelector('#myNavigator').popPage().catch((e)=>history.back());
+}
