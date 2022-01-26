@@ -8,10 +8,10 @@ import tu.bp21.passwortmanager.db.dao.WebsiteDao;
 import tu.bp21.passwortmanager.db.Website;
 
 public class InterfaceWebsite {
-  private final WebsiteDao websiteDao;
+  private final WebsiteDao websiteDataAccessObject;
 
-  public InterfaceWebsite(WebsiteDao websiteDao) {
-    this.websiteDao = websiteDao;
+  public InterfaceWebsite(WebsiteDao websiteDataAccessObject) {
+    this.websiteDataAccessObject = websiteDataAccessObject;
   }
 
   @JavascriptInterface
@@ -19,7 +19,7 @@ public class InterfaceWebsite {
     Website newUrl = new Website(user, website, url);
 
     try {
-      websiteDao.addWebsite(newUrl);
+      websiteDataAccessObject.addWebsite(newUrl);
     } catch (Exception e) {
       e.printStackTrace();
       return false;
@@ -33,7 +33,7 @@ public class InterfaceWebsite {
     Website newUrl = new Website(user, website, url);
 
     try {
-      if (websiteDao.deleteWebsite(newUrl) == 0) throw new RuntimeException("nothing was deleted");
+      if (websiteDataAccessObject.deleteWebsite(newUrl) == 0) throw new RuntimeException("nothing was deleted");
     } catch (Exception e) {
       e.printStackTrace();
       return false;
@@ -45,7 +45,7 @@ public class InterfaceWebsite {
   @JavascriptInterface
   public String getUrlList(String user, String website) {
     ArrayList<String> list = new ArrayList<>();
-    websiteDao.getWebsiteList(user, website).forEach(x -> list.add(x.toString()));
+    websiteDataAccessObject.getWebsiteList(user, website).forEach(x -> list.add(x.toString()));
     return "{\"dataArray\":" + list.toString() + "}";
   }
 }

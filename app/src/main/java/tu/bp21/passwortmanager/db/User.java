@@ -10,17 +10,16 @@ public class User {
 
   @PrimaryKey @NonNull public String username;
   public String email;
-  public String password;
+  public byte[] password;
 
-  public User(@NonNull String username, String email, String password) {
+  public User(@NonNull String username, String email, byte[] password) {
     this.username = username;
     this.email = email;
     this.password = password;
   }
 
   @Ignore
-  public User(@NonNull String username, String password) {
+  public User(@NonNull String username) {
     this.username = username;
-    this.password = password;
   }
 }
