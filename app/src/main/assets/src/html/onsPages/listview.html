@@ -1,4 +1,4 @@
-<ons-page id="page1">
+<ons-page id="listview">
   <ons-toolbar>
     <div class="center">Passwortübersicht</div>
     <div class="right ">
@@ -12,18 +12,15 @@
     <div id="overview"></div>
   </ons-list>
   <ons-fab position="bottom right" id="addButton">
-    <ons-icon icon="md-plus" onclick="document.querySelector('#myNavigator').pushPage('onsPages/addPassword.html')"></ons-icon>
+    <ons-icon icon="md-plus"></ons-icon>
   </ons-fab>
 
   <ons-popover cancelable direction="down" id="popover">
     <ons-list width: max-content>
-      <ons-list-item modifier="tappable">
+      <ons-list-item id="deleteUser" modifier="tappable">
         Benutzer Löschen
       </ons-list-item>
-      <ons-list-item modifier="tappable">
-        Neues Passwort
-      </ons-list-item>
-      <ons-list-item modifier="tappable">
+      <ons-list-item id="logout" modifier="tappable">
         Abmelden
       </ons-list-item>
     </ons-list>
