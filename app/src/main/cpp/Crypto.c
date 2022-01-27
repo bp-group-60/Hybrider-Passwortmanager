@@ -5,6 +5,7 @@
 #include <openssl/evp.h>
 #include <openssl/kdf.h>
 #include <math.h>
+#include <string.h>
 
 
 
