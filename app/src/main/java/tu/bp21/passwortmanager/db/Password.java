@@ -3,9 +3,10 @@ package tu.bp21.passwortmanager.db;
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 
 @Entity(
-    primaryKeys = {"user", "website"},
+    primaryKeys = {"user", "websiteName"},
     foreignKeys = {
       @ForeignKey(
           entity = User.class,
@@ -17,24 +18,26 @@ import androidx.room.ForeignKey;
 public class Password {
 
   @NonNull public String user;
-  @NonNull public String website;
+  @NonNull public String websiteName;
   public String loginName;
-  public String password;
+  public byte[] password;
 
   public Password(
-      @NonNull String user, @NonNull String website, String loginName, String password) {
+      @NonNull String user, @NonNull String websiteName, String loginName, byte[] password) {
     this.user = user;
-    this.website = website;
+    this.websiteName = websiteName;
     this.loginName = loginName;
     this.password = password;
   }
 
-  public String toSecureString() {
-    return "[\"" + website + "\",\"" + loginName + "\"]";
+  @Ignore
+  public Password(@NonNull String username, @NonNull String websiteName) {
+    this.user = username;
+    this.websiteName = websiteName;
   }
 
   @Override
   public String toString() {
-    return "[\"" + website + "\",\"" + loginName + "\",\"" + password + "\"]";
+    return "[\"" + websiteName + "\",\"" + loginName + "\"]";
   }
 }

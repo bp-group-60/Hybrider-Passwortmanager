@@ -1,0 +1,28 @@
+<ons-page id="listview">
+  <ons-toolbar>
+    <div class="center">Passwortübersicht</div>
+    <div class="right ">
+      <ons-toolbar-button id="moreButton">
+        <ons-icon icon="ion-md-more"></ons-icon>
+      </ons-toolbar-button>
+    </div>
+  </ons-toolbar>
+  <ons-list>
+    <ons-list-header>Webseite / Nutzername</ons-list-header>
+    <div id="overview"></div>
+  </ons-list>
+  <ons-fab position="bottom right" id="addButton">
+    <ons-icon icon="md-plus"></ons-icon>
+  </ons-fab>
+
+  <ons-popover cancelable direction="down" id="popover">
+    <ons-list width: max-content>
+      <ons-list-item id="deleteUser" modifier="tappable">
+        Benutzer Löschen
+      </ons-list-item>
+      <ons-list-item id="logout" modifier="tappable">
+        Abmelden
+      </ons-list-item>
+    </ons-list>
+  </ons-popover>
+</ons-page>

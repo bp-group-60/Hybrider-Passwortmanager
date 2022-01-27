@@ -6,12 +6,19 @@ import android.os.Bundle;
 import android.webkit.WebView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
-import tu.bp21.passwortmanager.db.PasswordDatabase;
+
+import tu.bp21.passwortmanager.js_interfaces.InterfacePassword;
+import tu.bp21.passwortmanager.js_interfaces.InterfaceUser;
+import tu.bp21.passwortmanager.js_interfaces.InterfaceWebsite;
+import tu.bp21.passwortmanager.db.ApplicationDatabase;
 
 /** Main entry point for app. */
 public class MainActivity extends AppCompatActivity {
   private WebView webView;
-  private JavascriptHandler jsHandler;
+
+  static {
+    System.loadLibrary("Crypto");
+  }
 
   @Override
   @SuppressLint("SetJavaScriptEnabled")
@@ -22,40 +29,44 @@ public class MainActivity extends AppCompatActivity {
       getSupportActionBar().hide();
     }
 
-    // if your build is in debug mode, enable WebViews inspection
+    // if your build is in debug mode, enable WebViews inspection with chrome://inspect
     if (0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE)) {
       WebView.setWebContentsDebuggingEnabled(true);
     }
 
-    PasswordDatabase database =
-      Room.databaseBuilder(this, PasswordDatabase.class, "database")
-        .allowMainThreadQueries()
-        .build();
+    ApplicationDatabase database =
+        Room.databaseBuilder(this, ApplicationDatabase.class, "database")
+            .allowMainThreadQueries()
+            .build();
 
     webView = new WebView(this);
     webView.setWebViewClient(new AssetWebViewClient(this));
 
     webView.getSettings().setJavaScriptEnabled(true);
-    jsHandler = new JavascriptHandler(database.getDao());
-    webView.addJavascriptInterface(jsHandler, "Java");
+
+    InterfaceUser jsiUser = new InterfaceUser(database.getUserDao());
+    InterfacePassword jsiPassword = new InterfacePassword(database.getPasswordDao());
+    InterfaceWebsite jsiWebsite = new InterfaceWebsite(database.getWebsiteDao());
+
+    webView.addJavascriptInterface(jsiUser, "Java_InterfaceUser");
+    webView.addJavascriptInterface(jsiPassword, "Java_InterfacePassword");
+    webView.addJavascriptInterface(jsiWebsite, "Java_InterfaceWebsite");
+
     webView.loadUrl("https://appassets.androidplatform.net/assets/src/html/index.html");
 
-
     setContentView(webView);
-
   }
-
 
   @Override
   public void onBackPressed() {
     if (webView.canGoBack()) {
-      webView.goBack();
+      webView.evaluateJavascript(
+          "back()",
+          value -> {
+            if (value != null) webView.goBack();
+          });
     } else {
       super.onBackPressed();
     }
-  }
-
-  public JavascriptHandler getJavascriptHandler(){
-    return jsHandler;
   }
 }
