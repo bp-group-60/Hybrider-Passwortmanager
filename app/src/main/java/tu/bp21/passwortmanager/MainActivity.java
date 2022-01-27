@@ -15,6 +15,9 @@ import tu.bp21.passwortmanager.db.ApplicationDatabase;
 /** Main entry point for app. */
 public class MainActivity extends AppCompatActivity {
   private WebView webView;
+  InterfaceUser jsiUser ;
+  InterfacePassword jsiPassword;
+  InterfaceWebsite jsiWebsite;
 
   static {
     System.loadLibrary("Crypto");
@@ -44,9 +47,9 @@ public class MainActivity extends AppCompatActivity {
 
     webView.getSettings().setJavaScriptEnabled(true);
 
-    InterfaceUser jsiUser = new InterfaceUser(database.getUserDao());
-    InterfacePassword jsiPassword = new InterfacePassword(database.getPasswordDao());
-    InterfaceWebsite jsiWebsite = new InterfaceWebsite(database.getWebsiteDao());
+    jsiUser = new InterfaceUser(database.getUserDao());
+    jsiPassword = new InterfacePassword(database.getPasswordDao());
+    jsiWebsite = new InterfaceWebsite(database.getWebsiteDao());
 
     webView.addJavascriptInterface(jsiUser, "Java_InterfaceUser");
     webView.addJavascriptInterface(jsiPassword, "Java_InterfacePassword");
@@ -69,4 +72,8 @@ public class MainActivity extends AppCompatActivity {
       super.onBackPressed();
     }
   }
+
+  public InterfaceUser getInterfaceUser(){ return jsiUser;}
+  public InterfacePassword getInterfacePassword(){ return jsiPassword;}
+  public InterfaceWebsite getInterfaceWebsite(){ return jsiWebsite;}
 }
