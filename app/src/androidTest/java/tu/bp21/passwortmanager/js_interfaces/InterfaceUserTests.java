@@ -19,7 +19,7 @@ import tu.bp21.passwortmanager.db.ApplicationDatabase;
 import tu.bp21.passwortmanager.db.User;
 import tu.bp21.passwortmanager.db.dao.UserDao;
 
-public class InterfaceUserTest {
+public class InterfaceUserTests {
     InterfaceUser interfaceUser;
     UserDao userDao;
 
@@ -35,6 +35,10 @@ public class InterfaceUserTest {
         userDao = Room.databaseBuilder(getMainActivityRule().getActivity(), ApplicationDatabase.class, "database")
                 .allowMainThreadQueries()
                 .build().getUserDao();
+    }
+
+    @After
+    public void tearDown() throws Exception {
         //Clear Dummy-Data
         if(userDao.getUser("testuser02Exists") != null)
             userDao.deleteUser(userDao.getUser("testuser02Exists"));
@@ -42,10 +46,6 @@ public class InterfaceUserTest {
             userDao.deleteUser(userDao.getUser("testuser03Check"));
         if(userDao.getUser("testuser04Create") != null)
             userDao.deleteUser(userDao.getUser("testuser04Create"));
-    }
-
-    @After
-    public void tearDown() throws Exception {
     }
 
     @Test
@@ -79,7 +79,7 @@ public class InterfaceUserTest {
         assertTrue(userDao.getUser("testuser04Create") != null);
         assertEquals("testuser04Create", userDao.getUser("testuser04Create").username);
         assertEquals("testuser04@Create.de", userDao.getUser("testuser04Create").email);
-        assertEquals(encryptedPassword, userDao.getUser("testuser04Create").password);
+        assertTrue(Arrays.equals(encryptedPassword, userDao.getUser("testuser04Create").password));
     }
 
     @Test

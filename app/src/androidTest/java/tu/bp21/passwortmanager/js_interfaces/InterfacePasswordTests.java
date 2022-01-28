@@ -2,7 +2,6 @@ package tu.bp21.passwortmanager.js_interfaces;
 
 import static org.junit.Assert.*;
 
-import androidx.room.Room;
 import androidx.test.rule.ActivityTestRule;
 
 import org.junit.After;
@@ -13,14 +12,14 @@ import org.junit.Test;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 
+import tu.bp21.passwortmanager.Crypto;
 import tu.bp21.passwortmanager.MainActivity;
-import tu.bp21.passwortmanager.db.ApplicationDatabase;
 import tu.bp21.passwortmanager.db.Password;
 import tu.bp21.passwortmanager.db.User;
 import tu.bp21.passwortmanager.db.dao.PasswordDao;
 import tu.bp21.passwortmanager.db.dao.UserDao;
 
-public class InterfacePasswordTest {
+public class InterfacePasswordTests {
     InterfacePassword interfacePassword;
     UserDao userDao;
     PasswordDao passwordDao;
@@ -34,12 +33,8 @@ public class InterfacePasswordTest {
     @Before
     public void setUp() throws Exception {
         interfacePassword = getmMainActivityRule().getActivity().getInterfacePassword();
-        userDao = Room.databaseBuilder(getmMainActivityRule().getActivity(), ApplicationDatabase.class, "database")
-                .allowMainThreadQueries()
-                .build().getUserDao();
-        passwordDao = Room.databaseBuilder(getmMainActivityRule().getActivity(), ApplicationDatabase.class, "database")
-                .allowMainThreadQueries()
-                .build().getPasswordDao();
+        userDao = getmMainActivityRule().getActivity().getUserDao();
+        passwordDao = getmMainActivityRule().getActivity().getPasswordDao();
         //Clear Dummy-Data
         if(userDao.getUser("testuser05CreatePwd") != null)
             userDao.deleteUser(userDao.getUser("testuser05CreatePwd"));
@@ -54,8 +49,9 @@ public class InterfacePasswordTest {
     @Test
     public void testCreatePassword() throws Exception{
         byte[] encryptedPassword = new byte[20];
-        SecureRandom.getInstanceStrong().nextBytes(encryptedPassword);
         userDao.addUser(new User("testuser05CreatePwd", "testuser05@CreatePwd.de", encryptedPassword));
+        Crypto.setSalt(Crypto.generateSalt(16));
+        Crypto.setGeneratedKey("randompassword");
         boolean worked = interfacePassword.createPassword("testuser05CreatePwd", "youtube.com", "user05LoginName", "Pwd012345");
         assertTrue(worked);
 

@@ -7,6 +7,10 @@ import android.webkit.WebView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
+import tu.bp21.passwortmanager.db.Website;
+import tu.bp21.passwortmanager.db.dao.PasswordDao;
+import tu.bp21.passwortmanager.db.dao.UserDao;
+import tu.bp21.passwortmanager.db.dao.WebsiteDao;
 import tu.bp21.passwortmanager.js_interfaces.InterfacePassword;
 import tu.bp21.passwortmanager.js_interfaces.InterfaceUser;
 import tu.bp21.passwortmanager.js_interfaces.InterfaceWebsite;
@@ -18,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
   InterfaceUser jsiUser ;
   InterfacePassword jsiPassword;
   InterfaceWebsite jsiWebsite;
+  ApplicationDatabase database;
 
   static {
     System.loadLibrary("Crypto");
@@ -37,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
       WebView.setWebContentsDebuggingEnabled(true);
     }
 
-    ApplicationDatabase database =
+    database =
         Room.databaseBuilder(this, ApplicationDatabase.class, "database")
             .allowMainThreadQueries()
             .build();
@@ -76,4 +81,7 @@ public class MainActivity extends AppCompatActivity {
   public InterfaceUser getInterfaceUser(){ return jsiUser;}
   public InterfacePassword getInterfacePassword(){ return jsiPassword;}
   public InterfaceWebsite getInterfaceWebsite(){ return jsiWebsite;}
+  public UserDao getUserDao(){return database.getUserDao();}
+  public PasswordDao getPasswordDao(){return database.getPasswordDao();}
+  public WebsiteDao getWebsiteDao(){return database.getWebsiteDao();}
 }
