@@ -1,46 +1,46 @@
 package tu.bp21.passwortmanager;
 
-import static org.junit.Assert.*;
 
 import android.view.View;
 import android.webkit.WebView;
 
-import androidx.test.rule.ActivityTestRule;
+import org.junit.jupiter.api.AfterEach;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import de.mannodermaus.junit5.ActivityScenarioExtension;
 
-public class MainActivityTest {
+class MainActivityTest {
 
-    @Rule
-    public ActivityTestRule<MainActivity> mMainActivityRule = new ActivityTestRule<>(MainActivity.class);
+    @RegisterExtension
+    final ActivityScenarioExtension<MainActivity> scenarioExtension = ActivityScenarioExtension.launch(MainActivity.class);
 
-    private MainActivity mActivity = null;
+    MainActivity mActivity;
 
-    @Before
-    public void setUp() throws Exception {
-        mActivity = mMainActivityRule.getActivity();
+    @BeforeEach
+    void setUp() throws Exception {
+        scenarioExtension.getScenario().onActivity(activity -> mActivity=activity);
     }
 
-    @After
-    public void tearDown() throws Exception {
+    @AfterEach
+    void tearDown() throws Exception {
     }
 
     @Test
-    public void testonCreate() {
+    void testonCreate() {
         View view  =  mActivity.getCurrentFocus();
         if(view instanceof WebView) assertNotNull((WebView)view);
         else assertFalse(true);
     }
 
     @Test
-    public void testonBackPressed() {
-        
+    void testonBackPressed() {
+
     }
 
     @Test
-    public void testgetJavascriptHandler() {
+    void testgetJavascriptHandler() {
     }
 }

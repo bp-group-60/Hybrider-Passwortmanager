@@ -3,42 +3,47 @@ package tu.bp21.passwortmanager.js_interfaces;
 import static org.junit.Assert.*;
 
 import androidx.room.Room;
-import androidx.test.rule.ActivityTestRule;
+import androidx.test.core.app.ActivityScenario;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.security.SecureRandom;
 import java.util.Arrays;
 
+import de.mannodermaus.junit5.ActivityScenarioExtension;
 import tu.bp21.passwortmanager.Crypto;
 import tu.bp21.passwortmanager.MainActivity;
 import tu.bp21.passwortmanager.db.ApplicationDatabase;
 import tu.bp21.passwortmanager.db.User;
 import tu.bp21.passwortmanager.db.dao.UserDao;
 
-public class InterfaceUserTests {
+class InterfaceUserTests {
     InterfaceUser interfaceUser;
     UserDao userDao;
+    MainActivity mainActivity;
 
-    @Rule
-    public ActivityTestRule<MainActivity> mainActivityRule = new ActivityTestRule<>(MainActivity.class);
-    public ActivityTestRule<MainActivity> getMainActivityRule() {
-        return mainActivityRule;
-    }
+    @RegisterExtension
+    final ActivityScenarioExtension<MainActivity> scenarioExtension = ActivityScenarioExtension.launch(MainActivity.class);
 
-    @Before
-    public void setUp() throws Exception {
-        interfaceUser = getMainActivityRule().getActivity().getInterfaceUser();
-        userDao = Room.databaseBuilder(getMainActivityRule().getActivity(), ApplicationDatabase.class, "database")
+    @BeforeEach
+    void setUp() throws Exception {
+        ActivityScenario<MainActivity> scenario = scenarioExtension.getScenario();
+
+
+        scenario.onActivity(activity -> interfaceUser = activity.getInterfaceUser());
+        scenario.onActivity(activity -> mainActivity = activity);
+
+        userDao = Room.databaseBuilder(mainActivity, ApplicationDatabase.class, "database")
                 .allowMainThreadQueries()
                 .build().getUserDao();
     }
 
-    @After
-    public void tearDown() throws Exception {
+    @AfterEach
+    void tearDown() throws Exception {
         //Clear Dummy-Data
         if(userDao.getUser("testuser02Exists") != null)
             userDao.deleteUser(userDao.getUser("testuser02Exists"));
@@ -49,7 +54,7 @@ public class InterfaceUserTests {
     }
 
     @Test
-    public void testExistUser() throws Exception {
+    void testExistUser() throws Exception {
         byte[] encryptedPassword = new byte[20];
         SecureRandom.getInstanceStrong().nextBytes(encryptedPassword);
         userDao.addUser(new User("testuser02Exists", "testuser02@Exists.de", encryptedPassword));
@@ -58,7 +63,7 @@ public class InterfaceUserTests {
     }
 
     @Test
-    public void testCheckUser() {
+    void testCheckUser() {
         String password = "034567890123";
         Crypto.setSalt(Crypto.generateSalt(16));
         byte[] encryptedPassword = Crypto.computeHash(password);
@@ -69,7 +74,7 @@ public class InterfaceUserTests {
     }
 
     @Test
-    public void testCreateUser() {
+    void testCreateUser() {
         String password = "045678901234";
         byte[] encryptedPassword;
         assertTrue(userDao.getUser("testuser04Create") == null);
@@ -83,6 +88,6 @@ public class InterfaceUserTests {
     }
 
     @Test
-    public void deleteUser() {
+    void deleteUser() {
     }
 }

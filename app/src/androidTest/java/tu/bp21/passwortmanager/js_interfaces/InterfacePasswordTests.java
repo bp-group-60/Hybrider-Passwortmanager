@@ -1,17 +1,21 @@
 package tu.bp21.passwortmanager.js_interfaces;
 
-import static org.junit.Assert.*;
 
-import androidx.test.rule.ActivityTestRule;
+import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import androidx.test.core.app.ActivityScenario;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
 
+import de.mannodermaus.junit5.ActivityScenarioExtension;
 import tu.bp21.passwortmanager.Crypto;
 import tu.bp21.passwortmanager.MainActivity;
 import tu.bp21.passwortmanager.db.Password;
@@ -19,22 +23,21 @@ import tu.bp21.passwortmanager.db.User;
 import tu.bp21.passwortmanager.db.dao.PasswordDao;
 import tu.bp21.passwortmanager.db.dao.UserDao;
 
-public class InterfacePasswordTests {
+class InterfacePasswordTests {
     InterfacePassword interfacePassword;
     UserDao userDao;
     PasswordDao passwordDao;
 
-    @Rule
-    public ActivityTestRule<MainActivity> mMainActivityRule = new ActivityTestRule<>(MainActivity.class);
-    public ActivityTestRule<MainActivity> getmMainActivityRule() {
-        return mMainActivityRule;
-    }
+    @RegisterExtension
+    final ActivityScenarioExtension<MainActivity> scenarioExtension = ActivityScenarioExtension.launch(MainActivity.class);
 
-    @Before
-    public void setUp() throws Exception {
-        interfacePassword = getmMainActivityRule().getActivity().getInterfacePassword();
-        userDao = getmMainActivityRule().getActivity().getUserDao();
-        passwordDao = getmMainActivityRule().getActivity().getPasswordDao();
+    @BeforeEach
+    void setUp() throws Exception {
+        ActivityScenario<MainActivity> scenario = scenarioExtension.getScenario();
+
+        scenario.onActivity(activity -> interfacePassword = activity.getInterfacePassword());
+        scenario.onActivity(activity -> userDao = activity.getUserDao());
+        scenario.onActivity(activity -> passwordDao = activity.getPasswordDao());
         //Clear Dummy-Data
         if(userDao.getUser("testuser05CreatePwd") != null)
             userDao.deleteUser(userDao.getUser("testuser05CreatePwd"));
@@ -42,12 +45,12 @@ public class InterfacePasswordTests {
             userDao.deleteUser(userDao.getUser("testuser06getPwdList"));
     }
 
-    @After
-    public void tearDown() throws Exception {
+    @AfterEach
+    void tearDown() throws Exception {
     }
 
     @Test
-    public void testCreatePassword() throws Exception{
+    void testCreatePassword() throws Exception{
         byte[] encryptedPassword = new byte[20];
         userDao.addUser(new User("testuser05CreatePwd", "testuser05@CreatePwd.de", encryptedPassword));
         Crypto.setSalt(Crypto.generateSalt(16));
@@ -60,15 +63,15 @@ public class InterfacePasswordTests {
     }
 
     @Test
-    public void updatePassword() {
+    void updatePassword() {
     }
 
     @Test
-    public void deletePassword() {
+    void deletePassword() {
     }
 
     @Test
-    public void testGetPasswordList() throws Exception{
+    void testGetPasswordList() throws Exception{
         byte[] masterPassword = new byte[20];
         byte[] password1 = new byte[20];
         byte[] password2 = new byte[20];
@@ -97,10 +100,10 @@ public class InterfacePasswordTests {
     }
 
     @Test
-    public void getLoginName() {
+    void getLoginName() {
     }
 
     @Test
-    public void getPassword() {
+    void getPassword() {
     }
 }
