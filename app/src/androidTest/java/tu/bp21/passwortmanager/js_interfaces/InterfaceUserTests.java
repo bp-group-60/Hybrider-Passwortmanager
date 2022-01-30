@@ -38,7 +38,7 @@ class InterfaceUserTests {
 
         scenario.onActivity(activity -> mainActivity = activity);
 
-        database = Room.databaseBuilder(mainActivity, ApplicationDatabase.class, "database")
+        database = Room.databaseBuilder(mainActivity, ApplicationDatabase.class, "testDatabase")
                 .allowMainThreadQueries()
                 .build();
         userDao = database.getUserDao();
@@ -50,7 +50,7 @@ class InterfaceUserTests {
     @AfterEach
     void tearDown() throws Exception {
         //Clear Dummy-Data
-        database.clearAllTables();
+        mainActivity.deleteDatabase("testDatabase");
     }
 
     @ParameterizedTest

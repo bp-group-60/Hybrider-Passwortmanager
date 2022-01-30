@@ -48,7 +48,7 @@ class InterfacePasswordTests {
 
         scenario.onActivity(activity -> mainActivity = activity);
 
-        database = Room.databaseBuilder(mainActivity, ApplicationDatabase.class, "test")
+        database = Room.databaseBuilder(mainActivity, ApplicationDatabase.class, "testDatabase")
                 .allowMainThreadQueries()
                 .build();
         userDao = database.getUserDao();
@@ -59,7 +59,7 @@ class InterfacePasswordTests {
 
     @AfterEach
     void tearDown() throws Exception {
-        mainActivity.deleteDatabase("test");
+        mainActivity.deleteDatabase("testDatabase");
     }
 
     @ParameterizedTest
