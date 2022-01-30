@@ -10,8 +10,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
 
-import java.security.SecureRandom;
 import java.util.Arrays;
 
 import de.mannodermaus.junit5.ActivityScenarioExtension;
@@ -25,66 +26,63 @@ class InterfaceUserTests {
     InterfaceUser interfaceUser;
     UserDao userDao;
     MainActivity mainActivity;
-
+    ApplicationDatabase database;
     @RegisterExtension
     final ActivityScenarioExtension<MainActivity> scenarioExtension = ActivityScenarioExtension.launch(MainActivity.class);
+    static final String email = "randomEmail@blabla.de";
 
     @BeforeEach
     void setUp() throws Exception {
+
         ActivityScenario<MainActivity> scenario = scenarioExtension.getScenario();
 
-
-        scenario.onActivity(activity -> interfaceUser = activity.getInterfaceUser());
         scenario.onActivity(activity -> mainActivity = activity);
 
-        userDao = Room.databaseBuilder(mainActivity, ApplicationDatabase.class, "database")
+        database = Room.databaseBuilder(mainActivity, ApplicationDatabase.class, "database")
                 .allowMainThreadQueries()
-                .build().getUserDao();
+                .build();
+        userDao = database.getUserDao();
+
+        interfaceUser = new InterfaceUser(userDao);
+
     }
 
     @AfterEach
     void tearDown() throws Exception {
         //Clear Dummy-Data
-        if(userDao.getUser("testuser02Exists") != null)
-            userDao.deleteUser(userDao.getUser("testuser02Exists"));
-        if(userDao.getUser("testuser03Check") != null)
-            userDao.deleteUser(userDao.getUser("testuser03Check"));
-        if(userDao.getUser("testuser04Create") != null)
-            userDao.deleteUser(userDao.getUser("testuser04Create"));
+        database.clearAllTables();
     }
 
-    @Test
-    void testExistUser() throws Exception {
-        byte[] encryptedPassword = new byte[20];
-        SecureRandom.getInstanceStrong().nextBytes(encryptedPassword);
-        userDao.addUser(new User("testuser02Exists", "testuser02@Exists.de", encryptedPassword));
-        assertFalse(interfaceUser.existUser("testuser01NExist"));
-        assertTrue(interfaceUser.existUser("testuser02Exists"));
+    @ParameterizedTest
+    @CsvFileSource(resources = "/testUser.csv", numLinesToSkip = 1)
+    void testExistUser(String userToAdd, String passwordToAdd, String userNotExist) throws Exception {
+        userDao.addUser(new User(userToAdd, email, passwordToAdd.getBytes()));
+        assertFalse(interfaceUser.existUser(userNotExist));
+        assertTrue(interfaceUser.existUser(userToAdd));
     }
 
-    @Test
-    void testCheckUser() {
-        String password = "034567890123";
+    @ParameterizedTest
+    @CsvFileSource(resources = "/testCheckUser.csv", numLinesToSkip = 1)
+    void testCheckUser(String userToAdd, String passwordToAdd, String userToCheck, String passwordToCheck) {
         Crypto.setSalt(Crypto.generateSalt(16));
-        byte[] encryptedPassword = Crypto.computeHash(password);
-        userDao.addUser(new User("testuser03Check", "testuser03@Check.de", encryptedPassword));
-        assertFalse(interfaceUser.checkUser("testuser03Check","12345678012"));
-        assertFalse(interfaceUser.checkUser("testuser02Check","034567890123"));
-        assertTrue( interfaceUser.checkUser("testuser03Check","034567890123"));
+        byte[] encryptedPassword = Crypto.computeHash(passwordToAdd);
+        userDao.addUser(new User(userToAdd, email, encryptedPassword));
+        assertFalse(interfaceUser.checkUser(userToCheck,passwordToCheck));
+        assertTrue( interfaceUser.checkUser(userToAdd,passwordToAdd));
     }
 
-    @Test
-    void testCreateUser() {
-        String password = "045678901234";
-        byte[] encryptedPassword;
-        assertTrue(userDao.getUser("testuser04Create") == null);
-        interfaceUser.createUser("testuser04Create", "testuser04@Create.de", password);
-        Crypto.setSalt(Arrays.copyOf(userDao.getUser("testuser04Create").password, 16));
-        encryptedPassword = Crypto.computeHash(password);
-        assertTrue(userDao.getUser("testuser04Create") != null);
-        assertEquals("testuser04Create", userDao.getUser("testuser04Create").username);
-        assertEquals("testuser04@Create.de", userDao.getUser("testuser04Create").email);
-        assertTrue(Arrays.equals(encryptedPassword, userDao.getUser("testuser04Create").password));
+
+    @ParameterizedTest
+    @CsvFileSource(resources = "/testUser.csv", numLinesToSkip = 1)
+    void testCreateUser(String userToCreate, String passwordToCreate) {
+        assertTrue(interfaceUser.createUser(userToCreate, email, passwordToCreate));
+        Crypto.setSalt(Arrays.copyOf(userDao.getUser(userToCreate).password, 16));
+        byte[] encryptedPassword = Crypto.computeHash(passwordToCreate);
+        assertTrue(userDao.getUser(userToCreate) != null);
+        assertEquals(userToCreate, userDao.getUser(userToCreate).username);
+        assertEquals(email, userDao.getUser(userToCreate).email);
+        assertTrue(Arrays.equals(encryptedPassword, userDao.getUser(userToCreate).password));
+        assertFalse(interfaceUser.createUser(userToCreate, email, passwordToCreate));
     }
 
     @Test

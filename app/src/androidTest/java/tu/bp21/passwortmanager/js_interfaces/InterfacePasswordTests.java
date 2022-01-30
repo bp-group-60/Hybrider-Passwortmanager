@@ -3,6 +3,7 @@ package tu.bp21.passwortmanager.js_interfaces;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import androidx.room.Room;
 import androidx.test.core.app.ActivityScenario;
 
 import org.junit.jupiter.api.AfterAll;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import de.mannodermaus.junit5.ActivityScenarioExtension;
 import tu.bp21.passwortmanager.Crypto;
 import tu.bp21.passwortmanager.MainActivity;
+import tu.bp21.passwortmanager.db.ApplicationDatabase;
 import tu.bp21.passwortmanager.db.Password;
 import tu.bp21.passwortmanager.db.User;
 import tu.bp21.passwortmanager.db.dao.PasswordDao;
@@ -27,6 +29,8 @@ class InterfacePasswordTests {
     InterfacePassword interfacePassword;
     UserDao userDao;
     PasswordDao passwordDao;
+    ApplicationDatabase database;
+    MainActivity mainActivity;
 
     @RegisterExtension
     final ActivityScenarioExtension<MainActivity> scenarioExtension = ActivityScenarioExtension.launch(MainActivity.class);
@@ -35,14 +39,15 @@ class InterfacePasswordTests {
     void setUp() throws Exception {
         ActivityScenario<MainActivity> scenario = scenarioExtension.getScenario();
 
-        scenario.onActivity(activity -> interfacePassword = activity.getInterfacePassword());
-        scenario.onActivity(activity -> userDao = activity.getUserDao());
-        scenario.onActivity(activity -> passwordDao = activity.getPasswordDao());
-        //Clear Dummy-Data
-        if(userDao.getUser("testuser05CreatePwd") != null)
-            userDao.deleteUser(userDao.getUser("testuser05CreatePwd"));
-        if(userDao.getUser("testuser06getPwdList") != null)
-            userDao.deleteUser(userDao.getUser("testuser06getPwdList"));
+        scenario.onActivity(activity -> mainActivity = activity);
+
+        database = Room.databaseBuilder(mainActivity, ApplicationDatabase.class, "database")
+                .allowMainThreadQueries()
+                .build();
+        userDao = database.getUserDao();
+        passwordDao = database.getPasswordDao();
+
+        interfacePassword = new InterfacePassword(passwordDao);
     }
 
     @AfterEach

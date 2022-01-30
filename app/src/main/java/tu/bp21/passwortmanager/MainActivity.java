@@ -7,10 +7,6 @@ import android.webkit.WebView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
-import tu.bp21.passwortmanager.db.Website;
-import tu.bp21.passwortmanager.db.dao.PasswordDao;
-import tu.bp21.passwortmanager.db.dao.UserDao;
-import tu.bp21.passwortmanager.db.dao.WebsiteDao;
 import tu.bp21.passwortmanager.js_interfaces.InterfacePassword;
 import tu.bp21.passwortmanager.js_interfaces.InterfaceUser;
 import tu.bp21.passwortmanager.js_interfaces.InterfaceWebsite;
@@ -19,10 +15,6 @@ import tu.bp21.passwortmanager.db.ApplicationDatabase;
 /** Main entry point for app. */
 public class MainActivity extends AppCompatActivity {
   private WebView webView;
-  InterfaceUser jsiUser ;
-  InterfacePassword jsiPassword;
-  InterfaceWebsite jsiWebsite;
-  ApplicationDatabase database;
 
   static {
     System.loadLibrary("Crypto");
@@ -42,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
       WebView.setWebContentsDebuggingEnabled(true);
     }
 
-    database =
+    ApplicationDatabase database =
         Room.databaseBuilder(this, ApplicationDatabase.class, "database")
             .allowMainThreadQueries()
             .build();
@@ -52,9 +44,9 @@ public class MainActivity extends AppCompatActivity {
 
     webView.getSettings().setJavaScriptEnabled(true);
 
-    jsiUser = new InterfaceUser(database.getUserDao());
-    jsiPassword = new InterfacePassword(database.getPasswordDao());
-    jsiWebsite = new InterfaceWebsite(database.getWebsiteDao());
+    InterfaceUser jsiUser = new InterfaceUser(database.getUserDao());
+    InterfacePassword jsiPassword = new InterfacePassword(database.getPasswordDao());
+    InterfaceWebsite jsiWebsite = new InterfaceWebsite(database.getWebsiteDao());
 
     webView.addJavascriptInterface(jsiUser, "Java_InterfaceUser");
     webView.addJavascriptInterface(jsiPassword, "Java_InterfacePassword");
@@ -77,11 +69,4 @@ public class MainActivity extends AppCompatActivity {
       super.onBackPressed();
     }
   }
-
-  public InterfaceUser getInterfaceUser(){ return jsiUser;}
-  public InterfacePassword getInterfacePassword(){ return jsiPassword;}
-  public InterfaceWebsite getInterfaceWebsite(){ return jsiWebsite;}
-  public UserDao getUserDao(){return database.getUserDao();}
-  public PasswordDao getPasswordDao(){return database.getPasswordDao();}
-  public WebsiteDao getWebsiteDao(){return database.getWebsiteDao();}
 }
