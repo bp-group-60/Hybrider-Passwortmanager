@@ -6,6 +6,7 @@ import androidx.room.Room;
 import androidx.test.core.app.ActivityScenario;
 
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +26,7 @@ import tu.bp21.passwortmanager.db.dao.UserDao;
 class InterfaceUserTests {
     InterfaceUser interfaceUser;
     UserDao userDao;
-    MainActivity mainActivity;
+    static MainActivity mainActivity;
     ApplicationDatabase database;
     @RegisterExtension
     final ActivityScenarioExtension<MainActivity> scenarioExtension = ActivityScenarioExtension.launch(MainActivity.class);
@@ -48,13 +49,18 @@ class InterfaceUserTests {
     }
 
     @AfterEach
-    void tearDown() throws Exception {
+    void clearDatabase() throws Exception {
         //Clear Dummy-Data
+        database.clearAllTables();
+    }
+
+    @AfterAll
+    static void tearDown() throws Exception{
         mainActivity.deleteDatabase("testDatabase");
     }
 
     @ParameterizedTest
-    @CsvFileSource(resources = "/testUser.csv", numLinesToSkip = 1)
+    @CsvFileSource(resources = "/User/testUser.csv", numLinesToSkip = 1)
     void testExistUser(String userToAdd, String passwordToAdd, String userNotExist) throws Exception {
         userDao.addUser(new User(userToAdd, email, passwordToAdd.getBytes()));
         assertFalse(interfaceUser.existUser(userNotExist));
@@ -62,7 +68,7 @@ class InterfaceUserTests {
     }
 
     @ParameterizedTest
-    @CsvFileSource(resources = "/testCheckUser.csv", numLinesToSkip = 1)
+    @CsvFileSource(resources = "/User/testCheckUser.csv", numLinesToSkip = 1)
     void testCheckUser(String userToAdd, String passwordToAdd, String userToCheck, String passwordToCheck) {
         Crypto.setSalt(Crypto.generateSalt(16));
         byte[] encryptedPassword = Crypto.computeHash(passwordToAdd);
@@ -73,7 +79,7 @@ class InterfaceUserTests {
 
 
     @ParameterizedTest
-    @CsvFileSource(resources = "/testUser.csv", numLinesToSkip = 1)
+    @CsvFileSource(resources = "/User/testUser.csv", numLinesToSkip = 1)
     void testCreateUser(String userToCreate, String passwordToCreate) {
         assertTrue(interfaceUser.createUser(userToCreate, email, passwordToCreate));
         Crypto.setSalt(Arrays.copyOf(userDao.getUser(userToCreate).password, 16));

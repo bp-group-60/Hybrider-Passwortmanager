@@ -5,18 +5,13 @@ import static org.junit.jupiter.api.Assertions.*;
 import androidx.room.Room;
 import androidx.test.core.app.ActivityScenario;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 
-import java.security.SecureRandom;
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Arrays;
 import java.util.Random;
 
 import de.mannodermaus.junit5.ActivityScenarioExtension;
@@ -29,12 +24,14 @@ import tu.bp21.passwortmanager.db.User;
 import tu.bp21.passwortmanager.db.dao.PasswordDao;
 import tu.bp21.passwortmanager.db.dao.UserDao;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@DisplayName(value = "Tests for InterfacePassword")
 class InterfacePasswordTests {
     InterfacePassword interfacePassword;
     UserDao userDao;
     PasswordDao passwordDao;
-    ApplicationDatabase database;
-    MainActivity mainActivity;
+    static ApplicationDatabase database;
+    static MainActivity mainActivity;
     static final String email = "randomEmail@blabla.de";
     static final String loginName = "random";
     static final String masterpassword = "randompassword";
@@ -58,12 +55,18 @@ class InterfacePasswordTests {
     }
 
     @AfterEach
-    void tearDown() throws Exception {
+    void clearDatabase() throws Exception {
+        //Clear Dummy-Data
+        database.clearAllTables();
+    }
+
+    @AfterAll
+    static void tearDown() throws Exception{
         mainActivity.deleteDatabase("testDatabase");
     }
 
     @ParameterizedTest
-    @CsvFileSource(resources = "/testCreatePassword.csv", numLinesToSkip = 1)
+    @CsvFileSource(resources = "/Password/testCreatePassword.csv", numLinesToSkip = 1)
     void testCreatePassword(String userToAdd, String websiteToAdd, String passwordTooAdd, String userNotExist
                             ) throws Exception{
         userDao.addUser(new User(userToAdd, email, masterpassword.getBytes()));
@@ -78,8 +81,43 @@ class InterfacePasswordTests {
         assertFalse(workedNot);
     }
 
-    @Test
-    void updatePassword() {
+    @Nested
+    @DisplayName("updatePassword method")
+    class updatePasswordTest{
+
+        @ParameterizedTest
+        @CsvFileSource(resources = "/Password/updatePasswordSuccess.csv", numLinesToSkip = 1)
+        @DisplayName("Case: Update Success")
+        void updatePasswordSuccess(String username, String loginName, String password, String newLoginName, String newPassword) {
+            Crypto.setSalt(Crypto.generateSalt(16));
+            Crypto.setGeneratedKey(masterpassword);
+            String website = createRandomString()+".com";
+            userDao.addUser(new User(username, email, masterpassword.getBytes()));
+            passwordDao.addPassword(new Password(username,website,loginName,password.getBytes()));
+
+            assertTrue(interfacePassword.updatePassword(username,website,newLoginName, newPassword));
+            Password expected = passwordDao.getPassword(username,website);
+            assertTrue(expected.user.equals(username));
+            assertTrue(expected.websiteName.equals(website));
+            assertTrue(expected.loginName.equals(newLoginName));
+            assertTrue(Crypto.decrypt(expected.password).equals(newPassword));
+        }
+
+        @ParameterizedTest
+        @CsvFileSource(resources = "/Password/updatePasswordFailure.csv", numLinesToSkip = 1)
+        @DisplayName("Case: Update Failure")
+        void updatePasswordFailure(String username1, String website1, String loginName1, String password1, String username2, String website2, String loginName2, String password2) {
+            userDao.addUser(new User(username1, email, masterpassword.getBytes()));
+            passwordDao.addPassword(new Password(username1,website1,loginName1,password1.getBytes()));
+
+            assertFalse(interfacePassword.updatePassword(username2,website2,loginName2,password2));
+
+            Password expected = passwordDao.getPassword(username1,website1);
+            assertTrue(expected.user.equals(username1));
+            assertTrue(expected.websiteName.equals(website1));
+            assertTrue(expected.loginName.equals(loginName1));
+            assertTrue(Arrays.equals(password1.getBytes(),expected.password));
+        }
     }
 
     @Test
@@ -87,12 +125,12 @@ class InterfacePasswordTests {
     }
 
     @ParameterizedTest
-    @CsvFileSource(resources = "/testGetPasswordList.csv", numLinesToSkip = 1)
-    void testGetPasswordList(String userToAdd, String userNotExist, String length) throws Exception{
+    @CsvFileSource(resources = "/Password/testGetPasswordList.csv", numLinesToSkip = 1)
+    void testGetPasswordList(String userToAdd, String userNotExist, int amount) throws Exception{
 
         userDao.addUser(new User(userToAdd, email, masterpassword.getBytes()));
         ArrayList<Password> list = new ArrayList<>();
-        addRandomPassword(Integer.parseInt(length), userToAdd, list);
+        addRandomPassword(amount, userToAdd, list);
         assertEquals("{\"dataArray\":" + list + "}", interfacePassword.getPasswordList(userToAdd, masterpassword));
         assertEquals("{\"dataArray\":[]}", interfacePassword.getPasswordList(userNotExist, masterpassword));
     }
