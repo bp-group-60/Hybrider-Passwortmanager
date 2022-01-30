@@ -2,7 +2,6 @@ package tu.bp21.passwortmanager.js_interfaces;
 
 
 import static org.junit.jupiter.api.Assertions.*;
-
 import androidx.room.Room;
 import androidx.test.core.app.ActivityScenario;
 
@@ -12,13 +11,18 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Random;
 
 import de.mannodermaus.junit5.ActivityScenarioExtension;
 import tu.bp21.passwortmanager.Crypto;
 import tu.bp21.passwortmanager.MainActivity;
+import tu.bp21.passwortmanager.R;
 import tu.bp21.passwortmanager.db.ApplicationDatabase;
 import tu.bp21.passwortmanager.db.Password;
 import tu.bp21.passwortmanager.db.User;
@@ -31,6 +35,9 @@ class InterfacePasswordTests {
     PasswordDao passwordDao;
     ApplicationDatabase database;
     MainActivity mainActivity;
+    static final String email = "randomEmail@blabla.de";
+    static final String loginName = "random";
+    static final String masterpassword = "randompassword";
 
     @RegisterExtension
     final ActivityScenarioExtension<MainActivity> scenarioExtension = ActivityScenarioExtension.launch(MainActivity.class);
@@ -52,18 +59,22 @@ class InterfacePasswordTests {
 
     @AfterEach
     void tearDown() throws Exception {
+        database.clearAllTables();
     }
 
-    @Test
-    void testCreatePassword() throws Exception{
-        byte[] encryptedPassword = new byte[20];
-        userDao.addUser(new User("testuser05CreatePwd", "testuser05@CreatePwd.de", encryptedPassword));
+    @ParameterizedTest
+    @CsvFileSource(resources = "/testCreatePassword.csv", numLinesToSkip = 1)
+    void testCreatePassword(String userToAdd, String websiteToAdd, String passwordTooAdd, String userNotExist
+                            ) throws Exception{
+        userDao.addUser(new User(userToAdd, email, masterpassword.getBytes()));
         Crypto.setSalt(Crypto.generateSalt(16));
-        Crypto.setGeneratedKey("randompassword");
-        boolean worked = interfacePassword.createPassword("testuser05CreatePwd", "youtube.com", "user05LoginName", "Pwd012345");
+        Crypto.setGeneratedKey(masterpassword);
+        boolean worked = interfacePassword.createPassword(userToAdd, websiteToAdd, loginName, passwordTooAdd);
         assertTrue(worked);
+        boolean alreadyExist = !interfacePassword.createPassword(userToAdd, websiteToAdd, loginName, passwordTooAdd);
+        assertTrue(alreadyExist);
 
-        boolean workedNot = interfacePassword.createPassword("testuser01NExist", "youtube.com", "user05LoginName", "Pwd012345");
+        boolean workedNot = interfacePassword.createPassword(userNotExist, websiteToAdd, loginName, passwordTooAdd);
         assertFalse(workedNot);
     }
 
@@ -75,33 +86,15 @@ class InterfacePasswordTests {
     void deletePassword() {
     }
 
-    @Test
-    void testGetPasswordList() throws Exception{
-        byte[] masterPassword = new byte[20];
-        byte[] password1 = new byte[20];
-        byte[] password2 = new byte[20];
-        byte[] password3 = new byte[20];
-        byte[] password4 = new byte[20];
-        SecureRandom.getInstanceStrong().nextBytes(masterPassword);
-        SecureRandom.getInstanceStrong().nextBytes(password1);
-        SecureRandom.getInstanceStrong().nextBytes(password2);
-        SecureRandom.getInstanceStrong().nextBytes(password3);
-        SecureRandom.getInstanceStrong().nextBytes(password4);
+    @ParameterizedTest
+    @CsvFileSource(resources = "/testGetPasswordList.csv", numLinesToSkip = 1)
+    void testGetPasswordList(String userToAdd, String userNotExist, String length) throws Exception{
 
-        userDao.addUser(new User("testuser06getPwdList", "testuser06@getPasswordList.de", masterPassword));
-        ArrayList<Password> list = new ArrayList<Password>();
-        list.add(new Password("testuser06getPwdList", "App01", "appuser01", password1));
-        list.add(new Password("testuser06getPwdList", "App02", "appuser02", password2));
-        list.add(new Password("testuser06getPwdList", "App03", "appuser03", password3));
-        list.add(new Password("testuser06getPwdList", "App04", "appuser01", password4));
-        list.add(new Password("testuser06getPwdList", "App05", "appuser02", password1));
-        passwordDao.addPassword(list.get(0));
-        passwordDao.addPassword(list.get(1));
-        passwordDao.addPassword(list.get(2));
-        passwordDao.addPassword(list.get(3));
-        passwordDao.addPassword(list.get(4));
-        assertEquals("{\"dataArray\":" + list.toString() + "}", interfacePassword.getPasswordList("testuser06getPwdList", "067890123456"));
-        assertEquals("{\"dataArray\":[]}", interfacePassword.getPasswordList("testuser06getNoPasswordList", "067890123456"));
+        userDao.addUser(new User(userToAdd, email, masterpassword.getBytes()));
+        ArrayList<Password> list = new ArrayList<>();
+        addRandomPassword(Integer.parseInt(length), userToAdd, list);
+        assertEquals("{\"dataArray\":" + list.toString() + "}", interfacePassword.getPasswordList(userToAdd, masterpassword));
+        assertEquals("{\"dataArray\":[]}", interfacePassword.getPasswordList(userNotExist, masterpassword));
     }
 
     @Test
@@ -110,5 +103,41 @@ class InterfacePasswordTests {
 
     @Test
     void getPassword() {
+    }
+
+    void addRandomPassword(int length, String user, ArrayList<Password> list){
+        String website, password, loginName;
+        for (int i = 0; i < length; i++) {
+            website = createRandomString()+".com";
+            password = createRandomString();
+            loginName = createRandomString();
+            Password toAdd = new Password(user, website, loginName,password.getBytes());
+            list.add(toAdd);
+            passwordDao.addPassword(toAdd);
+        }
+        list.sort(new PasswordComparator());
+    }
+
+    String createRandomString() {
+        Random random = new Random();
+        int leftLimit = 48; // numeral '0'
+        int rightLimit = 122; // letter 'z'
+        int targetStringLength = random.nextInt(20);
+
+        String generatedString = random.ints(leftLimit, rightLimit + 1)
+                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+                .limit(targetStringLength)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
+
+        return generatedString;
+    }
+
+    class PasswordComparator implements java.util.Comparator<Password>{
+        @Override
+        public int compare(Password password1, Password password2) {
+            return password1.websiteName.compareTo(password2.websiteName);
+        }
+
     }
 }
