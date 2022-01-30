@@ -48,7 +48,7 @@ class InterfacePasswordTests {
 
         scenario.onActivity(activity -> mainActivity = activity);
 
-        database = Room.databaseBuilder(mainActivity, ApplicationDatabase.class, "database")
+        database = Room.databaseBuilder(mainActivity, ApplicationDatabase.class, "test")
                 .allowMainThreadQueries()
                 .build();
         userDao = database.getUserDao();
@@ -59,7 +59,7 @@ class InterfacePasswordTests {
 
     @AfterEach
     void tearDown() throws Exception {
-        database.clearAllTables();
+        mainActivity.deleteDatabase("test");
     }
 
     @ParameterizedTest
@@ -93,7 +93,7 @@ class InterfacePasswordTests {
         userDao.addUser(new User(userToAdd, email, masterpassword.getBytes()));
         ArrayList<Password> list = new ArrayList<>();
         addRandomPassword(Integer.parseInt(length), userToAdd, list);
-        assertEquals("{\"dataArray\":" + list.toString() + "}", interfacePassword.getPasswordList(userToAdd, masterpassword));
+        assertEquals("{\"dataArray\":" + list + "}", interfacePassword.getPasswordList(userToAdd, masterpassword));
         assertEquals("{\"dataArray\":[]}", interfacePassword.getPasswordList(userNotExist, masterpassword));
     }
 
