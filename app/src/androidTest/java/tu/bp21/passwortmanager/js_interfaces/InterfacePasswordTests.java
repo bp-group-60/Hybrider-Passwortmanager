@@ -82,46 +82,73 @@ class InterfacePasswordTests {
     }
 
     @Nested
-    @DisplayName("updatePassword method")
+    @DisplayName("Tests for updatePassword")
     class updatePasswordTest{
 
         @ParameterizedTest
         @CsvFileSource(resources = "/Password/updatePasswordSuccess.csv", numLinesToSkip = 1)
         @DisplayName("Case: Update Success")
         void updatePasswordSuccess(String username, String loginName, String password, String newLoginName, String newPassword) {
-            Crypto.setSalt(Crypto.generateSalt(16));
-            Crypto.setGeneratedKey(masterpassword);
             String website = createRandomString()+".com";
-            userDao.addUser(new User(username, email, masterpassword.getBytes()));
-            passwordDao.addPassword(new Password(username,website,loginName,password.getBytes()));
+            initDB(username,email,website,loginName,password);
 
             assertTrue(interfacePassword.updatePassword(username,website,newLoginName, newPassword));
-            Password expected = passwordDao.getPassword(username,website);
-            assertTrue(expected.user.equals(username));
-            assertTrue(expected.websiteName.equals(website));
-            assertTrue(expected.loginName.equals(newLoginName));
-            assertTrue(Crypto.decrypt(expected.password).equals(newPassword));
+
+            checkExpectedDB(username,website,newLoginName,newPassword);
+
         }
 
         @ParameterizedTest
         @CsvFileSource(resources = "/Password/updatePasswordFailure.csv", numLinesToSkip = 1)
         @DisplayName("Case: Update Failure")
         void updatePasswordFailure(String username1, String website1, String loginName1, String password1, String username2, String website2, String loginName2, String password2) {
-            userDao.addUser(new User(username1, email, masterpassword.getBytes()));
-            passwordDao.addPassword(new Password(username1,website1,loginName1,password1.getBytes()));
+            initDB(username1,email,website1,loginName1,password1);
 
             assertFalse(interfacePassword.updatePassword(username2,website2,loginName2,password2));
 
-            Password expected = passwordDao.getPassword(username1,website1);
-            assertTrue(expected.user.equals(username1));
-            assertTrue(expected.websiteName.equals(website1));
-            assertTrue(expected.loginName.equals(loginName1));
-            assertTrue(Arrays.equals(password1.getBytes(),expected.password));
+            checkExpectedDB(username1,website1,loginName1,password1);
         }
     }
 
     @Test
     void deletePassword() {
+    }
+
+  @Nested
+  @DisplayName("Tests for deletePassword")
+  class deletePasswordTest {
+
+    @ParameterizedTest
+    @CsvFileSource(resources = "/Password/deletePasswordSuccess.csv", numLinesToSkip = 1)
+    @DisplayName("Case: Delete Success")
+    void deletePasswordSuccess(
+        String username,
+        String website) {
+        String loginName = createRandomString();
+        String password = createRandomString();
+      initDB(username, email, website, loginName, password);
+
+      assertTrue(interfacePassword.deletePassword(username, website));
+      assertTrue(passwordDao.getPassword(username,website) == null);
+    }
+
+    @ParameterizedTest
+    @CsvFileSource(resources = "/Password/deletePasswordFailure.csv", numLinesToSkip = 1)
+    @DisplayName("Case: Delete Failure")
+    void deletePasswordFailure(
+        String username1,
+        String website1,
+        String username2,
+        String website2) {
+        String loginName = createRandomString();
+        String password = createRandomString();
+      initDB(username1, email, website1, loginName, password);
+
+      assertFalse(interfacePassword.deletePassword(username2,website2));
+
+      checkExpectedDB(username1, website1, loginName, password);
+    }
+
     }
 
     @ParameterizedTest
@@ -137,15 +164,20 @@ class InterfacePasswordTests {
 
     @Test
     void getLoginName() {
+
     }
 
     @Test
     void getPassword() {
     }
 
-    void addRandomPassword(int length, String user, ArrayList<Password> list){
+    /**
+     * this method adds a random amounts of entity Password into the DB under the given user
+     * the added entries are also saved into the ArrayList
+     */
+    void addRandomPassword(int amount, String user, ArrayList<Password> list){
         String website, password, loginName;
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < amount; i++) {
             website = createRandomString()+".com";
             password = createRandomString();
             loginName = createRandomString();
@@ -156,11 +188,12 @@ class InterfacePasswordTests {
         list.sort(new PasswordComparator());
     }
 
+    //this method generate a random numberalphabetic String with not more than 20 characters
     String createRandomString() {
         Random random = new Random();
         int leftLimit = 48; // numeral '0'
         int rightLimit = 122; // letter 'z'
-        int targetStringLength = random.nextInt(20);
+        int targetStringLength = random.nextInt(21);
 
         String generatedString = random.ints(leftLimit, rightLimit + 1)
                 .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
@@ -178,4 +211,23 @@ class InterfacePasswordTests {
         }
 
     }
+
+    //this method adds an User entity and Password entity into the DB
+    void initDB(String username, String email, String website, String loginName, String password){
+        Crypto.setSalt(Crypto.generateSalt(16));
+        Crypto.setGeneratedKey(masterpassword);
+        userDao.addUser(new User(username, email, masterpassword.getBytes()));
+        passwordDao.addPassword(new Password(username,website,loginName,Crypto.encrypt(password)));
+    }
+
+    //this method checks if the given loginName and password matches the loginName and password of the given Entity specified by username and website
+    void checkExpectedDB(String username, String website, String loginName, String password){
+        Password expected = passwordDao.getPassword(username,website);
+        assertTrue(expected!=null);
+        assertTrue(expected.user.equals(username));
+        assertTrue(expected.websiteName.equals(website));
+        assertTrue(expected.loginName.equals(loginName));
+        assertTrue(Crypto.decrypt(expected.password).equals(password));
+    }
+
 }
