@@ -2,6 +2,8 @@ package tu.bp21.passwortmanager.js_interfaces;
 
 import static org.junit.Assert.*;
 
+import static tu.bp21.passwortmanager.RandomString.generateRandomString;
+
 import androidx.room.Room;
 import androidx.test.core.app.ActivityScenario;
 
@@ -9,6 +11,8 @@ import androidx.test.core.app.ActivityScenario;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -20,8 +24,12 @@ import de.mannodermaus.junit5.ActivityScenarioExtension;
 import tu.bp21.passwortmanager.Crypto;
 import tu.bp21.passwortmanager.MainActivity;
 import tu.bp21.passwortmanager.db.ApplicationDatabase;
+import tu.bp21.passwortmanager.db.Password;
 import tu.bp21.passwortmanager.db.User;
+import tu.bp21.passwortmanager.db.Website;
+import tu.bp21.passwortmanager.db.dao.PasswordDao;
 import tu.bp21.passwortmanager.db.dao.UserDao;
+import tu.bp21.passwortmanager.db.dao.WebsiteDao;
 
 class InterfaceUserTests {
     InterfaceUser interfaceUser;
@@ -30,7 +38,7 @@ class InterfaceUserTests {
     ApplicationDatabase database;
     @RegisterExtension
     final ActivityScenarioExtension<MainActivity> scenarioExtension = ActivityScenarioExtension.launch(MainActivity.class);
-    static final String email = "randomEmail@blabla.de";
+    String randomEmail;
 
     @BeforeEach
     void setUp() throws Exception {
@@ -45,7 +53,7 @@ class InterfaceUserTests {
         userDao = database.getUserDao();
 
         interfaceUser = new InterfaceUser(userDao);
-
+        randomEmail = generateRandomString(21) + "@email.de";
     }
 
     @AfterEach
@@ -62,7 +70,7 @@ class InterfaceUserTests {
     @ParameterizedTest
     @CsvFileSource(resources = "/User/testUser.csv", numLinesToSkip = 1)
     void testExistUser(String userToAdd, String passwordToAdd, String userNotExist) throws Exception {
-        userDao.addUser(new User(userToAdd, email, passwordToAdd.getBytes()));
+        userDao.addUser(new User(userToAdd, randomEmail, passwordToAdd.getBytes()));
         assertFalse(interfaceUser.existUser(userNotExist));
         assertTrue(interfaceUser.existUser(userToAdd));
     }
@@ -72,7 +80,7 @@ class InterfaceUserTests {
     void testCheckUser(String userToAdd, String passwordToAdd, String userToCheck, String passwordToCheck) {
         Crypto.setSalt(Crypto.generateSalt(16));
         byte[] encryptedPassword = Crypto.computeHash(passwordToAdd);
-        userDao.addUser(new User(userToAdd, email, encryptedPassword));
+        userDao.addUser(new User(userToAdd, randomEmail, encryptedPassword));
         assertFalse(interfaceUser.checkUser(userToCheck,passwordToCheck));
         assertTrue( interfaceUser.checkUser(userToAdd,passwordToAdd));
     }
@@ -81,17 +89,57 @@ class InterfaceUserTests {
     @ParameterizedTest
     @CsvFileSource(resources = "/User/testUser.csv", numLinesToSkip = 1)
     void testCreateUser(String userToCreate, String passwordToCreate) {
-        assertTrue(interfaceUser.createUser(userToCreate, email, passwordToCreate));
+        assertTrue(interfaceUser.createUser(userToCreate, randomEmail, passwordToCreate));
         Crypto.setSalt(Arrays.copyOf(userDao.getUser(userToCreate).password, 16));
         byte[] encryptedPassword = Crypto.computeHash(passwordToCreate);
         assertTrue(userDao.getUser(userToCreate) != null);
         assertEquals(userToCreate, userDao.getUser(userToCreate).username);
-        assertEquals(email, userDao.getUser(userToCreate).email);
+        assertEquals(randomEmail, userDao.getUser(userToCreate).email);
         assertTrue(Arrays.equals(encryptedPassword, userDao.getUser(userToCreate).password));
-        assertFalse(interfaceUser.createUser(userToCreate, email, passwordToCreate));
+        assertFalse(interfaceUser.createUser(userToCreate, randomEmail, passwordToCreate));
     }
 
     @Test
     void deleteUser() {
+    }
+
+    @Nested
+    @DisplayName("Tests for deleteUser")
+    class deleteUserTest{
+
+        @Test
+        @DisplayName("Case: Success")
+        void deleteUserSuccess(){
+            String username = generateRandomString(20), masterPassword = generateRandomString(20),
+                    loginName = generateRandomString(20), website1 = generateRandomString(20)+".com",
+                    password=generateRandomString(20), url = generateRandomString(20), website2 = website1 + ".de";
+            Crypto.setSalt(Crypto.generateSalt(16));
+            byte[] encryptedPassword = Crypto.computeHash(masterPassword);
+            PasswordDao passwordDao = database.getPasswordDao();
+            WebsiteDao websiteDao = database.getWebsiteDao();
+            userDao.addUser(new User(username, randomEmail, encryptedPassword));
+            passwordDao.addPassword(new Password(username,website1,loginName,password.getBytes()));
+            passwordDao.addPassword(new Password(username,website2,loginName,password.getBytes()));
+            websiteDao.addWebsite(new Website(username,website1,url));
+
+            assertTrue(interfaceUser.deleteUser(username,masterPassword));
+            assertNull(userDao.getUser(username));
+            assertNull(passwordDao.getPassword(username,website1));
+            assertNull(passwordDao.getPassword(username,website2));
+            assertTrue(websiteDao.getWebsiteList(username,website1).isEmpty());
+        }
+
+        @ParameterizedTest
+        @CsvFileSource(resources = "/User/testCheckUser.csv", numLinesToSkip = 1)
+        @DisplayName("Case: Failure")
+        void deleteUserFailure(String username, String password, String differentUsername, String differentPassword){
+            Crypto.setSalt(Crypto.generateSalt(16));
+            byte[] encryptedPassword = Crypto.computeHash(password);
+            userDao.addUser(new User(username, randomEmail, encryptedPassword));
+
+            assertFalse(interfaceUser.deleteUser(differentUsername,differentPassword));
+            assertNotNull(userDao.getUser(username));
+            assertTrue(Arrays.equals(encryptedPassword,userDao.getUser(username).password));
+        }
     }
 }

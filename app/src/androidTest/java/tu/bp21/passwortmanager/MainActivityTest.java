@@ -28,19 +28,15 @@ class MainActivityTest {
     void tearDown() throws Exception {
     }
 
-    @Test
+    /*@Test
     void testonCreate() {
         View view  =  mActivity.getCurrentFocus();
         if(view instanceof WebView) assertNotNull((WebView)view);
         else assertFalse(true);
-    }
+    }*/
 
     @Test
     void testonBackPressed() {
 
-    }
-
-    @Test
-    void testgetJavascriptHandler() {
     }
 }

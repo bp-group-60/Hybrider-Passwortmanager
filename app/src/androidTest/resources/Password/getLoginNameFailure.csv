@@ -1,0 +1,4 @@
+username,masterPassword,website,actualUserName,actualMasterPassword,actualWebsite
+user01,password01,website01.de,wronguser,password01,website01.de
+user01,password01,website01.de,user01,wrongpassword,website01.de
+user01,password01,website01.de,user01,password01,wrongwebsite.de
