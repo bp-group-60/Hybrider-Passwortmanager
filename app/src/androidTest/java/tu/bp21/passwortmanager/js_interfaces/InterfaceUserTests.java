@@ -2,7 +2,7 @@ package tu.bp21.passwortmanager.js_interfaces;
 
 import static org.junit.Assert.*;
 
-import static tu.bp21.passwortmanager.RandomString.generateRandomString;
+import static tu.bp21.passwortmanager.StringFunction.generateRandomString;
 
 import androidx.room.Room;
 import androidx.test.core.app.ActivityScenario;
@@ -53,7 +53,7 @@ class InterfaceUserTests {
         userDao = database.getUserDao();
 
         interfaceUser = new InterfaceUser(userDao);
-        randomEmail = generateRandomString(21) + "@email.de";
+        randomEmail = generateRandomString(20) + "@email.de";
     }
 
     @AfterEach

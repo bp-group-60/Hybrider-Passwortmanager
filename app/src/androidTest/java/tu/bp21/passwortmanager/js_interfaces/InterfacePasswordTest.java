@@ -2,7 +2,7 @@ package tu.bp21.passwortmanager.js_interfaces;
 
 
 import static org.junit.jupiter.api.Assertions.*;
-import static tu.bp21.passwortmanager.RandomString.generateRandomString;
+import static tu.bp21.passwortmanager.StringFunction.*;
 
 import androidx.room.Room;
 import androidx.test.core.app.ActivityScenario;
@@ -13,6 +13,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import de.mannodermaus.junit5.ActivityScenarioExtension;
 import tu.bp21.passwortmanager.Crypto;
@@ -27,7 +28,7 @@ import tu.bp21.passwortmanager.db.dao.WebsiteDao;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName(value = "Tests for InterfacePassword")
-class InterfacePasswordTests {
+class InterfacePasswordTest {
     InterfacePassword interfacePassword;
     UserDao userDao;
     PasswordDao passwordDao;
@@ -57,12 +58,12 @@ class InterfacePasswordTests {
 
         interfacePassword = new InterfacePassword(passwordDao);
 
-        randomUser = generateRandomString(21);
-        randomEmail = generateRandomString(21) + "@email.de";
-        randomLoginName = generateRandomString(21);
-        randomMasterPassword = generateRandomString(21);
-        randomWebsite = generateRandomString(21) + ".de";
-        randomPassword = generateRandomString(21);
+        randomUser = generateRandomString(20);
+        randomEmail = generateRandomString(20) + "@email.de";
+        randomLoginName = generateRandomString(20);
+        randomMasterPassword = generateRandomString(20);
+        randomWebsite = generateRandomString(20) + ".de";
+        randomPassword = generateRandomString(20);
     }
 
     @AfterEach
@@ -92,9 +93,9 @@ class InterfacePasswordTests {
         }
 
         @ParameterizedTest
-        @CsvFileSource(resources = "/Password/createPasswordExist.csv", numLinesToSkip = 1)
+        @CsvFileSource(resources = "/Password/createPasswordExisted.csv", numLinesToSkip = 1)
         @DisplayName("Case: Already Exist")
-        void createPasswordExist(String loginName1, String password1, String loginName2, String password2){
+        void createPasswordExisted(String loginName1, String password1, String loginName2, String password2){
             initDB(randomUser,randomEmail,randomMasterPassword,randomWebsite,loginName1,password1);
             boolean worked = interfacePassword.createPassword(randomUser, randomWebsite, loginName2, password2);
             assertFalse(worked);
@@ -103,14 +104,20 @@ class InterfacePasswordTests {
 
         @ParameterizedTest
         @CsvFileSource(resources = "/Password/createPasswordFailure.csv", numLinesToSkip = 1)
-        @DisplayName("Case: User not exist")
-        void createPasswordFailure(String userExist, String userNotExist){
-            userDao.addUser(new User(userExist, randomEmail, randomMasterPassword.getBytes()));
+        @DisplayName("Case: Failure")
+        void createPasswordFailure(String userExistedInDB, String userToCreate, String websiteToCreate, String loginNameToCreate, String passwordToCreate
+                                   ){
+            userToCreate = convertNullToEmptyString(userToCreate);
+            websiteToCreate = convertNullToEmptyString(websiteToCreate);
+            loginNameToCreate = convertNullToEmptyString(loginNameToCreate);
+            passwordToCreate = convertNullToEmptyString(passwordToCreate);
+            userDao.addUser(new User(userExistedInDB, randomEmail, randomMasterPassword.getBytes()));
             Crypto.setSalt(Crypto.generateSalt(16));
             Crypto.setGeneratedKey(randomMasterPassword);
-            boolean worked = interfacePassword.createPassword(userNotExist, randomWebsite, randomLoginName, randomPassword);
+            boolean worked = interfacePassword.createPassword(userToCreate, websiteToCreate, loginNameToCreate, passwordToCreate);
             assertFalse(worked);
-            assertNull(passwordDao.getPassword(userNotExist,randomWebsite));
+            assertNull(passwordDao.getPassword(userToCreate,websiteToCreate));
+
         }
     }
 
@@ -150,7 +157,7 @@ class InterfacePasswordTests {
     @DisplayName("Case: Delete Success")
     void deletePasswordSuccess() {
       initDB(randomUser, randomEmail, randomMasterPassword, randomWebsite, randomLoginName, randomPassword);
-      String randomUrl = generateRandomString(21);
+      String randomUrl = generateRandomString(20);
       WebsiteDao websiteDao = database.getWebsiteDao();
       websiteDao.addWebsite(new Website(randomUser,randomWebsite,randomUrl));
 
@@ -176,15 +183,19 @@ class InterfacePasswordTests {
 
     }
 
-    @ParameterizedTest
-    @CsvFileSource(resources = "/Password/testGetPasswordList.csv", numLinesToSkip = 1)
-    void testGetPasswordList(String usernameToAdd, String differentUsername, int amount) throws Exception{
+    @Test
+    void getPasswordListTest(){
+        String expectedUser = randomUser;
+        String differentUser = generateRandomString(20);
+        while(differentUser.equals(expectedUser))
+            differentUser = generateRandomString(20);
 
-        userDao.addUser(new User(usernameToAdd, randomEmail, randomMasterPassword.getBytes()));
+        userDao.addUser(new User(expectedUser, randomEmail, randomMasterPassword.getBytes()));
         ArrayList<Password> list = new ArrayList<>();
-        addRandomPassword(amount, usernameToAdd, list);
-        assertEquals("{\"dataArray\":" + list + "}", interfacePassword.getPasswordList(usernameToAdd, randomMasterPassword));
-        assertEquals("{\"dataArray\":[]}", interfacePassword.getPasswordList(differentUsername, randomMasterPassword));
+        addRandomPassword(expectedUser, list);
+        assertEquals("{\"dataArray\":" + list + "}", interfacePassword.getPasswordList(expectedUser, randomMasterPassword));
+        assertNotEquals("{\"dataArray\":" + list + "}", interfacePassword.getPasswordList(differentUser, randomMasterPassword));
+        assertEquals("{\"dataArray\":[]}", interfacePassword.getPasswordList(differentUser, randomMasterPassword));
     }
 
     @Nested
@@ -236,16 +247,17 @@ class InterfacePasswordTests {
     }
 
     /**
-     * this method adds a random amounts of entity Password into the DB under the given user
+     * this method adds a random amount (less than 30) of entity Password into the DB under the given username
      * the added entries are also saved into the ArrayList
      */
-    void addRandomPassword(int amount, String user, ArrayList<Password> list){
+    void addRandomPassword(String username, ArrayList<Password> list){
         String website, password, loginName;
+        int amount = new Random().nextInt(30)+1;
         for (int i = 0; i < amount; i++) {
-            website = generateRandomString(21)+".com";
-            password = generateRandomString(21);
-            loginName = generateRandomString(21);
-            Password toAdd = new Password(user, website, loginName,password.getBytes());
+            website = generateRandomString(20)+".com";
+            password = generateRandomString(20);
+            loginName = generateRandomString(20);
+            Password toAdd = new Password(username, website, loginName,password.getBytes());
             list.add(toAdd);
             passwordDao.addPassword(toAdd);
         }

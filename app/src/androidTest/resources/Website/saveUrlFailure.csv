@@ -1,0 +1,5 @@
+userExistedInDB,websiteExistedInDB,userGiven,websiteGiven,urlGiven
+giang123,web.de,giang123,web.de,,               case: url ist leer
+giang123,web.de,giang123,abc.de,abc.web.de,     case: website stimmt nicht
+giang123,web.de,giang456,abc.de,abc.web.de,     case: username stimmt nicht
+giang123,web.de,giang456,abc.de,abc.web.de,     case: beide stimmt nicht
