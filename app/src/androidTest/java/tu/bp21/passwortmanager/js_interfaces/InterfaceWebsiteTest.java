@@ -112,7 +112,7 @@ class InterfaceWebsiteTest {
         @ParameterizedTest
         @CsvFileSource(resources = "/Website/saveUrlFailure.csv", numLinesToSkip = 1)
         @DisplayName("Case: Failure")
-        void saveUrlFailure(String userExistedInDB, String websiteExistedInDB, String userGiven, String websiteGiven, String urlGiven){
+        void saveUrlFailure(String displayCase, String userExistedInDB, String websiteExistedInDB, String userGiven, String websiteGiven, String urlGiven){
             urlGiven = convertNullToEmptyString(urlGiven);
             initDB(userExistedInDB,randomEmail,randomMasterPassword,websiteExistedInDB,randomLoginName,randomPassword);
             assertFalse(interfaceWebsite.saveUrl(userGiven,websiteGiven,urlGiven));
@@ -136,7 +136,7 @@ class InterfaceWebsiteTest {
         @ParameterizedTest
         @CsvFileSource(resources = "/Website/deleteUrlFailure.csv", numLinesToSkip = 1)
         @DisplayName("Case: Failure")
-        void deleteUrlFailure(String usernameExistedInDB, String websiteExistedInDB, String urlExistedInDB, String usernameGiven, String websiteGiven, String urlGiven){
+        void deleteUrlFailure(String displayCase, String usernameExistedInDB, String websiteExistedInDB, String urlExistedInDB, String usernameGiven, String websiteGiven, String urlGiven){
             initDB(usernameExistedInDB,randomEmail,randomMasterPassword,websiteExistedInDB,randomLoginName,randomPassword);
             websiteDao.addWebsite(new Website(usernameExistedInDB,websiteExistedInDB,urlExistedInDB));
             assertFalse(interfaceWebsite.deleteUrl(usernameGiven,websiteGiven,urlGiven));
@@ -160,7 +160,7 @@ class InterfaceWebsiteTest {
         @ParameterizedTest
         @CsvFileSource(resources = "/Website/getUrlListFailure.csv", numLinesToSkip = 1)
         @DisplayName("Case: Failure")
-        void getUrlListFailure(String usernameExistedInDB, String websiteExistedInDB, String usernameGiven, String websiteGiven){
+        void getUrlListFailure(String displayCase, String usernameExistedInDB, String websiteExistedInDB, String usernameGiven, String websiteGiven){
             ArrayList<Website> list = new ArrayList<>();
             initDB(usernameExistedInDB,randomEmail,randomMasterPassword,websiteExistedInDB,randomLoginName,randomPassword);
             addRandomWebsiteUrl(usernameExistedInDB,websiteExistedInDB, list);

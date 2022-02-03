@@ -1,5 +1,5 @@
-usernameExistedInDB,websiteExistedInDB,urlExistedInDB,usernameGiven,websiteGiven,urlGiven
-username,website,website.de,wrongusername,website,website.de,       case: username stimmt nicht
-username,website,website.de,username,wrongwebsite,website.de,       case: website stimmt nicht
-username,website,website.de,username,website,wrongwebsite.de,       case: url stimmt nicht
+case,usernameExistedInDB,websiteExistedInDB,urlExistedInDB,usernameGiven,websiteGiven,urlGiven
+username doesn't match,username,website,website.de,wrongusername,website,website.de,        case: username stimmt nicht
+website doesn't match,username,website,website.de,username,wrongwebsite,website.de,         case: website stimmt nicht
+url doesn't match,username,website,website.de,username,website,wrongwebsite.de,             case: url stimmt nicht
 

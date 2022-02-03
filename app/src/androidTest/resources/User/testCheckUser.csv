@@ -1,4 +1,4 @@
-username1,password1,username02,password2
-testuser01,testpassword01,testuser02,testpassword02,        case: username und masterPassword stimmt nicht
-testuser01,testpassword01,testuser02,testpassword01,        case: username stimmt nicht
-testuser01,testpassword01,testuser01,testpassword02,        case: masterPassword stimmt nicht
+case,username1,password1,username02,password2
+username doesn't match,testuser01,testpassword01,testuser02,testpassword01,              case: username stimmt nicht
+masterPassword doesn't match,testuser01,testpassword01,testuser01,testpassword02,        case: masterPassword stimmt nicht
+both don't match,testuser01,testpassword01,testuser02,testpassword02,                    case: username und masterPassword stimmt nicht

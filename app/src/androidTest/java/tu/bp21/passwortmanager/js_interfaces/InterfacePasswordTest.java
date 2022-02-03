@@ -94,8 +94,8 @@ class InterfacePasswordTest {
 
         @ParameterizedTest
         @CsvFileSource(resources = "/Password/createPasswordExisted.csv", numLinesToSkip = 1)
-        @DisplayName("Case: Already Exist")
-        void createPasswordExisted(String loginName1, String password1, String loginName2, String password2){
+        @DisplayName("Case: Existed")
+        void createPasswordExisted(String displayCase, String loginName1, String password1, String loginName2, String password2){
             initDB(randomUser,randomEmail,randomMasterPassword,randomWebsite,loginName1,password1);
             boolean worked = interfacePassword.createPassword(randomUser, randomWebsite, loginName2, password2);
             assertFalse(worked);
@@ -105,7 +105,7 @@ class InterfacePasswordTest {
         @ParameterizedTest
         @CsvFileSource(resources = "/Password/createPasswordFailure.csv", numLinesToSkip = 1)
         @DisplayName("Case: Failure")
-        void createPasswordFailure(String userExistedInDB, String userToCreate, String websiteToCreate, String loginNameToCreate, String passwordToCreate
+        void createPasswordFailure(String displayCase, String userExistedInDB, String userToCreate, String websiteToCreate, String loginNameToCreate, String passwordToCreate
                                    ){
             userToCreate = convertNullToEmptyString(userToCreate);
             websiteToCreate = convertNullToEmptyString(websiteToCreate);
@@ -127,8 +127,8 @@ class InterfacePasswordTest {
 
         @ParameterizedTest
         @CsvFileSource(resources = "/Password/updatePasswordSuccess.csv", numLinesToSkip = 1)
-        @DisplayName("Case: Update Success")
-        void updatePasswordSuccess(String username, String loginName, String password, String newLoginName, String newPassword) {
+        @DisplayName("Case: Success")
+        void updatePasswordSuccess(String displayCase, String username, String loginName, String password, String newLoginName, String newPassword) {
             initDB(username, randomEmail, randomMasterPassword, randomWebsite, loginName, password);
 
             assertTrue(interfacePassword.updatePassword(username,randomWebsite,newLoginName, newPassword));
@@ -139,8 +139,8 @@ class InterfacePasswordTest {
 
         @ParameterizedTest
         @CsvFileSource(resources = "/Password/updatePasswordFailure.csv", numLinesToSkip = 1)
-        @DisplayName("Case: Update Failure")
-        void updatePasswordFailure(String username1, String website1, String loginName1, String password1, String username2, String website2, String loginName2, String password2) {
+        @DisplayName("Case: Failure")
+        void updatePasswordFailure(String displayCase, String username1, String website1, String loginName1, String password1, String username2, String website2, String loginName2, String password2) {
             initDB(username1, randomEmail, randomMasterPassword, website1, loginName1, password1);
 
             assertFalse(interfacePassword.updatePassword(username2,website2,loginName2,password2));
@@ -154,7 +154,7 @@ class InterfacePasswordTest {
   class deletePasswordTest {
 
     @Test
-    @DisplayName("Case: Delete Success")
+    @DisplayName("Case: Success")
     void deletePasswordSuccess() {
       initDB(randomUser, randomEmail, randomMasterPassword, randomWebsite, randomLoginName, randomPassword);
       String randomUrl = generateRandomString(20);
@@ -168,8 +168,8 @@ class InterfacePasswordTest {
 
     @ParameterizedTest
     @CsvFileSource(resources = "/Password/deletePasswordFailure.csv", numLinesToSkip = 1)
-    @DisplayName("Case: Delete Failure")
-    void deletePasswordFailure(
+    @DisplayName("Case: Failure")
+    void deletePasswordFailure( String displayCase,
         String username1,
         String website1,
         String username2,
@@ -214,11 +214,11 @@ class InterfacePasswordTest {
         @ParameterizedTest
         @CsvFileSource(resources = "/Password/getLoginNameFailure.csv", numLinesToSkip = 1)
         @DisplayName("Case: Failure")
-        void getLoginNameFailure(String username, String masterPassword, String website, String actualUserName, String actualMasterPassword, String actualWebsite){
-            String expectedLoginName = randomLoginName;
-            initDB(username, randomEmail, masterPassword, website, expectedLoginName, randomPassword);
+        void getLoginNameFailure(String displayCase, String username, String masterPassword, String website, String actualUserName, String actualMasterPassword, String actualWebsite){
+            String expectedLoginName = "";
+            initDB(username, randomEmail, masterPassword, website, randomLoginName, randomPassword);
             String actualLoginName = interfacePassword.getLoginName(actualUserName, actualMasterPassword, actualWebsite);
-            assertFalse(expectedLoginName.equals(actualLoginName));
+            assertTrue(expectedLoginName.equals(actualLoginName));
         }
     }
 
@@ -238,11 +238,11 @@ class InterfacePasswordTest {
         @ParameterizedTest
         @CsvFileSource(resources = "/Password/getPasswordFailure.csv", numLinesToSkip = 1)
         @DisplayName("Case: Failure")
-        void getPasswordFailure(String username, String masterPassword, String website, String actualUserName, String actualMasterPassword, String actualWebsite){
-            String expectedPassword = randomPassword;
-            initDB(randomUser,randomEmail, randomMasterPassword,randomWebsite, randomLoginName, expectedPassword);
+        void getPasswordFailure(String displayCase, String username, String masterPassword, String website, String actualUserName, String actualMasterPassword, String actualWebsite){
+            String expectedPassword = "";
+            initDB(username,randomEmail, masterPassword,website, randomLoginName, randomPassword);
             String actualPassword = interfacePassword.getPassword(actualUserName, actualMasterPassword, actualWebsite);
-            assertFalse(expectedPassword.equals(actualPassword));
+            assertTrue(expectedPassword.equals(actualPassword));
         }
     }
 

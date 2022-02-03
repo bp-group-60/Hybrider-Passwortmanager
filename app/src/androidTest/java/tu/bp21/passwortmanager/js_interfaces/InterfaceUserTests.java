@@ -77,7 +77,7 @@ class InterfaceUserTests {
 
     @ParameterizedTest
     @CsvFileSource(resources = "/User/testCheckUser.csv", numLinesToSkip = 1)
-    void testCheckUser(String userToAdd, String passwordToAdd, String userToCheck, String passwordToCheck) {
+    void testCheckUser(String displayCase, String userToAdd, String passwordToAdd, String userToCheck, String passwordToCheck) {
         Crypto.setSalt(Crypto.generateSalt(16));
         byte[] encryptedPassword = Crypto.computeHash(passwordToAdd);
         userDao.addUser(new User(userToAdd, randomEmail, encryptedPassword));
@@ -132,7 +132,7 @@ class InterfaceUserTests {
         @ParameterizedTest
         @CsvFileSource(resources = "/User/testCheckUser.csv", numLinesToSkip = 1)
         @DisplayName("Case: Failure")
-        void deleteUserFailure(String username, String password, String differentUsername, String differentPassword){
+        void deleteUserFailure(String displayCase, String username, String password, String differentUsername, String differentPassword){
             Crypto.setSalt(Crypto.generateSalt(16));
             byte[] encryptedPassword = Crypto.computeHash(password);
             userDao.addUser(new User(username, randomEmail, encryptedPassword));
