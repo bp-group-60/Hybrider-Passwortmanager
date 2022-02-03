@@ -209,6 +209,7 @@ class InterfacePasswordTest {
             initDB(randomUser,randomEmail, randomMasterPassword,randomWebsite, expectedLoginName, randomPassword);
             String actualLoginName = interfacePassword.getLoginName(randomUser, randomMasterPassword, randomWebsite);
             assertTrue(expectedLoginName.equals(actualLoginName));
+
         }
 
         @ParameterizedTest
