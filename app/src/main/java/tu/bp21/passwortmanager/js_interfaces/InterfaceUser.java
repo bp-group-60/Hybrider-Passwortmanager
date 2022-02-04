@@ -2,6 +2,8 @@ package tu.bp21.passwortmanager.js_interfaces;
 
 import android.webkit.JavascriptInterface;
 
+import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.io.BaseEncoding;
+
 import java.util.Arrays;
 
 import tu.bp21.passwortmanager.Crypto;
@@ -24,9 +26,9 @@ public class InterfaceUser {
   public boolean checkUser(String username, String userPassword) {
     User user = userDataAccessObject.getUser(username);
     if(user != null) {
-      Crypto.setSalt(Arrays.copyOf(user.password, 16));
-      if(Arrays.equals(user.password, Crypto.computeHash(userPassword))) {
-        Crypto.setGeneratedKey(userPassword);
+      byte[] cipher = BaseEncoding.base16().decode(userPassword.toUpperCase());
+      System.out.println("Wert: " +cipher.length);
+      if(Arrays.equals(user.password,cipher)) {
         return true;
       }
     }
@@ -50,8 +52,8 @@ public class InterfaceUser {
   }
 
   @JavascriptInterface
-  public boolean deleteUser(String username, String plainPassword) {
-    if(!checkUser(username, plainPassword))
+  public boolean deleteUser(String username, String userPassword) {
+    if(!checkUser(username, userPassword))
       return false;
 
     User newUser = new User(username);
