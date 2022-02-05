@@ -99,10 +99,6 @@ class InterfaceUserTests {
         assertFalse(interfaceUser.createUser(userToCreate, randomEmail, passwordToCreate));
     }
 
-    @Test
-    void deleteUser() {
-    }
-
     @Nested
     @DisplayName("Tests for deleteUser")
     class deleteUserTest{

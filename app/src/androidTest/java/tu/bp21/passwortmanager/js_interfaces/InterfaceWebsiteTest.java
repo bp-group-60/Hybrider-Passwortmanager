@@ -84,10 +84,6 @@ class InterfaceWebsiteTest {
         mainActivity.deleteDatabase("testDatabase");
     }
 
-    @Test
-    public void saveUrl() {
-    }
-
     @Nested
     @DisplayName("Tests for saveUrl")
     class saveUrlTest{

@@ -35,8 +35,8 @@ class MainActivityTest {
         else assertFalse(true);
     }*/
 
-    @Test
+    /*@Test
     void testonBackPressed() {
 
-    }
+    }*/
 }

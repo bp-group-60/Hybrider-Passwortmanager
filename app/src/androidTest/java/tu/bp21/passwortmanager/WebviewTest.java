@@ -17,11 +17,11 @@ public class WebviewTest {
     public void tearDown() throws Exception {
     }
 
-    @Test
+    /*@Test
     public void onCreate() {
     }
 
     @Test
     public void onBackPressed() {
-    }
+    }*/
 }

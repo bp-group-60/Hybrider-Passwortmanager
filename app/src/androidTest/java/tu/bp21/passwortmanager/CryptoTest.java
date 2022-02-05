@@ -33,7 +33,7 @@ class CryptoTest {
     }
 
 
-    @Test
+    /*@Test
     void setSalt() {
     }
 
@@ -47,5 +47,5 @@ class CryptoTest {
 
     @Test
     void computeHash() {
-    }
+    }*/
 }

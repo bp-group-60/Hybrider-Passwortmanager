@@ -16,7 +16,7 @@ public class AssetWebViewClientTest {
     public void tearDown() throws Exception {
     }
 
-    @Test
+    /*@Test
     public void shouldInterceptRequest() {
-    }
+    }*/
 }
