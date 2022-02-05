@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     InterfacePassword jsiPassword = new InterfacePassword(database.getPasswordDao());
     InterfaceWebsite jsiWebsite = new InterfaceWebsite(database.getWebsiteDao());
     InterfaceCrypto jsiCrypto = new InterfaceCrypto(database.getUserDao());
+    Crypto.setPasswordDao(database.getPasswordDao());
 
     webView.addJavascriptInterface(jsiUser, "Java_InterfaceUser");
     webView.addJavascriptInterface(jsiPassword, "Java_InterfacePassword");

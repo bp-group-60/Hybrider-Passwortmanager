@@ -27,7 +27,6 @@ public class InterfaceUser {
     User user = userDataAccessObject.getUser(username);
     if(user != null) {
       byte[] cipher = BaseEncoding.base16().decode(userPassword.toUpperCase());
-      System.out.println("Wert: " +cipher.length);
       if(Arrays.equals(user.password,cipher)) {
         return true;
       }
@@ -37,7 +36,7 @@ public class InterfaceUser {
 
   @JavascriptInterface
   public boolean createUser(String username, String email, String userPassword) {
-    Crypto.setSalt(Crypto.generateSalt(16));
+    Crypto.setSalt(Crypto.generateSecureByteArray(16));
     byte[] hashValue = Crypto.computeHash(userPassword);
     User newUser = new User(username, email, hashValue);
 
