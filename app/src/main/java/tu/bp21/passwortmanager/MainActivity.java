@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
 import tu.bp21.passwortmanager.js_interfaces.InterfacePassword;
+import tu.bp21.passwortmanager.js_interfaces.InterfaceTools;
 import tu.bp21.passwortmanager.js_interfaces.InterfaceUser;
 import tu.bp21.passwortmanager.js_interfaces.InterfaceWebsite;
 import tu.bp21.passwortmanager.db.ApplicationDatabase;
@@ -39,18 +40,22 @@ public class MainActivity extends AppCompatActivity {
             .allowMainThreadQueries()
             .build();
 
+    InterfaceUser jsiUser = new InterfaceUser(database.getUserDao());
+    InterfacePassword jsiPassword = new InterfacePassword(database.getPasswordDao());
+    InterfaceWebsite jsiWebsite = new InterfaceWebsite(database.getWebsiteDao());
+
+    InterfaceTools jsiTools = new InterfaceTools(this);
+
     webView = new WebView(this);
     webView.setWebViewClient(new AssetWebViewClient(this));
 
     webView.getSettings().setJavaScriptEnabled(true);
 
-    InterfaceUser jsiUser = new InterfaceUser(database.getUserDao());
-    InterfacePassword jsiPassword = new InterfacePassword(database.getPasswordDao());
-    InterfaceWebsite jsiWebsite = new InterfaceWebsite(database.getWebsiteDao());
-
     webView.addJavascriptInterface(jsiUser, "Java_InterfaceUser");
     webView.addJavascriptInterface(jsiPassword, "Java_InterfacePassword");
     webView.addJavascriptInterface(jsiWebsite, "Java_InterfaceWebsite");
+
+    webView.addJavascriptInterface(jsiTools, "Java_InterfaceTools");
 
     webView.loadUrl("https://appassets.androidplatform.net/assets/src/html/index.html");
 

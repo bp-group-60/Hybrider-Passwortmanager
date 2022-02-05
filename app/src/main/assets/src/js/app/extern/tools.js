@@ -1,0 +1,1 @@
+Java_InterfaceTools.copyClipTimeout('test', 20000);

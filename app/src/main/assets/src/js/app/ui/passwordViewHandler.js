@@ -1,6 +1,6 @@
 import {addUrlOnclick} from './onclick/onclickUrl.js';
-import {getLoginName, getPassword} from '../database/passwordOperations.js';
-import {getUrlList} from '../database/websiteOperations.js';
+import {getLoginName, getPassword} from '../extern/database/passwordOperations.js';
+import {getUrlList} from '../extern/database/websiteOperations.js';
 import {getSessionUser} from '../sessionHandler.js';
 import {
   editAbortOnclick,

@@ -1,6 +1,6 @@
-import {deletePassword, updatePassword,} from '../../database/passwordOperations.js';
+import {deletePassword, updatePassword,} from '../../extern/database/passwordOperations.js';
 import {getSessionPassword, getSessionUser} from '../../sessionHandler.js';
-import {deleteUrlList, saveUrlList,} from '../../database/websiteOperations.js';
+import {deleteUrlList, saveUrlList,} from '../../extern/database/websiteOperations.js';
 import {getAddedUrls, getRemovedUrls} from '../urlHandler.js';
 import {updatePasswordView} from '../passwordViewHandler.js';
 

@@ -1,6 +1,6 @@
 import {clearInputError, setFormMessage, setInputError} from './loginMessages.js';
-import {checkUser, createUser, existUser} from '../app/database/userOperations.js';
-import {hashPassword} from '../app/database/passwordOperations.js';
+import {checkUser, createUser, existUser} from '../app/extern/database/userOperations.js';
+import {hashPassword} from '../app/extern/database/passwordOperations.js';
 
 function checkUserAvailable(user) {
   if (existUser(user)) {

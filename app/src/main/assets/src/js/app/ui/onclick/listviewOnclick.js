@@ -1,5 +1,5 @@
 import {getSessionPassword, getSessionUser, logout} from '../../sessionHandler.js';
-import {deleteUser} from '../../database/userOperations.js';
+import {deleteUser} from '../../extern/database/userOperations.js';
 
 export function onclickAddButton(page) {
   return () => {

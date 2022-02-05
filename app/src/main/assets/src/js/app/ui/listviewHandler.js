@@ -1,4 +1,4 @@
-import {getPasswordList} from '../database/passwordOperations.js';
+import {getPasswordList} from '../extern/database/passwordOperations.js';
 import {
   onclickAddButton,
   onclickDeleteUser,
