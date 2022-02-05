@@ -1,5 +1,7 @@
 package tu.bp21.passwortmanager;
 
+import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.io.BaseEncoding;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -55,17 +57,22 @@ public class Crypto {
 
     private static byte[] generateIV(){
         List<Password> list = passwordDao.getPasswordList(username);
-        ArrayList<byte[]> ivList = new ArrayList<>();
+        ArrayList<String> ivList = new ArrayList<>();
         int length = list.size();
+
         if(length >= Math.pow(2,96))
             throw new RuntimeException("Reached maximum number of entries for this account");
+
+        byte[] ivExisted;
         for (Password x : list) {
-            ivList.add(Arrays.copyOf(x.password,12));
+            ivExisted = Arrays.copyOf(x.password,12);
+            ivList.add(BaseEncoding.base16().encode(ivExisted));
         }
-        byte[] iv = generateSecureByteArray(12);
-        while(ivList.contains(iv))
-            iv = generateSecureByteArray(12);
-        return iv;
+
+        byte[] ivNew = generateSecureByteArray(12);
+        while(ivList.contains(BaseEncoding.base16().encode(ivNew)))
+            ivNew = generateSecureByteArray(12);
+        return ivNew;
     }
 
 }
