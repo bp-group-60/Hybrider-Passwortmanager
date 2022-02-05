@@ -25,9 +25,9 @@ public class InterfaceUser {
   @JavascriptInterface
   public boolean checkUser(String username, String userPassword) {
     User user = userDataAccessObject.getUser(username);
-    if(user != null) {
+    if (user != null) {
       byte[] cipher = BaseEncoding.base16().decode(userPassword.toUpperCase());
-      if(Arrays.equals(user.password,cipher)) {
+      if (Arrays.equals(user.password, cipher)) {
         return true;
       }
     }
@@ -52,13 +52,13 @@ public class InterfaceUser {
 
   @JavascriptInterface
   public boolean deleteUser(String username, String userPassword) {
-    if(!checkUser(username, userPassword))
-      return false;
+    if (!checkUser(username, userPassword)) return false;
 
     User newUser = new User(username);
 
     try {
-      if (userDataAccessObject.deleteUser(newUser) == 0) throw new RuntimeException("nothing was deleted");
+      if (userDataAccessObject.deleteUser(newUser) == 0)
+        throw new RuntimeException("nothing was deleted");
     } catch (Exception e) {
       e.printStackTrace();
       return false;
