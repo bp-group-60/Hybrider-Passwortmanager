@@ -44,6 +44,8 @@ public class Crypto {
 
   public static String decrypt(byte[] cipher) {
     byte[] text = crypt(cipher, username.getBytes(), null, key);
+    if(text == null)
+      return "";
     return new String(text);
   }
 
