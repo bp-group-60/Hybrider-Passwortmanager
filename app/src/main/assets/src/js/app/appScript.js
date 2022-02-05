@@ -2,7 +2,7 @@ import {addOnclickListview, updateListview} from './ui/listviewHandler.js';
 import {addOnclickPasswordView, updatePasswordView} from './ui/passwordViewHandler.js';
 import {addOnclickAddPasswordView} from './ui/addPasswordViewHandler.js';
 
-import {getSessionPassword, getSessionUser} from './sessionHandler.js';
+import {getSessionPassword, getSessionUser, logout} from './sessionHandler.js';
 
 document.addEventListener('show', function (event) {
   let page = event.target;
@@ -30,5 +30,5 @@ document.addEventListener('init', function (event) {
 });
 
 window.back = function() {
-    document.querySelector('#myNavigator').popPage().catch((e)=>history.back());
+  document.querySelector('#myNavigator').popPage().catch(()=>logout());
 }

@@ -16,9 +16,10 @@ import tu.bp21.passwortmanager.db.ApplicationDatabase;
 /** Main entry point for app. */
 public class MainActivity extends AppCompatActivity {
   private WebView webView;
+
   static {
-       System.loadLibrary("Crypto");
-    }
+    System.loadLibrary("Crypto");
+  }
 
   @Override
   @SuppressLint("SetJavaScriptEnabled")

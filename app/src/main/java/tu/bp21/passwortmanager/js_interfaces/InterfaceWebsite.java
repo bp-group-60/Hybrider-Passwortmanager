@@ -33,7 +33,8 @@ public class InterfaceWebsite {
     Website newUrl = new Website(user, website, url);
 
     try {
-      if (websiteDataAccessObject.deleteWebsite(newUrl) == 0) throw new RuntimeException("nothing was deleted");
+      if (websiteDataAccessObject.deleteWebsite(newUrl) == 0)
+        throw new RuntimeException("nothing was deleted");
     } catch (Exception e) {
       e.printStackTrace();
       return false;
