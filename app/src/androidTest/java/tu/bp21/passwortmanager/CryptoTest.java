@@ -1,8 +1,12 @@
 package tu.bp21.passwortmanager;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
+import static tu.bp21.passwortmanager.StringFunction.generateRandomString;
 
+import org.bouncycastle.crypto.generators.SCrypt;
+
+
+import org.bouncycastle.util.Arrays;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +26,7 @@ class CryptoTest {
   void tearDown() {}
 
   @Test
-  void generateSalt() {
+  void generateSaltTest() {
     int saltSize = new Random().nextInt(64) + 1;
     byte[] salt = Crypto.generateSecureByteArray(saltSize);
     assertEquals(saltSize, salt.length);
@@ -31,7 +35,7 @@ class CryptoTest {
     }
   }
 
-  /*@Test
+  @Test
   void setSalt() {
   }
 
@@ -44,6 +48,15 @@ class CryptoTest {
   }
 
   @Test
-  void computeHash() {
-  }*/
+  void computeHashTest() {
+    byte[] salt = Crypto.generateSecureByteArray(16);
+    Crypto.setSalt(salt);
+    String password = generateRandomString(new Random().nextInt(20)+1);
+    System.out.println("Wert");
+    byte[] expected = SCrypt.generate(password.getBytes(),salt, (int) Math.pow(2,19), 8, 1, 64);
+    System.out.println("Wert");
+    expected = Arrays.concatenate(salt, expected);
+    byte[] actual = Crypto.computeHash(password);
+    assertArrayEquals(expected,actual);
+  }
 }
