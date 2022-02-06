@@ -11,7 +11,12 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.security.Key;
 import java.util.Random;
+
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 
 class CryptoTest {
 
@@ -36,11 +41,15 @@ class CryptoTest {
   }
 
   @Test
-  void setSalt() {
-  }
+  void encrypt() throws Exception {
+    KeyGenerator keygen = KeyGenerator.getInstance("AES");
+    keygen.init(256);
+    SecretKey key = keygen.generateKey();
 
-  @Test
-  void encrypt() {
+    Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+
+    cipher.init(Cipher.ENCRYPT_MODE, key);
+
   }
 
   @Test
