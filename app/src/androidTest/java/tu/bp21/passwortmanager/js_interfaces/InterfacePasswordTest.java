@@ -138,21 +138,19 @@ class InterfacePasswordTest {
       String password) {
     Crypto.setSalt(Crypto.generateSecureByteArray(16));
     Crypto.setGeneratedKey(masterPassword);
-    Crypto.setCurrentUser(username);
     userDao.addUser(new User(username, email, masterPassword.getBytes()));
-    passwordDao.addPassword(new Password(username, website, loginName, Crypto.encrypt(password, website)));
+    passwordDao.addPassword(new Password(username, website, loginName, Crypto.encrypt(username,website,password)));
   }
 
   // this method checks if the given loginName and password matches the loginName and password of
   // the given Entity specified by username and website
   void checkExpectedDB(String username, String website, String loginName, String password) {
-    Crypto.setCurrentUser(username);
     Password expected = passwordDao.getPassword(username, website);
     assertTrue(expected != null);
     assertTrue(expected.user.equals(username));
     assertTrue(expected.websiteName.equals(website));
     assertTrue(expected.loginName.equals(loginName));
-    assertTrue(Crypto.decrypt(expected.password,expected.websiteName).equals(password));
+    assertTrue(Crypto.decrypt(expected.user,expected.websiteName,expected.password).equals(password));
   }
 
   @Nested
@@ -165,7 +163,6 @@ class InterfacePasswordTest {
       userDao.addUser(new User(randomUser, randomEmail, randomMasterPassword.getBytes()));
       Crypto.setSalt(Crypto.generateSecureByteArray(16));
       Crypto.setGeneratedKey(randomMasterPassword);
-      Crypto.setCurrentUser(randomUser);
       boolean worked =
           interfacePassword.createPassword(
               randomUser, randomWebsite, randomLoginName, randomPassword);
@@ -205,7 +202,6 @@ class InterfacePasswordTest {
       passwordToCreate = convertNullToEmptyString(passwordToCreate);
       userDao.addUser(new User(userExistedInDB, randomEmail, randomMasterPassword.getBytes()));
       Crypto.setSalt(Crypto.generateSecureByteArray(16));
-      Crypto.setCurrentUser(userToCreate);
       Crypto.setGeneratedKey(randomMasterPassword);
       boolean worked =
           interfacePassword.createPassword(
