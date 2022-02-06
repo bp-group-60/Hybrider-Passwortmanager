@@ -12,7 +12,6 @@ import tu.bp21.passwortmanager.db.dao.PasswordDao;
 public class Crypto {
   private static byte[] salt;
   private static byte[] key;
-  private static String username;
   private static PasswordDao passwordDao;
 
   private static native byte[] crypt(byte[] input, byte[] aad, byte[] iv, byte[] key);
@@ -37,14 +36,14 @@ public class Crypto {
     salt = input;
   }
 
-  public static byte[] encrypt(String plainText, String website) {
+  public static byte[] encrypt(String username, String website, String plainText) {
     byte[] input = plainText.getBytes();
-    return crypt(input, (username + website).getBytes(), generateIV(), key);
+    return crypt(input, (username + website).getBytes(), generateIV(username,12), key);
   }
 
-  public static String decrypt(byte[] cipher, String website) {
+  public static String decrypt(String username, String website, byte[] cipher) {
     byte[] text = crypt(cipher, (username + website).getBytes(), null, key);
-    if (text == null) return "";
+    if (text == null) return "authentication failed";
     return new String(text);
   }
 
@@ -55,27 +54,23 @@ public class Crypto {
     return output;
   }
 
-  public static void setCurrentUser(String username) {
-    Crypto.username = username;
-  }
-
-  private static byte[] generateIV() {
+  private static byte[] generateIV(String username, int size) {
     List<Password> list = passwordDao.getPasswordList(username);
     ArrayList<String> ivList = new ArrayList<>();
     int length = list.size();
 
-    if (length >= Math.pow(2, 96))
+    if (length >= Math.pow(2, size*8))
       throw new RuntimeException("Reached maximum number of entries for this account");
 
     byte[] ivExisted;
     for (Password x : list) {
-      ivExisted = Arrays.copyOf(x.password, 12);
+      ivExisted = Arrays.copyOf(x.password, size);
       ivList.add(BaseEncoding.base16().encode(ivExisted));
     }
 
-    byte[] ivNew = generateSecureByteArray(12);
+    byte[] ivNew = generateSecureByteArray(size);
     while (ivList.contains(BaseEncoding.base16().encode(ivNew)))
-      ivNew = generateSecureByteArray(12);
+      ivNew = generateSecureByteArray(size);
     return ivNew;
   }
 }
