@@ -33,5 +33,4 @@ public class InterfaceCrypto {
   public void setGeneratedKey(String plainPassword) {
     Crypto.setGeneratedKey(plainPassword);
   }
-
 }

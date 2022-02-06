@@ -38,7 +38,7 @@ public class Crypto {
 
   public static byte[] encrypt(String username, String website, String plainText) {
     byte[] input = plainText.getBytes();
-    return crypt(input, (username + website).getBytes(), generateIV(username,12), key);
+    return crypt(input, (username + website).getBytes(), generateIV(username, 12), key);
   }
 
   public static String decrypt(String username, String website, byte[] cipher) {
@@ -59,7 +59,7 @@ public class Crypto {
     ArrayList<String> ivList = new ArrayList<>();
     int length = list.size();
 
-    if (length >= Math.pow(2, size*8))
+    if (length >= Math.pow(2, size * 8))
       throw new RuntimeException("Reached maximum number of entries for this account");
 
     byte[] ivExisted;
