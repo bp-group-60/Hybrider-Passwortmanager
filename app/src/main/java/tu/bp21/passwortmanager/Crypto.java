@@ -39,11 +39,11 @@ public class Crypto {
 
   public static byte[] encrypt(String plainText, String website) {
     byte[] input = plainText.getBytes();
-    return crypt(input, (username+website).getBytes(), generateIV(), key);
+    return crypt(input, (username + website).getBytes(), generateIV(), key);
   }
 
   public static String decrypt(byte[] cipher, String website) {
-    byte[] text = crypt(cipher, (username+website).getBytes(), null, key);
+    byte[] text = crypt(cipher, (username + website).getBytes(), null, key);
     if (text == null) return "";
     return new String(text);
   }
