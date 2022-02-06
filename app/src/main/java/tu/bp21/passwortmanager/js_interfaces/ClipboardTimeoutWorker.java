@@ -31,9 +31,10 @@ public class ClipboardTimeoutWorker extends Worker {
 
     new Handler(Looper.getMainLooper())
         .postDelayed(
-            () -> Toast.makeText(
-                    getApplicationContext(), "Zwischenspeicher geleert", Toast.LENGTH_SHORT)
-                .show(),
+            () ->
+                Toast.makeText(
+                        getApplicationContext(), "Zwischenspeicher geleert", Toast.LENGTH_SHORT)
+                    .show(),
             1000);
 
     return Result.success();

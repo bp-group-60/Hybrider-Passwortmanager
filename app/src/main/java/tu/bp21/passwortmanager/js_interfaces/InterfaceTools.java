@@ -26,8 +26,7 @@ public class InterfaceTools {
 
   @JavascriptInterface
   public void copyToClipboardWithTimeout(String text, long timeout) {
-    if (latestWorkId != null)
-      workManager.cancelWorkById(latestWorkId);
+    if (latestWorkId != null) workManager.cancelWorkById(latestWorkId);
 
     String lable = "Hybrider-Passwormanager:" + System.currentTimeMillis();
     clipboard.setPrimaryClip(ClipData.newPlainText(lable, text));

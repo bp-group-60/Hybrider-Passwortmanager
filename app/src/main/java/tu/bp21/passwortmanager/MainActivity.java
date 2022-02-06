@@ -1,7 +1,6 @@
 package tu.bp21.passwortmanager;
 
 import android.annotation.SuppressLint;
-import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.webkit.WebView;
 import androidx.appcompat.app.AppCompatActivity;
