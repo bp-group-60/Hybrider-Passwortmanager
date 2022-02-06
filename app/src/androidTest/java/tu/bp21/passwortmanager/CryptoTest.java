@@ -50,13 +50,15 @@ class CryptoTest {
   @Test
   void computeHashTest() {
     byte[] salt = Crypto.generateSecureByteArray(16);
+    int outputLength = 64;
     Crypto.setSalt(salt);
     String password = generateRandomString(new Random().nextInt(20)+1);
     System.out.println("Wert");
-    byte[] expected = SCrypt.generate(password.getBytes(),salt, (int) Math.pow(2,19), 8, 1, 64);
+    byte[] expected = SCrypt.generate(password.getBytes(),salt, (int) Math.pow(2,18), 8, 1, outputLength);
     System.out.println("Wert");
     expected = Arrays.concatenate(salt, expected);
     byte[] actual = Crypto.computeHash(password);
     assertArrayEquals(expected,actual);
+    assertEquals(outputLength+salt.length, actual.length);
   }
 }

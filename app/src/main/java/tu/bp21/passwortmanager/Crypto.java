@@ -57,10 +57,6 @@ public class Crypto {
   private static byte[] generateIV(String username, int size) {
     List<Password> list = passwordDao.getPasswordList(username);
     ArrayList<String> ivList = new ArrayList<>();
-    int length = list.size();
-
-    if (length >= Math.pow(2, size * 8))
-      throw new RuntimeException("Reached maximum number of entries for this account");
 
     byte[] ivExisted;
     for (Password x : list) {
