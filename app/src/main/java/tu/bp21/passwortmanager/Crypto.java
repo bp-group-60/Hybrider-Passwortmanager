@@ -10,13 +10,11 @@ import tu.bp21.passwortmanager.db.Password;
 import tu.bp21.passwortmanager.db.dao.PasswordDao;
 
 public class Crypto {
-  private static byte[] salt;
-  private static byte[] key;
   private static PasswordDao passwordDao;
 
   private static native byte[] crypt(byte[] input, byte[] aad, byte[] iv, byte[] key);
 
-  private static native byte[] generateKey(
+  private static native byte[] generateKeyNative(
       byte[] input, int input_length, byte[] salt, int salt_length);
 
   public static native byte[] generateSecureByteArray(int size);
@@ -27,27 +25,23 @@ public class Crypto {
     Crypto.passwordDao = passwordDao;
   }
 
-  public static void setGeneratedKey(String passwordToDerive) {
+  public static byte[] generateKey(String passwordToDerive, byte[] salt) {
     byte[] input = passwordToDerive.getBytes();
-    key = generateKey(input, input.length, salt, salt.length);
+    return generateKeyNative(input, input.length, salt, salt.length);
   }
 
-  public static void setSalt(byte[] input) {
-    salt = input;
-  }
-
-  public static byte[] encrypt(String username, String website, String plainText) {
+  public static byte[] encrypt(String username, String website, String plainText, byte[] key) {
     byte[] input = plainText.getBytes();
     return crypt(input, (username + website).getBytes(), generateIV(username, 12), key);
   }
 
-  public static String decrypt(String username, String website, byte[] cipher) {
+  public static String decrypt(String username, String website, byte[] cipher, byte[] key) {
     byte[] text = crypt(cipher, (username + website).getBytes(), null, key);
     if (text == null) return "authentication failed";
     return new String(text);
   }
 
-  public static byte[] computeHash(String password) {
+  public static byte[] computeHash(String password, byte[] salt) {
     byte[] input = password.getBytes();
     byte[] output = hash(input, input.length, salt, salt.length);
     if (output == null) throw new RuntimeException("Hash failed. Not enough RAM");

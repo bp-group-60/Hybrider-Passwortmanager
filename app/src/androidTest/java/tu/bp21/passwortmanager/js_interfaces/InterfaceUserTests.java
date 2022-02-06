@@ -1,10 +1,6 @@
 package tu.bp21.passwortmanager.js_interfaces;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static tu.bp21.passwortmanager.StringFunction.generateRandomString;
 
 import androidx.room.Room;
@@ -100,12 +96,12 @@ class InterfaceUserTests {
   @CsvFileSource(resources = "/User/testUser.csv", numLinesToSkip = 1)
   void testCreateUser(String userToCreate, String passwordToCreate) {
     assertTrue(interfaceUser.createUser(userToCreate, randomEmail, passwordToCreate));
-    Crypto.setSalt(Arrays.copyOf(userDao.getUser(userToCreate).password, 16));
-    byte[] encryptedPassword = Crypto.computeHash(passwordToCreate);
+    byte[] salt = Arrays.copyOf(userDao.getUser(userToCreate).password, 16);
+    byte[] encryptedPassword = Crypto.computeHash(passwordToCreate, salt);
     assertTrue(userDao.getUser(userToCreate) != null);
     assertEquals(userToCreate, userDao.getUser(userToCreate).username);
     assertEquals(randomEmail, userDao.getUser(userToCreate).email);
-    assertTrue(Arrays.equals(encryptedPassword, userDao.getUser(userToCreate).password));
+    assertArrayEquals(encryptedPassword, userDao.getUser(userToCreate).password);
     assertFalse(interfaceUser.createUser(userToCreate, randomEmail, passwordToCreate));
   }
 

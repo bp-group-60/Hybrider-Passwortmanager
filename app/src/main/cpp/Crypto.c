@@ -90,8 +90,8 @@ Java_tu_bp21_passwortmanager_Crypto_crypt(JNIEnv *env, jobject thiz, jbyteArray 
 }
 
 JNIEXPORT jbyteArray JNICALL
-Java_tu_bp21_passwortmanager_Crypto_generateKey(JNIEnv *env, jobject thiz, jbyteArray input,
-                                                jint input_length, jbyteArray salt, jint salt_length) {
+Java_tu_bp21_passwortmanager_Crypto_generateKeyNative(JNIEnv *env, jobject thiz, jbyteArray input,
+                                                      jint input_length, jbyteArray salt, jint salt_length) {
     jbyte  *input_ptr = (*env)->GetByteArrayElements(env , input, 0);
     jbyte  *salt_ptr = (*env)->GetByteArrayElements(env , salt, 0);
     int output_length = 32;

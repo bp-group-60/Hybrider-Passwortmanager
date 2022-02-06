@@ -18,19 +18,24 @@ public class InterfaceCrypto {
   }
 
   @JavascriptInterface
-  public String hashPassword(String userPassword) {
-    byte[] cipher = Crypto.computeHash(userPassword);
+  public String hashPassword(String userPassword, String salt) {
+    byte[] cipher = Crypto.computeHash(userPassword, BaseEncoding.base16().decode(salt));
     return BaseEncoding.base16().encode(cipher);
   }
 
   @JavascriptInterface
-  public void setSalt(String username) {
+  public String getSalt(String username) {
     User user = userDataAccessObject.getUser(username);
-    if (user != null) Crypto.setSalt(Arrays.copyOf(user.password, 16));
+    if (user != null){
+      byte[] salt = Arrays.copyOf(user.password, 16);
+      return BaseEncoding.base16().encode(salt);
+    }
+    return "";
   }
 
   @JavascriptInterface
-  public void setGeneratedKey(String plainPassword) {
-    Crypto.setGeneratedKey(plainPassword);
+  public String generateKey(String plainPassword, String salt) {
+    byte[] key = Crypto.generateKey(plainPassword, BaseEncoding.base16().decode(salt));
+    return BaseEncoding.base16().encode(key);
   }
 }

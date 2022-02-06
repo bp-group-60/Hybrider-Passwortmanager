@@ -1,7 +1,6 @@
 import {clearInputError, setFormMessage, setInputError} from './loginMessages.js';
 import {checkUser, createUser, existUser} from '../app/extern/database/userOperations.js';
-import {hashPassword} from '../app/extern/database/passwordOperations.js';
-import {getSessionPassword} from "../app/sessionHandler.js";
+import {hashPassword, generateKey, getSalt} from '../app/extern/crypto.js';
 
 function checkUserAvailable(user) {
   if (existUser(user)) {
@@ -12,10 +11,11 @@ function checkUserAvailable(user) {
 
 function checkLoginInformation(user, password) {
   sessionStorage.setItem('user', user);
-  Java_InterfaceCrypto.setSalt(user);
-  sessionStorage.setItem('password', hashPassword(password));
-  if (checkUser(user, getSessionPassword())) {
-    Java_InterfaceCrypto.setGeneratedKey(password);
+  let salt = getSalt(user);
+  let hashedPassword = hashPassword(password, salt);
+  sessionStorage.setItem('password', hashedPassword);
+  if (checkUser(user, hashedPassword)) {
+    sessionStorage.setItem('key', generateKey(password, salt));
     window.location.href = './app.html';
   } else {
     const loginForm = document.getElementById('Anmeldung');

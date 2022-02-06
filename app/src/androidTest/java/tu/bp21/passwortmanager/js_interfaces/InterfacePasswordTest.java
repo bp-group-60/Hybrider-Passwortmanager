@@ -11,6 +11,8 @@ import static tu.bp21.passwortmanager.StringFunction.generateRandomString;
 import androidx.room.Room;
 import androidx.test.core.app.ActivityScenario;
 
+import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.io.BaseEncoding;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,6 +56,8 @@ class InterfacePasswordTest {
   String randomMasterPassword;
   String randomWebsite;
   String randomPassword;
+  byte[] key;
+  String keyAsHex;
 
   @AfterAll
   static void tearDown() throws Exception {
@@ -128,7 +132,7 @@ class InterfacePasswordTest {
     list.sort(new PasswordComparator());
   }
 
-  // this method adds an User entity and Password entity into the DB
+  // this method adds an User entity and Password entity into the DB, also generate the key for crypto functions
   void initDB(
       String username,
       String email,
@@ -136,21 +140,20 @@ class InterfacePasswordTest {
       String website,
       String loginName,
       String password) {
-    Crypto.setSalt(Crypto.generateSecureByteArray(16));
-    Crypto.setGeneratedKey(masterPassword);
+    byte[] salt = Crypto.generateSecureByteArray(16);
+    key = Crypto.generateKey(masterPassword, salt);
+    keyAsHex = BaseEncoding.base16().encode(key);
     userDao.addUser(new User(username, email, masterPassword.getBytes()));
-    passwordDao.addPassword(new Password(username, website, loginName, Crypto.encrypt(username,website,password)));
+    passwordDao.addPassword(new Password(username, website, loginName, Crypto.encrypt(username,website,password, key)));
   }
 
   // this method checks if the given loginName and password matches the loginName and password of
   // the given Entity specified by username and website
-  void checkExpectedDB(String username, String website, String loginName, String password) {
+  void checkExpectedDB(String username, String website, String loginName, String password, byte[] key) {
     Password expected = passwordDao.getPassword(username, website);
     assertTrue(expected != null);
-    assertTrue(expected.user.equals(username));
-    assertTrue(expected.websiteName.equals(website));
     assertTrue(expected.loginName.equals(loginName));
-    assertTrue(Crypto.decrypt(expected.user,expected.websiteName,expected.password).equals(password));
+    assertTrue(Crypto.decrypt(expected.user,expected.websiteName,expected.password, key).equals(password));
   }
 
   @Nested
@@ -161,13 +164,13 @@ class InterfacePasswordTest {
     @DisplayName("Case: Success")
     void createPasswordSuccess() {
       userDao.addUser(new User(randomUser, randomEmail, randomMasterPassword.getBytes()));
-      Crypto.setSalt(Crypto.generateSecureByteArray(16));
-      Crypto.setGeneratedKey(randomMasterPassword);
+      byte[] salt = Crypto.generateSecureByteArray(16);
+      key = Crypto.generateKey(randomMasterPassword, salt);
       boolean worked =
           interfacePassword.createPassword(
-              randomUser, randomWebsite, randomLoginName, randomPassword);
+              randomUser, randomWebsite, randomLoginName, randomPassword, BaseEncoding.base16().encode(key));
       assertTrue(worked);
-      checkExpectedDB(randomUser, randomWebsite, randomLoginName, randomPassword);
+      checkExpectedDB(randomUser, randomWebsite, randomLoginName, randomPassword, key);
     }
 
     @ParameterizedTest
@@ -181,9 +184,9 @@ class InterfacePasswordTest {
         String password2) {
       initDB(randomUser, randomEmail, randomMasterPassword, randomWebsite, loginName1, password1);
       boolean worked =
-          interfacePassword.createPassword(randomUser, randomWebsite, loginName2, password2);
+          interfacePassword.createPassword(randomUser, randomWebsite, loginName2, password2, keyAsHex);
       assertFalse(worked);
-      checkExpectedDB(randomUser, randomWebsite, loginName1, password1);
+      checkExpectedDB(randomUser, randomWebsite, loginName1, password1, key);
     }
 
     @ParameterizedTest
@@ -201,11 +204,11 @@ class InterfacePasswordTest {
       loginNameToCreate = convertNullToEmptyString(loginNameToCreate);
       passwordToCreate = convertNullToEmptyString(passwordToCreate);
       userDao.addUser(new User(userExistedInDB, randomEmail, randomMasterPassword.getBytes()));
-      Crypto.setSalt(Crypto.generateSecureByteArray(16));
-      Crypto.setGeneratedKey(randomMasterPassword);
+      byte[] salt = Crypto.generateSecureByteArray(16);
+      key = Crypto.generateKey(randomMasterPassword, salt);
       boolean worked =
           interfacePassword.createPassword(
-              userToCreate, websiteToCreate, loginNameToCreate, passwordToCreate);
+              userToCreate, websiteToCreate, loginNameToCreate, passwordToCreate, BaseEncoding.base16().encode(key));
       assertFalse(worked);
       assertNull(passwordDao.getPassword(userToCreate, websiteToCreate));
     }
@@ -228,9 +231,9 @@ class InterfacePasswordTest {
       initDB(username, randomEmail, randomMasterPassword, randomWebsite, loginName, password);
 
       assertTrue(
-          interfacePassword.updatePassword(username, randomWebsite, newLoginName, newPassword));
+          interfacePassword.updatePassword(username, randomWebsite, newLoginName, newPassword, keyAsHex));
 
-      checkExpectedDB(username, randomWebsite, newLoginName, newPassword);
+      checkExpectedDB(username, randomWebsite, newLoginName, newPassword, key);
     }
 
     @ParameterizedTest
@@ -248,9 +251,9 @@ class InterfacePasswordTest {
         String password2) {
       initDB(username1, randomEmail, randomMasterPassword, website1, loginName1, password1);
 
-      assertFalse(interfacePassword.updatePassword(username2, website2, loginName2, password2));
+      assertFalse(interfacePassword.updatePassword(username2, website2, loginName2, password2, keyAsHex));
 
-      checkExpectedDB(username1, website1, loginName1, password1);
+      checkExpectedDB(username1, website1, loginName1, password1, key);
     }
   }
 
@@ -287,7 +290,7 @@ class InterfacePasswordTest {
 
       assertFalse(interfacePassword.deletePassword(username2, website2));
 
-      checkExpectedDB(username1, website1, randomLoginName, randomPassword);
+      checkExpectedDB(username1, website1, randomLoginName, randomPassword, key);
     }
   }
 
@@ -346,7 +349,7 @@ class InterfacePasswordTest {
           randomLoginName,
           expectedPassword);
       String actualPassword =
-          interfacePassword.getPassword(randomUser, randomMasterPassword, randomWebsite);
+          interfacePassword.getPassword(randomUser, randomMasterPassword, randomWebsite, keyAsHex);
       assertTrue(expectedPassword.equals(actualPassword));
     }
 
@@ -364,7 +367,7 @@ class InterfacePasswordTest {
       String expectedPassword = "";
       initDB(username, randomEmail, masterPassword, website, randomLoginName, randomPassword);
       String actualPassword =
-          interfacePassword.getPassword(actualUserName, actualMasterPassword, actualWebsite);
+          interfacePassword.getPassword(actualUserName, actualMasterPassword, actualWebsite, keyAsHex);
       assertTrue(expectedPassword.equals(actualPassword));
     }
   }

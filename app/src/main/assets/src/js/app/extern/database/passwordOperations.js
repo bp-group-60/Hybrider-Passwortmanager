@@ -1,4 +1,4 @@
-import {getSessionPassword, getSessionUser} from "../../sessionHandler.js";
+import {getSessionPassword, getSessionUser, getSessionKey} from "../../sessionHandler.js";
 
 export function getPasswordList(user, password) {
   // array structure: [[website, loginName], ...]
@@ -15,22 +15,21 @@ export function getLoginName(id) {
 export function getPassword(id) {
   let user = getSessionUser();
   let password = getSessionPassword();
+  let key = getSessionKey();
 
-  return Java_InterfacePassword.getPassword(user, password, id);
+  return Java_InterfacePassword.getPassword(user, password, id, key);
 }
 
 export function createPassword(user, website, loginName, password) {
-  return Java_InterfacePassword.createPassword(user, website, loginName, password);
+  let key = getSessionKey();
+  return Java_InterfacePassword.createPassword(user, website, loginName, password, key);
 }
 
 export function updatePassword(user, website, loginName, password) {
-  return Java_InterfacePassword.updatePassword(user, website, loginName, password);
+  let key = getSessionKey();
+  return Java_InterfacePassword.updatePassword(user, website, loginName, password, key);
 }
 
 export function deletePassword(user, website) {
   return Java_InterfacePassword.deletePassword(user, website);
-}
-
-export function hashPassword(password) {
-  return Java_InterfaceCrypto.hashPassword(password);
 }

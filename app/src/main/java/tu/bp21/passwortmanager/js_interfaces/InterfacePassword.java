@@ -2,6 +2,8 @@ package tu.bp21.passwortmanager.js_interfaces;
 
 import android.webkit.JavascriptInterface;
 
+import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.io.BaseEncoding;
+
 import java.util.ArrayList;
 
 import tu.bp21.passwortmanager.Crypto;
@@ -17,8 +19,8 @@ public class InterfacePassword {
 
   @JavascriptInterface
   public boolean createPassword(
-      String username, String website, String loginName, String plainPassword) {
-    byte[] cipherPassword = Crypto.encrypt(username, website, plainPassword);
+      String username, String website, String loginName, String plainPassword, String key) {
+    byte[] cipherPassword = Crypto.encrypt(username, website, plainPassword, BaseEncoding.base16().decode(key));
     Password newPassword = new Password(username, website, loginName, cipherPassword);
 
     try {
@@ -33,8 +35,8 @@ public class InterfacePassword {
 
   @JavascriptInterface
   public boolean updatePassword(
-      String username, String website, String loginName, String plainPassword) {
-    byte[] cipherPassword = Crypto.encrypt(username, website, plainPassword);
+      String username, String website, String loginName, String plainPassword, String key) {
+    byte[] cipherPassword = Crypto.encrypt(username, website, plainPassword, BaseEncoding.base16().decode(key));
     Password newPassword = new Password(username, website, loginName, cipherPassword);
 
     try {
@@ -74,10 +76,10 @@ public class InterfacePassword {
   }
 
   @JavascriptInterface
-  public String getPassword(String user, String password, String id) {
+  public String getPassword(String user, String password, String id, String key) {
     byte[] cipherPassword = passwordDataAccessObject.getPassword(user, id).password;
     String website = passwordDataAccessObject.getPassword(user, id).websiteName;
-    String plainPassword = Crypto.decrypt(user, website, cipherPassword);
+    String plainPassword = Crypto.decrypt(user, website, cipherPassword, BaseEncoding.base16().decode(key));
     return plainPassword;
   }
 }

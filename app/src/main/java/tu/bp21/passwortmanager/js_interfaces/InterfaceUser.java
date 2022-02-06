@@ -36,8 +36,8 @@ public class InterfaceUser {
 
   @JavascriptInterface
   public boolean createUser(String username, String email, String userPassword) {
-    Crypto.setSalt(Crypto.generateSecureByteArray(16));
-    byte[] hashValue = Crypto.computeHash(userPassword);
+    byte[] salt = Crypto.generateSecureByteArray(16);
+    byte[] hashValue = Crypto.computeHash(userPassword, salt);
     User newUser = new User(username, email, hashValue);
 
     try {
