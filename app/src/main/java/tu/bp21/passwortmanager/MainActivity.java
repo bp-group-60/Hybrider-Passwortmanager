@@ -30,10 +30,8 @@ public class MainActivity extends AppCompatActivity {
       getSupportActionBar().hide();
     }
 
-    // if your build is in debug mode, enable WebViews inspection with chrome://inspect
-    if (0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE)) {
-      WebView.setWebContentsDebuggingEnabled(true);
-    }
+    // enable WebViews inspection with chrome://inspect
+    WebView.setWebContentsDebuggingEnabled(true);
 
     ApplicationDatabase database =
         Room.databaseBuilder(this, ApplicationDatabase.class, "database")

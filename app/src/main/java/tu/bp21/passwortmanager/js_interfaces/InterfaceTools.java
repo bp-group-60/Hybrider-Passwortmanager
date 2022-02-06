@@ -5,15 +5,19 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.os.Build;
 import android.webkit.JavascriptInterface;
 
 import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
+import java.util.UUID;
+
 public class InterfaceTools {
   private final ClipboardManager clipboard;
   private final WorkManager workManager;
+  private UUID latestWorkId;
 
   public InterfaceTools(Context context) {
     clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
@@ -21,7 +25,10 @@ public class InterfaceTools {
   }
 
   @JavascriptInterface
-  public void copyToClipboard(String text, long timeout) {
+  public void copyToClipboardWithTimeout(String text, long timeout) {
+    if (latestWorkId != null)
+      workManager.cancelWorkById(latestWorkId);
+
     String lable = "Hybrider-Passwormanager:" + System.currentTimeMillis();
     clipboard.setPrimaryClip(ClipData.newPlainText(lable, text));
 
@@ -33,9 +40,20 @@ public class InterfaceTools {
           new OneTimeWorkRequest.Builder(ClipboardTimeoutWorker.class)
               .setInitialDelay(timeout, MILLISECONDS)
               .setInputData(data.build())
+              .addTag("clearClipboard")
               .build();
 
+      latestWorkId = clipboardTimeoutRequest.getId();
       workManager.beginWith(clipboardTimeoutRequest).enqueue();
+    }
+  }
+
+  @JavascriptInterface
+  public void clearClipboard() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+      clipboard.clearPrimaryClip();
+    } else {
+      clipboard.setPrimaryClip(ClipData.newPlainText("", ""));
     }
   }
 }

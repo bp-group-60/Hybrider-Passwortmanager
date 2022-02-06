@@ -3,6 +3,7 @@ import {getLoginName, getPassword} from '../extern/database/passwordOperations.j
 import {getUrlList} from '../extern/database/websiteOperations.js';
 import {getSessionUser} from '../sessionHandler.js';
 import {
+  copyPasswordOnclick,
   editAbortOnclick,
   editButtonOnclick,
   onclickDeletePassword,
@@ -12,6 +13,7 @@ import {
 import {createUrlItem} from './urlHandler.js';
 
 export function addOnclickPasswordView(page) {
+  page.querySelector('#passwordCopy').onclick = copyPasswordOnclick(page);
   page.querySelector('#passwordCheckbox').onclick = showPasswordOnclick(page);
 
   page.querySelector('#editButton').onclick = editButtonOnclick(page);
@@ -30,6 +32,7 @@ export function updatePasswordView(page) {
   page.querySelector('#addUrl').style.display = 'none';
   page.querySelector('#username').children[0].readOnly = true;
   page.querySelector('#password').children[0].readOnly = true;
+  page.querySelector('#passwordCopy').style.display = '';
 
   page.querySelector('ons-toolbar .center').innerHTML = page.data.id;
 
