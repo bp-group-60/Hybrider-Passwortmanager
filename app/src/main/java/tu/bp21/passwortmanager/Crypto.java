@@ -37,13 +37,13 @@ public class Crypto {
     salt = input;
   }
 
-  public static byte[] encrypt(String text) {
-    byte[] input = text.getBytes();
-    return crypt(input, username.getBytes(), generateIV(), key);
+  public static byte[] encrypt(String plainText, String website) {
+    byte[] input = plainText.getBytes();
+    return crypt(input, (username + website).getBytes(), generateIV(), key);
   }
 
-  public static String decrypt(byte[] cipher) {
-    byte[] text = crypt(cipher, username.getBytes(), null, key);
+  public static String decrypt(byte[] cipher, String website) {
+    byte[] text = crypt(cipher, (username + website).getBytes(), null, key);
     if (text == null) return "";
     return new String(text);
   }
