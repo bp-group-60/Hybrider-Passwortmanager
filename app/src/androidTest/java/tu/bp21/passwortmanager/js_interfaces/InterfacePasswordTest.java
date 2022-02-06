@@ -134,8 +134,10 @@ class InterfacePasswordTest {
     list.sort(new PasswordComparator());
   }
 
-  // this method adds an User entity and Password entity into the DB, also generate the key for
-  // crypto functions
+  /**
+   * this method adds an User entity and Password entity into the DB, also generate the key for
+   * crypto functions
+   */
   void initDB(
       String username,
       String email,
@@ -152,8 +154,10 @@ class InterfacePasswordTest {
             username, website, loginName, Crypto.encrypt(username, website, password, key)));
   }
 
-  // this method checks if the given loginName and password matches the loginName and password of
-  // the given Entity specified by username and website
+  /**
+   * this method checks if the given loginName and password matches the loginName and password of
+   * the given Entity specified by username and website
+   */
   void checkExpectedDB(
       String username, String website, String loginName, String password, byte[] key) {
     Password expected = passwordDao.getPassword(username, website);
