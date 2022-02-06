@@ -140,7 +140,7 @@ class InterfacePasswordTest {
     Crypto.setGeneratedKey(masterPassword);
     Crypto.setCurrentUser(username);
     userDao.addUser(new User(username, email, masterPassword.getBytes()));
-    passwordDao.addPassword(new Password(username, website, loginName, Crypto.encrypt(password)));
+    passwordDao.addPassword(new Password(username, website, loginName, Crypto.encrypt(password, website)));
   }
 
   // this method checks if the given loginName and password matches the loginName and password of
@@ -152,7 +152,7 @@ class InterfacePasswordTest {
     assertTrue(expected.user.equals(username));
     assertTrue(expected.websiteName.equals(website));
     assertTrue(expected.loginName.equals(loginName));
-    assertTrue(Crypto.decrypt(expected.password).equals(password));
+    assertTrue(Crypto.decrypt(expected.password,expected.websiteName).equals(password));
   }
 
   @Nested
