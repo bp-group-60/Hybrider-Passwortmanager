@@ -136,8 +136,9 @@ class InterfacePasswordTest {
       String website,
       String loginName,
       String password) {
-    Crypto.setSalt(Crypto.generateSalt(16));
+    Crypto.setSalt(Crypto.generateSecureByteArray(16));
     Crypto.setGeneratedKey(masterPassword);
+    Crypto.setCurrentUser(username);
     userDao.addUser(new User(username, email, masterPassword.getBytes()));
     passwordDao.addPassword(new Password(username, website, loginName, Crypto.encrypt(password)));
   }
@@ -145,6 +146,7 @@ class InterfacePasswordTest {
   // this method checks if the given loginName and password matches the loginName and password of
   // the given Entity specified by username and website
   void checkExpectedDB(String username, String website, String loginName, String password) {
+    Crypto.setCurrentUser(username);
     Password expected = passwordDao.getPassword(username, website);
     assertTrue(expected != null);
     assertTrue(expected.user.equals(username));
@@ -161,8 +163,9 @@ class InterfacePasswordTest {
     @DisplayName("Case: Success")
     void createPasswordSuccess() {
       userDao.addUser(new User(randomUser, randomEmail, randomMasterPassword.getBytes()));
-      Crypto.setSalt(Crypto.generateSalt(16));
+      Crypto.setSalt(Crypto.generateSecureByteArray(16));
       Crypto.setGeneratedKey(randomMasterPassword);
+      Crypto.setCurrentUser(randomUser);
       boolean worked =
           interfacePassword.createPassword(
               randomUser, randomWebsite, randomLoginName, randomPassword);
@@ -201,7 +204,8 @@ class InterfacePasswordTest {
       loginNameToCreate = convertNullToEmptyString(loginNameToCreate);
       passwordToCreate = convertNullToEmptyString(passwordToCreate);
       userDao.addUser(new User(userExistedInDB, randomEmail, randomMasterPassword.getBytes()));
-      Crypto.setSalt(Crypto.generateSalt(16));
+      Crypto.setSalt(Crypto.generateSecureByteArray(16));
+      Crypto.setCurrentUser(userToCreate);
       Crypto.setGeneratedKey(randomMasterPassword);
       boolean worked =
           interfacePassword.createPassword(

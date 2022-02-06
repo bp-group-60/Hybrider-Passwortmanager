@@ -10,6 +10,8 @@ import static tu.bp21.passwortmanager.StringFunction.generateRandomString;
 import androidx.room.Room;
 import androidx.test.core.app.ActivityScenario;
 
+import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.io.BaseEncoding;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -87,11 +89,11 @@ class InterfaceUserTests {
       String passwordToAdd,
       String userToCheck,
       String passwordToCheck) {
-    Crypto.setSalt(Crypto.generateSalt(16));
-    byte[] encryptedPassword = Crypto.computeHash(passwordToAdd);
-    userDao.addUser(new User(userToAdd, randomEmail, encryptedPassword));
-    assertFalse(interfaceUser.checkUser(userToCheck, passwordToCheck));
-    assertTrue(interfaceUser.checkUser(userToAdd, passwordToAdd));
+    byte[] rightPassword = passwordToAdd.getBytes();
+    byte[] wrongPassword = passwordToCheck.getBytes();
+    userDao.addUser(new User(userToAdd, randomEmail, rightPassword));
+    assertFalse(interfaceUser.checkUser(userToCheck, BaseEncoding.base16().encode(wrongPassword)));
+    assertTrue(interfaceUser.checkUser(userToAdd, BaseEncoding.base16().encode(rightPassword)));
   }
 
   @ParameterizedTest
@@ -121,16 +123,14 @@ class InterfaceUserTests {
           password = generateRandomString(20),
           url = generateRandomString(20),
           website2 = website1 + ".de";
-      Crypto.setSalt(Crypto.generateSalt(16));
-      byte[] encryptedPassword = Crypto.computeHash(masterPassword);
       PasswordDao passwordDao = database.getPasswordDao();
       WebsiteDao websiteDao = database.getWebsiteDao();
-      userDao.addUser(new User(username, randomEmail, encryptedPassword));
+      userDao.addUser(new User(username, randomEmail, masterPassword.getBytes()));
       passwordDao.addPassword(new Password(username, website1, loginName, password.getBytes()));
       passwordDao.addPassword(new Password(username, website2, loginName, password.getBytes()));
       websiteDao.addWebsite(new Website(username, website1, url));
 
-      assertTrue(interfaceUser.deleteUser(username, masterPassword));
+      assertTrue(interfaceUser.deleteUser(username, BaseEncoding.base16().encode(masterPassword.getBytes())));
       assertNull(userDao.getUser(username));
       assertNull(passwordDao.getPassword(username, website1));
       assertNull(passwordDao.getPassword(username, website2));
@@ -146,13 +146,11 @@ class InterfaceUserTests {
         String password,
         String differentUsername,
         String differentPassword) {
-      Crypto.setSalt(Crypto.generateSalt(16));
-      byte[] encryptedPassword = Crypto.computeHash(password);
-      userDao.addUser(new User(username, randomEmail, encryptedPassword));
+      userDao.addUser(new User(username, randomEmail, password.getBytes()));
 
-      assertFalse(interfaceUser.deleteUser(differentUsername, differentPassword));
+      assertFalse(interfaceUser.deleteUser(differentUsername, BaseEncoding.base16().encode(differentPassword.getBytes())));
       assertNotNull(userDao.getUser(username));
-      assertTrue(Arrays.equals(encryptedPassword, userDao.getUser(username).password));
+      assertTrue(Arrays.equals(password.getBytes(), userDao.getUser(username).password));
     }
   }
 }

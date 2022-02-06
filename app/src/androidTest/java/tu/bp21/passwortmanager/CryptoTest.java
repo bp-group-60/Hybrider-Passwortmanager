@@ -24,7 +24,7 @@ class CryptoTest {
   @Test
   void generateSalt() {
     int saltSize = new Random().nextInt(64) + 1;
-    byte[] salt = Crypto.generateSalt(saltSize);
+    byte[] salt = Crypto.generateSecureByteArray(saltSize);
     assertEquals(saltSize, salt.length);
     for (byte b : salt) {
       assertNotNull(b);
