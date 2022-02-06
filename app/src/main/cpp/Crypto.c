@@ -143,7 +143,7 @@ Java_tu_bp21_passwortmanager_Crypto_hash(JNIEnv *env, jclass clazz, jbyteArray i
     EVP_PKEY_CTX_set1_pbe_pass(ctx, input_ptr, input_length);
     EVP_PKEY_CTX_set1_scrypt_salt(ctx, salt_ptr, salt_length);
 
-    EVP_PKEY_CTX_set_scrypt_N(ctx, (int) pow(2, 19));
+    EVP_PKEY_CTX_set_scrypt_N(ctx, (int) pow(2, 18));
     EVP_PKEY_CTX_set_scrypt_r(ctx, 8);
     EVP_PKEY_CTX_set_scrypt_p(ctx, 1);
 
