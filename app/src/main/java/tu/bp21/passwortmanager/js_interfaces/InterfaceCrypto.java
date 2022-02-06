@@ -26,7 +26,7 @@ public class InterfaceCrypto {
   @JavascriptInterface
   public String getSalt(String username) {
     User user = userDataAccessObject.getUser(username);
-    if (user != null){
+    if (user != null) {
       byte[] salt = Arrays.copyOf(user.password, 16);
       return BaseEncoding.base16().encode(salt);
     }

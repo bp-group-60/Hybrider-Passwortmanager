@@ -5,7 +5,6 @@ import static tu.bp21.passwortmanager.StringFunction.generateRandomString;
 
 import org.bouncycastle.crypto.generators.SCrypt;
 
-
 import org.bouncycastle.util.Arrays;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,22 +49,21 @@ class CryptoTest {
     Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
 
     cipher.init(Cipher.ENCRYPT_MODE, key);
-
   }
 
   @Test
-  void decrypt() {
-  }
+  void decrypt() {}
 
   @Test
   void computeHashTest() {
     byte[] salt = Crypto.generateSecureByteArray(16);
     int outputLength = 64;
-    String password = generateRandomString(new Random().nextInt(20)+1);
-    byte[] expected = SCrypt.generate(password.getBytes(),salt, (int) Math.pow(2,18), 8, 1, outputLength);
+    String password = generateRandomString(new Random().nextInt(20) + 1);
+    byte[] expected =
+        SCrypt.generate(password.getBytes(), salt, (int) Math.pow(2, 18), 8, 1, outputLength);
     expected = Arrays.concatenate(salt, expected);
     byte[] actual = Crypto.computeHash(password, salt);
-    assertArrayEquals(expected,actual);
-    assertEquals(outputLength+salt.length, actual.length);
+    assertArrayEquals(expected, actual);
+    assertEquals(outputLength + salt.length, actual.length);
   }
 }

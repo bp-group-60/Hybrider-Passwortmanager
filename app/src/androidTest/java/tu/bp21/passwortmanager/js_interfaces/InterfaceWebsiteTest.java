@@ -37,9 +37,11 @@ import tu.bp21.passwortmanager.db.dao.WebsiteDao;
 class InterfaceWebsiteTest {
   static ApplicationDatabase database;
   static MainActivity mainActivity;
+
   @RegisterExtension
   final ActivityScenarioExtension<MainActivity> scenarioExtension =
       ActivityScenarioExtension.launch(MainActivity.class);
+
   InterfaceWebsite interfaceWebsite;
   UserDao userDao;
   PasswordDao passwordDao;

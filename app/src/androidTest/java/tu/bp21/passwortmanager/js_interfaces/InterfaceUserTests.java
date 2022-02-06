@@ -34,9 +34,11 @@ import tu.bp21.passwortmanager.db.dao.WebsiteDao;
 class InterfaceUserTests {
   static MainActivity mainActivity;
   static ApplicationDatabase database;
+
   @RegisterExtension
   final ActivityScenarioExtension<MainActivity> scenarioExtension =
       ActivityScenarioExtension.launch(MainActivity.class);
+
   InterfaceUser interfaceUser;
   UserDao userDao;
   String randomEmail;
@@ -126,7 +128,9 @@ class InterfaceUserTests {
       passwordDao.addPassword(new Password(username, website2, loginName, password.getBytes()));
       websiteDao.addWebsite(new Website(username, website1, url));
 
-      assertTrue(interfaceUser.deleteUser(username, BaseEncoding.base16().encode(masterPassword.getBytes())));
+      assertTrue(
+          interfaceUser.deleteUser(
+              username, BaseEncoding.base16().encode(masterPassword.getBytes())));
       assertNull(userDao.getUser(username));
       assertNull(passwordDao.getPassword(username, website1));
       assertNull(passwordDao.getPassword(username, website2));
@@ -144,7 +148,9 @@ class InterfaceUserTests {
         String differentPassword) {
       userDao.addUser(new User(username, randomEmail, password.getBytes()));
 
-      assertFalse(interfaceUser.deleteUser(differentUsername, BaseEncoding.base16().encode(differentPassword.getBytes())));
+      assertFalse(
+          interfaceUser.deleteUser(
+              differentUsername, BaseEncoding.base16().encode(differentPassword.getBytes())));
       assertNotNull(userDao.getUser(username));
       assertTrue(Arrays.equals(password.getBytes(), userDao.getUser(username).password));
     }
