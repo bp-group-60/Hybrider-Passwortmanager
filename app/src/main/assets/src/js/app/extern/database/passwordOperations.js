@@ -1,4 +1,4 @@
-import {getSessionPassword, getSessionUser} from "../sessionHandler.js";
+import {getSessionPassword, getSessionUser} from "../../sessionHandler.js";
 
 export function getPasswordList(user, password) {
   // array structure: [[website, loginName], ...]

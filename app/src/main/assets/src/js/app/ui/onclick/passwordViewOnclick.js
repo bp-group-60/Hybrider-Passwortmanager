@@ -1,8 +1,9 @@
-import {deletePassword, updatePassword,} from '../../database/passwordOperations.js';
+import {deletePassword, updatePassword,} from '../../extern/database/passwordOperations.js';
 import {getSessionPassword, getSessionUser} from '../../sessionHandler.js';
-import {deleteUrlList, saveUrlList,} from '../../database/websiteOperations.js';
+import {deleteUrlList, saveUrlList,} from '../../extern/database/websiteOperations.js';
 import {getAddedUrls, getRemovedUrls} from '../urlHandler.js';
 import {updatePasswordView} from '../passwordViewHandler.js';
+import {copyToClipboardWithTimeout} from "../../extern/tools.js";
 
 export function editButtonOnclick(page) {
   return () => {
@@ -17,6 +18,7 @@ export function editButtonOnclick(page) {
 
     page.querySelector('#username').children[0].readOnly = false;
     page.querySelector('#password').children[0].readOnly = false;
+    page.querySelector('#passwordCopy').style.display = 'none';
 
     page.querySelector('ons-toolbar .center').innerHTML = 'Bearbeiten';
   };
@@ -64,6 +66,13 @@ export function onclickDeletePassword(page) {
           ons.notification.toast('Passwort wurde gelöscht!', {timeout: 3000});
         }
       });
+  };
+}
+
+export function copyPasswordOnclick(page) {
+  return () => {
+    copyToClipboardWithTimeout(page.querySelector('#password').value, 20000);
+    ons.notification.toast('Passwort wurde kopiert', {timeout: 3000});
   };
 }
 

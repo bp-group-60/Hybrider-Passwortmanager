@@ -1,6 +1,6 @@
 import {getSessionUser} from '../../sessionHandler.js';
-import {createPassword} from '../../database/passwordOperations.js';
-import {saveUrlList} from '../../database/websiteOperations.js';
+import {createPassword} from '../../extern/database/passwordOperations.js';
+import {saveUrlList} from '../../extern/database/websiteOperations.js';
 import {getAddedUrls} from '../urlHandler.js';
 
 export function commitButtonOnclick(page) {

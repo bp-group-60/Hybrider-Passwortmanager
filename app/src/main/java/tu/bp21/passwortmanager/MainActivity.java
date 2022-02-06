@@ -9,6 +9,7 @@ import androidx.room.Room;
 
 import tu.bp21.passwortmanager.js_interfaces.InterfaceCrypto;
 import tu.bp21.passwortmanager.js_interfaces.InterfacePassword;
+import tu.bp21.passwortmanager.js_interfaces.InterfaceTools;
 import tu.bp21.passwortmanager.js_interfaces.InterfaceUser;
 import tu.bp21.passwortmanager.js_interfaces.InterfaceWebsite;
 import tu.bp21.passwortmanager.db.ApplicationDatabase;
@@ -30,20 +31,13 @@ public class MainActivity extends AppCompatActivity {
       getSupportActionBar().hide();
     }
 
-    // if your build is in debug mode, enable WebViews inspection with chrome://inspect
-    if (0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE)) {
-      WebView.setWebContentsDebuggingEnabled(true);
-    }
+    // enable WebViews inspection with chrome://inspect
+    WebView.setWebContentsDebuggingEnabled(true);
 
     ApplicationDatabase database =
         Room.databaseBuilder(this, ApplicationDatabase.class, "database")
             .allowMainThreadQueries()
             .build();
-
-    webView = new WebView(this);
-    webView.setWebViewClient(new AssetWebViewClient(this));
-
-    webView.getSettings().setJavaScriptEnabled(true);
 
     InterfaceUser jsiUser = new InterfaceUser(database.getUserDao());
     InterfacePassword jsiPassword = new InterfacePassword(database.getPasswordDao());
@@ -51,10 +45,19 @@ public class MainActivity extends AppCompatActivity {
     InterfaceCrypto jsiCrypto = new InterfaceCrypto(database.getUserDao());
     Crypto.setPasswordDao(database.getPasswordDao());
 
+    InterfaceTools jsiTools = new InterfaceTools(this);
+
+    webView = new WebView(this);
+    webView.setWebViewClient(new AssetWebViewClient(this));
+
+    webView.getSettings().setJavaScriptEnabled(true);
+
     webView.addJavascriptInterface(jsiUser, "Java_InterfaceUser");
     webView.addJavascriptInterface(jsiPassword, "Java_InterfacePassword");
     webView.addJavascriptInterface(jsiWebsite, "Java_InterfaceWebsite");
     webView.addJavascriptInterface(jsiCrypto, "Java_InterfaceCrypto");
+
+    webView.addJavascriptInterface(jsiTools, "Java_InterfaceTools");
 
     webView.loadUrl("https://appassets.androidplatform.net/assets/src/html/index.html");
 
