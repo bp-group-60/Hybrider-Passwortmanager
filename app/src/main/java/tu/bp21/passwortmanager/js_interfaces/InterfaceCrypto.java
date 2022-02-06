@@ -33,9 +33,4 @@ public class InterfaceCrypto {
   public void setGeneratedKey(String plainPassword) {
     Crypto.setGeneratedKey(plainPassword);
   }
-
-  @JavascriptInterface
-  public void setCurrentUser(String username) {
-    Crypto.setCurrentUser(username);
-  }
 }

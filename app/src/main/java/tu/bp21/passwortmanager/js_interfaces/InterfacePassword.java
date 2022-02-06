@@ -18,7 +18,7 @@ public class InterfacePassword {
   @JavascriptInterface
   public boolean createPassword(
       String username, String website, String loginName, String plainPassword) {
-    byte[] cipherPassword = Crypto.encrypt(plainPassword, website);
+    byte[] cipherPassword = Crypto.encrypt(username, website, plainPassword);
     Password newPassword = new Password(username, website, loginName, cipherPassword);
 
     try {
@@ -34,7 +34,7 @@ public class InterfacePassword {
   @JavascriptInterface
   public boolean updatePassword(
       String username, String website, String loginName, String plainPassword) {
-    byte[] cipherPassword = Crypto.encrypt(plainPassword, website);
+    byte[] cipherPassword = Crypto.encrypt(username, website, plainPassword);
     Password newPassword = new Password(username, website, loginName, cipherPassword);
 
     try {
@@ -77,7 +77,7 @@ public class InterfacePassword {
   public String getPassword(String user, String password, String id) {
     byte[] cipherPassword = passwordDataAccessObject.getPassword(user, id).password;
     String website = passwordDataAccessObject.getPassword(user, id).websiteName;
-    String plainPassword = Crypto.decrypt(cipherPassword, website);
+    String plainPassword = Crypto.decrypt(user, website, cipherPassword);
     return plainPassword;
   }
 }

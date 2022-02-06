@@ -16,7 +16,6 @@ function checkLoginInformation(user, password) {
   sessionStorage.setItem('password', hashPassword(password));
   if (checkUser(user, getSessionPassword())) {
     Java_InterfaceCrypto.setGeneratedKey(password);
-    Java_InterfaceCrypto.setCurrentUser(user);
     window.location.href = './app.html';
   } else {
     const loginForm = document.getElementById('Anmeldung');
