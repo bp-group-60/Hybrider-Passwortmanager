@@ -1,5 +1,7 @@
 package tu.bp21.passwortmanager;
 
+import androidx.annotation.NonNull;
+
 import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.io.BaseEncoding;
 
 import java.util.ArrayList;
@@ -7,8 +9,6 @@ import java.util.ArrayList;
 import tu.bp21.passwortmanager.db.dao.PasswordDao;
 
 public class Crypto {
-  private static PasswordDao passwordDao;
-
   private static native byte[] crypt(byte[] input, byte[] aad, byte[] iv, byte[] key);
 
   private static native byte[] generateKeyNative(
@@ -18,9 +18,6 @@ public class Crypto {
 
   private static native byte[] hash(byte[] input, int input_length, byte[] salt, int salt_length);
 
-  public static void setPasswordDao(PasswordDao passwordDao) {
-    Crypto.passwordDao = passwordDao;
-  }
 
   public static byte[] generateKey(String passwordToDerive, byte[] salt) {
     byte[] input = passwordToDerive.getBytes();
@@ -28,7 +25,7 @@ public class Crypto {
   }
 
   public static byte[] encrypt(
-      String username, String website, String plainText, byte[] key, byte[] iv) {
+          @NonNull String username, @NonNull String website, @NonNull String plainText, @NonNull byte[] key, @NonNull byte[] iv) {
     byte[] input = plainText.getBytes();
     return crypt(input, (username + website).getBytes(), iv, key);
   }
@@ -46,7 +43,7 @@ public class Crypto {
     return output;
   }
 
-  public static byte[] generateIV(ArrayList<String> ivList, int size) {
+  public static byte[] generateUniqueIV(ArrayList<String> ivList, int size) {
 
     byte[] ivNew = generateSecureByteArray(size);
     if (ivList == null || ivList.size() == 0) return ivNew;

@@ -102,7 +102,7 @@ public class InterfacePassword {
       String username, String website, String loginName, String plainPassword, String key) {
     int ivSize = 12;
     ArrayList<String> ivList = getIVList(username, ivSize);
-    byte[] iv = Crypto.generateIV(ivList, ivSize);
+    byte[] iv = Crypto.generateUniqueIV(ivList, ivSize);
     byte[] cipherPassword =
         Crypto.encrypt(username, website, plainPassword, BaseEncoding.base16().decode(key), iv);
     return new Password(username, website, loginName, cipherPassword);

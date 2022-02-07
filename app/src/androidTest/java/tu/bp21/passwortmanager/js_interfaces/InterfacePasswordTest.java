@@ -154,7 +154,7 @@ class InterfacePasswordTest {
             username,
             website,
             loginName,
-            Crypto.encrypt(username, website, password, key, Crypto.generateIV(null, 12))));
+            Crypto.encrypt(username, website, password, key, Crypto.generateUniqueIV(null, 12))));
   }
 
   /**
