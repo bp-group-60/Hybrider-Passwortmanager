@@ -81,8 +81,9 @@ public class InterfacePassword {
   public String getPassword(String user, String password, String id, String key) {
     byte[] cipherPassword = passwordDataAccessObject.getPassword(user, id).password;
     String website = passwordDataAccessObject.getPassword(user, id).websiteName;
+    byte[] associatedData = (user + website).getBytes();
     String plainPassword =
-        Crypto.decrypt(user, website, cipherPassword, BaseEncoding.base16().decode(key));
+        Crypto.decrypt(cipherPassword, associatedData, BaseEncoding.base16().decode(key));
     return plainPassword;
   }
 
@@ -103,8 +104,9 @@ public class InterfacePassword {
     int ivSize = 12;
     ArrayList<String> ivList = getIVList(username, ivSize);
     byte[] iv = Crypto.generateUniqueIV(ivList, ivSize);
+    byte[] associatedData = (username+website).getBytes();
     byte[] cipherPassword =
-        Crypto.encrypt(username, website, plainPassword, BaseEncoding.base16().decode(key), iv);
+        Crypto.encrypt(plainPassword, associatedData, BaseEncoding.base16().decode(key), iv);
     return new Password(username, website, loginName, cipherPassword);
   }
 }
