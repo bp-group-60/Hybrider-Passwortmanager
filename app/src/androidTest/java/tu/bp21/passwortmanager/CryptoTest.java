@@ -5,12 +5,9 @@ import static tu.bp21.passwortmanager.StringFunction.generateRandomString;
 
 import org.bouncycastle.crypto.generators.SCrypt;
 
-
 import org.bouncycastle.util.Arrays;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -26,10 +23,13 @@ class CryptoTest {
   static {
     System.loadLibrary("Crypto");
   }
+
   static Random random;
 
   @BeforeAll
-  static void setUp() {random = new Random();}
+  static void setUp() {
+    random = new Random();
+  }
 
   @AfterEach
   void tearDown() {}
@@ -48,7 +48,7 @@ class CryptoTest {
 
   @Test
   void encrypt() throws Exception {
-    byte[] associatedData = new byte[random.nextInt(100)+1];
+    byte[] associatedData = new byte[random.nextInt(100) + 1];
     random.nextBytes(associatedData);
     String plaintext = generateRandomString(40);
 
@@ -61,28 +61,28 @@ class CryptoTest {
     cipher.init(Cipher.ENCRYPT_MODE, key);
     cipher.updateAAD(associatedData);
     byte[] iv = cipher.getIV();
-    assertEquals(12,iv.length);
+    assertEquals(12, iv.length);
     byte[] expected = cipher.doFinal(plaintext.getBytes());
-    expected = Arrays.concatenate(iv,expected);
-    byte[] actual = Crypto.encrypt(plaintext,associatedData,keyAsByte,iv);
-    assertArrayEquals(expected,actual);
-    assertThrows(NullPointerException.class, () -> Crypto.encrypt(null,associatedData,keyAsByte,iv));
+    expected = Arrays.concatenate(iv, expected);
+    byte[] actual = Crypto.encrypt(plaintext, associatedData, keyAsByte, iv);
+    assertArrayEquals(expected, actual);
+    assertThrows(
+        NullPointerException.class, () -> Crypto.encrypt(null, associatedData, keyAsByte, iv));
   }
 
   @Test
   void decrypt() {}
 
-
   @Nested
   @DisplayName("Tests for computeHash")
-  class computeHashTest{
+  class computeHashTest {
     @Test
     @DisplayName("Case: Default")
     void computeHashDefault() {
-      byte[] salt = Crypto.generateSecureByteArray(new Random().nextInt(64)+1);
+      byte[] salt = Crypto.generateSecureByteArray(new Random().nextInt(64) + 1);
       int outputLength = 64;
       String password = generateRandomString(40);
-      byte[] expected = computeExpectedHash(password,salt,outputLength);
+      byte[] expected = computeExpectedHash(password, salt, outputLength);
       byte[] actual = Crypto.computeHash(password, salt);
 
       assertArrayEquals(expected, actual);
@@ -91,11 +91,11 @@ class CryptoTest {
 
     @Test
     @DisplayName("Case: no salt")
-    void computeHashNoSalt(){
+    void computeHashNoSalt() {
       byte[] salt = new byte[0];
       int outputLength = 64;
       String password = generateRandomString(new Random().nextInt(40) + 1);
-      byte[] expected = computeExpectedHash(password,salt,outputLength);
+      byte[] expected = computeExpectedHash(password, salt, outputLength);
       byte[] actual = Crypto.computeHash(password, salt);
 
       assertArrayEquals(expected, actual);
@@ -108,22 +108,22 @@ class CryptoTest {
 
     @Test
     @DisplayName("Case: empty or null plaintext")
-    void computeHashEmpty(){
-      byte[] salt = Crypto.generateSecureByteArray(new Random().nextInt(64)+1);
+    void computeHashEmpty() {
+      byte[] salt = Crypto.generateSecureByteArray(new Random().nextInt(64) + 1);
       int outputLength = 64;
       String password = "";
-      byte[] expected = computeExpectedHash(password,salt,outputLength);
+      byte[] expected = computeExpectedHash(password, salt, outputLength);
       byte[] actual = Crypto.computeHash(password, salt);
 
       assertArrayEquals(expected, actual);
       assertEquals(outputLength + salt.length, actual.length);
 
-      assertThrows(NullPointerException.class, () -> Crypto.computeHash(null,salt));
+      assertThrows(NullPointerException.class, () -> Crypto.computeHash(null, salt));
     }
 
-    byte[] computeExpectedHash(String plaintext, byte[] salt, int outputLength){
+    byte[] computeExpectedHash(String plaintext, byte[] salt, int outputLength) {
       byte[] expected =
-              SCrypt.generate(plaintext.getBytes(), salt, (int) Math.pow(2, 18), 8, 1, outputLength);
+          SCrypt.generate(plaintext.getBytes(), salt, (int) Math.pow(2, 18), 8, 1, outputLength);
       expected = Arrays.concatenate(salt, expected);
       return expected;
     }
