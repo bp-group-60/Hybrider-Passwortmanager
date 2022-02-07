@@ -10,7 +10,6 @@ import org.bouncycastle.util.Arrays;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -46,27 +45,99 @@ class CryptoTest {
     assertEquals(0, salt.length);
   }
 
-  @Test
-  void encrypt() throws Exception {
-    byte[] associatedData = new byte[random.nextInt(100)+1];
-    random.nextBytes(associatedData);
-    String plaintext = generateRandomString(40);
+  @Nested
+  @DisplayName("Tests for encrypt")
+  class encryptTest{
 
-    KeyGenerator keygen = KeyGenerator.getInstance("AES");
-    keygen.init(256);
-    SecretKey key = keygen.generateKey();
-    byte[] keyAsByte = key.getEncoded();
+    @Test
+    @DisplayName("Case: Default")
+    void encryptDefault() throws Exception {
+      byte[] associatedData = new byte[random.nextInt(100)+1];
+      random.nextBytes(associatedData);
+      String plaintext = generateRandomString(40);
+      checkEncryptExpected(associatedData, plaintext);
+    }
 
-    Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
-    cipher.init(Cipher.ENCRYPT_MODE, key);
-    cipher.updateAAD(associatedData);
-    byte[] iv = cipher.getIV();
-    assertEquals(12,iv.length);
-    byte[] expected = cipher.doFinal(plaintext.getBytes());
-    expected = Arrays.concatenate(iv,expected);
-    byte[] actual = Crypto.encrypt(plaintext,associatedData,keyAsByte,iv);
-    assertArrayEquals(expected,actual);
-    assertThrows(NullPointerException.class, () -> Crypto.encrypt(null,associatedData,keyAsByte,iv));
+    @Test
+    @DisplayName("Case: empty or null associatedData")
+    void encryptEmptyOrNullAssociatedData() throws Exception{
+      byte[] associatedData = new byte[0];
+      String plaintext = generateRandomString(40);
+      checkEncryptExpected(associatedData, plaintext);
+      checkEncryptExpected(null, plaintext);
+
+    }
+
+    @Test
+    @DisplayName("Case: empty plaintext")
+    void encryptEmptyPlaintext() throws Exception{
+      byte[] associatedData = new byte[random.nextInt(100)+1];
+      random.nextBytes(associatedData);
+      String plaintext = "";
+      checkEncryptExpected(associatedData, plaintext);
+    }
+
+    @Test
+    @DisplayName("Case: null plaintext")
+    void encryptNullPlainText(){
+      byte[] associatedData = new byte[random.nextInt(100)+1];
+      byte[] key = new byte[32];
+      byte[] iv = new byte[12];
+      random.nextBytes(associatedData);
+      random.nextBytes(key);
+      random.nextBytes(iv);
+      assertThrows(NullPointerException.class, () -> Crypto.encrypt(null,associatedData,key,iv));
+    }
+
+    @Test
+    @DisplayName("Case: illegal Key Size")
+    void encryptIllegalKeySize(){
+      int illegalSize = random.nextInt(100);
+      while(illegalSize==32) illegalSize = random.nextInt(100);
+      byte[] associatedData = new byte[random.nextInt(100)+1];
+      byte[] key = new byte[illegalSize];
+      byte[] iv = new byte[12];
+      String plaintext = generateRandomString(40);
+      random.nextBytes(associatedData);
+      random.nextBytes(key);
+      random.nextBytes(iv);
+      byte[] expected = new byte[0];
+      byte[] actual = Crypto.encrypt(plaintext,associatedData,key,iv);
+      assertArrayEquals(expected,actual);
+      assertEquals(0,actual.length);
+    }
+
+    @Test
+    @DisplayName("Case: illegal IV Size")
+    void encryptIllegalIVSize(){
+      int illegalSize = random.nextInt(100);
+      while(illegalSize==32) illegalSize = random.nextInt(100);
+      byte[] associatedData = new byte[random.nextInt(100)+1];
+      byte[] key = new byte[32];
+      byte[] iv = new byte[illegalSize];
+      String plaintext = generateRandomString(40);
+      random.nextBytes(associatedData);
+      random.nextBytes(key);
+      random.nextBytes(iv);
+      byte[] expected = new byte[0];
+      byte[] actual = Crypto.encrypt(plaintext,associatedData,key,iv);
+      assertArrayEquals(expected,actual);
+      assertEquals(0,actual.length);
+    }
+
+    void checkEncryptExpected(byte[] associatedData, String plaintext) throws Exception{
+      byte[] aadForExpected = associatedData;
+      if(associatedData == null) aadForExpected = new byte[0];
+      SecretKey key = generateKey();
+      byte[] keyAsByte = key.getEncoded();
+      byte[] expected = encryptWithGCM(plaintext, aadForExpected,key);
+
+      byte[] iv = Arrays.copyOf(expected, 12);
+      byte[] actual = Crypto.encrypt(plaintext,associatedData,keyAsByte,iv);
+
+      assertArrayEquals(expected,actual);
+    }
+
   }
 
   @Test
@@ -79,7 +150,7 @@ class CryptoTest {
     @Test
     @DisplayName("Case: Default")
     void computeHashDefault() {
-      byte[] salt = Crypto.generateSecureByteArray(new Random().nextInt(64)+1);
+      byte[] salt = Crypto.generateSecureByteArray(random.nextInt(64)+1);
       int outputLength = 64;
       String password = generateRandomString(40);
       byte[] expected = computeExpectedHash(password,salt,outputLength);
@@ -94,7 +165,7 @@ class CryptoTest {
     void computeHashNoSalt(){
       byte[] salt = new byte[0];
       int outputLength = 64;
-      String password = generateRandomString(new Random().nextInt(40) + 1);
+      String password = generateRandomString(40);
       byte[] expected = computeExpectedHash(password,salt,outputLength);
       byte[] actual = Crypto.computeHash(password, salt);
 
@@ -109,7 +180,7 @@ class CryptoTest {
     @Test
     @DisplayName("Case: empty or null plaintext")
     void computeHashEmpty(){
-      byte[] salt = Crypto.generateSecureByteArray(new Random().nextInt(64)+1);
+      byte[] salt = Crypto.generateSecureByteArray(random.nextInt(64)+1);
       int outputLength = 64;
       String password = "";
       byte[] expected = computeExpectedHash(password,salt,outputLength);
@@ -127,5 +198,22 @@ class CryptoTest {
       expected = Arrays.concatenate(salt, expected);
       return expected;
     }
+  }
+
+  SecretKey generateKey() throws Exception{
+    KeyGenerator keygen = KeyGenerator.getInstance("AES");
+    keygen.init(256);
+    return keygen.generateKey();
+  }
+
+  byte[] encryptWithGCM(String plaintext, byte[] aad, SecretKey key) throws  Exception{
+    Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+    cipher.init(Cipher.ENCRYPT_MODE, key);
+    cipher.updateAAD(aad);
+    byte[] iv = cipher.getIV();
+    assertEquals(12,iv.length);
+    byte[] expected = cipher.doFinal(plaintext.getBytes());
+    expected = Arrays.concatenate(iv,expected);
+    return expected;
   }
 }

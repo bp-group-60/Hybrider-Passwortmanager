@@ -26,7 +26,7 @@ public class Crypto {
           @NonNull byte[] key,
           @NonNull byte[] iv) {
     byte[] input = plainText.getBytes();
-    if(key.length != 32 || iv.length != 12) return null;
+    if(key.length != 32 || iv.length != 12) return new byte[0];
     if(associatedData==null) associatedData = new byte[0];
     return crypt(input, associatedData, iv, key);
   }

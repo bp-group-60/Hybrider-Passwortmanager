@@ -1,14 +1,13 @@
-package tu.bp21.passwortmanager;
+package tu.bp21.passwortmanager.db;
 
 import static org.junit.Assert.*;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
 
-import java.security.SecureRandom;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import tu.bp21.passwortmanager.db.Password;
+import tu.bp21.passwortmanager.StringFunction;
 
 public class PasswordTest {
 
@@ -17,19 +16,18 @@ public class PasswordTest {
   private String user, website, loginName;
   private byte[] password;
 
-  @Before
+  @BeforeEach
   public void setUp() throws Exception {
     user = "PasswordTestUser01";
     website = "PasswordTestWebsite01";
     loginName = "PasswordTestLoginName01";
-    password = new byte[20];
-    SecureRandom.getInstanceStrong().nextBytes(password);
+    password = StringFunction.generateRandomString(40).getBytes();
 
     passwordObj = new Password(user, website, loginName, password);
     wrongPasswordObj = new Password(user, "wrong", loginName, password);
   }
 
-  @After
+  @AfterEach
   public void tearDown() throws Exception {
     user = website = loginName = "";
     password = null;
