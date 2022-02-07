@@ -3,6 +3,8 @@ package tu.bp21.passwortmanager;
 import static org.junit.jupiter.api.Assertions.*;
 import static tu.bp21.passwortmanager.StringFunction.generateRandomString;
 
+import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.io.BaseEncoding;
+
 import org.bouncycastle.crypto.generators.SCrypt;
 
 
@@ -12,6 +14,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import javax.crypto.Cipher;
@@ -134,7 +137,7 @@ class CryptoTest {
     void checkEncryptExpected(byte[] associatedData, String plaintext) throws Exception{
       byte[] aadForExpected = associatedData;
       if(associatedData == null) aadForExpected = new byte[0];
-      SecretKey key = generateKey();
+      SecretKey key = generateSecretKey();
       byte[] keyAsByte = key.getEncoded();
       byte[] expected = encryptWithGCM(plaintext, aadForExpected,key);
 
@@ -161,10 +164,15 @@ class CryptoTest {
     @Test
     @DisplayName("Case: Empty or Null associatedData")
     void decryptEmptyOrNullAssociatedData() throws Exception {
-      byte[] associatedData = new byte[0];
       String expected = generateRandomString(40);
+      byte[] associatedData = new byte[0];
       checkDecryptSuccess(associatedData,expected);
-      checkDecryptSuccess(null,expected);
+
+      associatedData = ("").getBytes();
+      checkDecryptSuccess(associatedData,expected);
+
+      associatedData = null;
+      checkDecryptSuccess(associatedData,expected);
     }
 
     @Test
@@ -184,7 +192,7 @@ class CryptoTest {
       random.nextBytes(associatedData);
       random.nextBytes(actualKey);
       String expected = generateRandomString(40);
-      SecretKey key = generateKey();
+      SecretKey key = generateSecretKey();
       byte[] expectedKey = key.getEncoded();
 
       while(Arrays.areEqual(expectedKey,actualKey))
@@ -207,7 +215,7 @@ class CryptoTest {
         random.nextBytes(associatedData2);
 
       String expected = generateRandomString(40);
-      SecretKey key = generateKey();
+      SecretKey key = generateSecretKey();
       byte[] hexKey = key.getEncoded();
 
       byte[] cipher = encryptWithGCM(expected,associatedData1,key);
@@ -222,7 +230,7 @@ class CryptoTest {
       byte[] associatedData = new byte[random.nextInt(100)+1];
       random.nextBytes(associatedData);
       String expected = generateRandomString(40);
-      SecretKey key = generateKey();
+      SecretKey key = generateSecretKey();
       byte[] hexKey = key.getEncoded();
 
       byte[] cipher = encryptWithGCM(expected,associatedData,key);
@@ -237,10 +245,14 @@ class CryptoTest {
       assertTrue(actual.equals("authentication failed"));
     }
 
+    /**
+     * encrypt with GCM mode provided by bouncy castle,
+     * then decrypt and check if the plaintext is correct
+     */
     void checkDecryptSuccess(byte[] associatedData, String expected) throws Exception{
       byte[] aadtoEncrypt = associatedData;
       if(associatedData==null) aadtoEncrypt = new byte[0];
-      SecretKey key = generateKey();
+      SecretKey key = generateSecretKey();
       byte[] hexKey = key.getEncoded();
       byte[] cipher = encryptWithGCM(expected,aadtoEncrypt,key);
       String actual = Crypto.decrypt(cipher,associatedData,hexKey);
@@ -291,7 +303,7 @@ class CryptoTest {
       assertArrayEquals(expected, actual);
       assertEquals(hashSize + salt.length, actual.length);
 
-      assertThrows(NullPointerException.class, () -> Crypto.computeHash(null,salt));
+      assertThrows(IllegalArgumentException.class, () -> Crypto.computeHash(null,salt));
     }
 
     /**
@@ -305,10 +317,114 @@ class CryptoTest {
     }
   }
 
+  @Nested
+  @DisplayName("Test for generateUniqueIV")
+  class generateUniqueIVTest{
+
+    @Test
+    @DisplayName("Case: Default")
+    void generateUniqueIVDefault(){
+      ArrayList<String> ivList = new ArrayList<>();
+      int amount = random.nextInt(100);
+      addRandomIV(ivList, ivSize, amount);
+      byte[] iv = Crypto.generateUniqueIV(ivList, ivSize);
+      assertEquals(ivSize, iv.length);
+      assertTrue(!ivList.contains(BaseEncoding.base16().encode(iv)));
+    }
+
+    @Test
+    @DisplayName("Case: Reached max amount of entries")
+    void generateUniqueIVFull(){
+      ArrayList<String> ivList = new ArrayList<>();
+      int ivSize = 1;
+      int maxSize = (int) Math.pow(2, ivSize*8);
+      int amount = maxSize;
+      addRandomIV(ivList, ivSize, amount);
+      Exception exception = assertThrows(RuntimeException.class, () -> Crypto.generateUniqueIV(ivList, ivSize));
+      assertTrue(exception.getMessage().equals("reached maximum amount of entries"));
+      byte[] iv = Crypto.generateSecureByteArray(1);
+      assertTrue(ivList.contains(BaseEncoding.base16().encode(iv)));
+    }
+
+    @Test
+    @DisplayName("Test Check Unique")
+    void generateUniqueIVCheckUnique(){
+      ArrayList<String> ivList = new ArrayList<>();
+      int ivSize = 1;
+      int maxSize = (int) Math.pow(2, ivSize*8);
+      int amount = maxSize-1;
+      addRandomIV(ivList, ivSize, amount);
+      byte[] iv = Crypto.generateUniqueIV(ivList, ivSize);
+      assertTrue(!ivList.contains(BaseEncoding.base16().encode(iv)));
+      assertEquals(ivSize,iv.length);
+    }
+
+    @Test
+    @DisplayName("Case: empty or null list")
+    void generateUniqueIVEmptyOrNullList(){
+      ArrayList<String> ivList = new ArrayList<>();
+      byte[] iv = Crypto.generateUniqueIV(ivList, ivSize);
+      assertEquals(ivSize, iv.length);
+      for(byte b : iv)
+        assertNotNull(b);
+
+      iv = Crypto.generateUniqueIV(null, ivSize);
+      assertEquals(ivSize, iv.length);
+      for(byte b : iv)
+        assertNotNull(b);
+    }
+
+    void addRandomIV(ArrayList<String> ivList, int ivSize, int amount){
+      byte[] iv;
+      for (int i = 0; i < amount; i++) {
+        iv = Crypto.generateSecureByteArray(ivSize);
+        while (ivList.contains(BaseEncoding.base16().encode(iv)))
+          iv = Crypto.generateSecureByteArray(ivSize);
+        ivList.add(BaseEncoding.base16().encode(iv));
+      }
+    }
+  }
+
+  @Nested
+  @DisplayName("Test for generateKey")
+  class generateKeyTest{
+
+    @Test
+    @DisplayName("Case: Default")
+    void generateKeyDefault(){
+      String passwordToDerive = generateRandomString(40);
+      byte[] salt = Crypto.generateSecureByteArray(random.nextInt(65));
+      byte[] key = Crypto.generateKey(passwordToDerive, salt);
+      assertEquals(keySize, key.length);
+    }
+
+    @Test
+    @DisplayName("Case: empty or null passwordToDerive")
+    void generateKeyEmptyOrNullPassword(){
+      String emptyPassword = "";
+      byte[] salt = Crypto.generateSecureByteArray(random.nextInt(65));
+      assertThrows(IllegalArgumentException.class, () -> Crypto.generateKey(emptyPassword, salt));
+
+      String nullPassword = null;
+      assertThrows(IllegalArgumentException.class, () -> Crypto.generateKey(nullPassword, salt));
+    }
+
+    @Test
+    @DisplayName("Case: empty or null salt")
+    void generateKeyTestEmptyOrNullSalt(){
+      String passwordToDerive = generateRandomString(40);
+      byte[] emptySalt = new byte[0];
+      assertThrows(IllegalArgumentException.class, () -> Crypto.generateKey(passwordToDerive, emptySalt));
+
+      byte[] nullSalt = null;
+      assertThrows(IllegalArgumentException.class, () -> Crypto.generateKey(passwordToDerive, nullSalt));
+    }
+  }
+
   /**
    * generate a key for encrypt and decrypt
    */
-  SecretKey generateKey() throws Exception{
+  SecretKey generateSecretKey() throws Exception{
     KeyGenerator keygen = KeyGenerator.getInstance("AES");
     keygen.init(256);
     return keygen.generateKey();

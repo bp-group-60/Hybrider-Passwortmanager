@@ -49,6 +49,8 @@ public class Crypto {
   }
 
   public static byte[] generateUniqueIV(ArrayList<String> ivList, int size) {
+    if(ivList != null && ivList.size() >= Math.pow(2,size*8))
+      throw new RuntimeException("reached maximum amount of entries");
 
     byte[] ivNew = generateSecureByteArray(size);
     if (ivList == null || ivList.size() == 0) return ivNew;

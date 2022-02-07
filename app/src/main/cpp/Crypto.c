@@ -113,7 +113,6 @@ Java_tu_bp21_passwortmanager_Crypto_generateKeyNative(JNIEnv *env, jobject thiz,
 
 JNIEXPORT jbyteArray JNICALL
 Java_tu_bp21_passwortmanager_Crypto_generateSecureByteArray(JNIEnv *env, jclass clazz, jint size) {
-    // TODO: salt unique sicherstellen benötigt?
     //generate salt
     jbyte *output = calloc (size, sizeof (jbyte));
     RAND_bytes(output, size);
