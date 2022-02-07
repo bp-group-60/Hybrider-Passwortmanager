@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     InterfaceUser jsiUser = new InterfaceUser(database.getUserDao());
     InterfacePassword jsiPassword = new InterfacePassword(database.getPasswordDao());
     InterfaceWebsite jsiWebsite = new InterfaceWebsite(database.getWebsiteDao());
-    InterfaceCrypto jsiCrypto = new InterfaceCrypto(database.getUserDao());
+    InterfaceCrypto jsiCrypto = new InterfaceCrypto();
     Crypto.setPasswordDao(database.getPasswordDao());
 
     InterfaceTools jsiTools = new InterfaceTools(this);

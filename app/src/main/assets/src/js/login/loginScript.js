@@ -1,6 +1,6 @@
 import {clearInputError, setFormMessage, setInputError} from './loginMessages.js';
-import {checkUser, createUser, existUser} from '../app/extern/database/userOperations.js';
-import {hashPassword, generateKey, getSalt} from '../app/extern/crypto.js';
+import {checkUser, createUser, existUser, getSalt} from '../app/extern/database/userOperations.js';
+import {hashPassword, generateKey} from '../app/extern/crypto.js';
 
 function checkUserAvailable(user) {
   if (existUser(user)) {
