@@ -6,7 +6,6 @@ import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.io.Bas
 
 import java.util.ArrayList;
 
-
 public class Crypto {
   private static native byte[] crypt(byte[] input, byte[] aad, byte[] iv, byte[] key);
 
