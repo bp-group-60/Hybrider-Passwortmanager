@@ -151,7 +151,7 @@ class InterfacePasswordTest {
     userDao.addUser(new User(username, email, masterPassword.getBytes()));
     passwordDao.addPassword(
         new Password(
-            username, website, loginName, Crypto.encrypt(username, website, password, key)));
+            username, website, loginName, Crypto.encrypt(username, website, password, key, Crypto.generateIV(null, 12) )));
   }
 
   /**

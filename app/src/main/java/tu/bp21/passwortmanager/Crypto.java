@@ -3,10 +3,7 @@ package tu.bp21.passwortmanager;
 import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.io.BaseEncoding;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
-import tu.bp21.passwortmanager.db.Password;
 import tu.bp21.passwortmanager.db.dao.PasswordDao;
 
 public class Crypto {
@@ -30,9 +27,9 @@ public class Crypto {
     return generateKeyNative(input, input.length, salt, salt.length);
   }
 
-  public static byte[] encrypt(String username, String website, String plainText, byte[] key) {
+  public static byte[] encrypt(String username, String website, String plainText, byte[] key, byte[] iv) {
     byte[] input = plainText.getBytes();
-    return crypt(input, (username + website).getBytes(), generateIV(username, 12), key);
+    return crypt(input, (username + website).getBytes(), iv, key);
   }
 
   public static String decrypt(String username, String website, byte[] cipher, byte[] key) {
@@ -48,17 +45,10 @@ public class Crypto {
     return output;
   }
 
-  private static byte[] generateIV(String username, int size) {
-    List<Password> list = passwordDao.getPasswordList(username);
-    ArrayList<String> ivList = new ArrayList<>();
-
-    byte[] ivExisted;
-    for (Password x : list) {
-      ivExisted = Arrays.copyOf(x.password, size);
-      ivList.add(BaseEncoding.base16().encode(ivExisted));
-    }
+  public static byte[] generateIV(ArrayList<String> ivList, int size) {
 
     byte[] ivNew = generateSecureByteArray(size);
+    if(ivList == null || ivList.size() == 0) return ivNew;
     while (ivList.contains(BaseEncoding.base16().encode(ivNew)))
       ivNew = generateSecureByteArray(size);
     return ivNew;

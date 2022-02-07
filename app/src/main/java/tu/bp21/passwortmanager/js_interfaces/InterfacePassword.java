@@ -5,6 +5,8 @@ import android.webkit.JavascriptInterface;
 import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.io.BaseEncoding;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import tu.bp21.passwortmanager.Crypto;
 import tu.bp21.passwortmanager.db.dao.PasswordDao;
@@ -20,9 +22,7 @@ public class InterfacePassword {
   @JavascriptInterface
   public boolean createPassword(
       String username, String website, String loginName, String plainPassword, String key) {
-    byte[] cipherPassword =
-        Crypto.encrypt(username, website, plainPassword, BaseEncoding.base16().decode(key));
-    Password newPassword = new Password(username, website, loginName, cipherPassword);
+    Password newPassword = createEncryptedPassword(username,website,loginName,plainPassword,key);
 
     try {
       passwordDataAccessObject.addPassword(newPassword);
@@ -37,9 +37,7 @@ public class InterfacePassword {
   @JavascriptInterface
   public boolean updatePassword(
       String username, String website, String loginName, String plainPassword, String key) {
-    byte[] cipherPassword =
-        Crypto.encrypt(username, website, plainPassword, BaseEncoding.base16().decode(key));
-    Password newPassword = new Password(username, website, loginName, cipherPassword);
+    Password newPassword = createEncryptedPassword(username,website,loginName,plainPassword,key);
 
     try {
       passwordDataAccessObject.updatePassword(newPassword);
@@ -84,5 +82,26 @@ public class InterfacePassword {
     String plainPassword =
         Crypto.decrypt(user, website, cipherPassword, BaseEncoding.base16().decode(key));
     return plainPassword;
+  }
+
+  private ArrayList<String> getIVList(String username, int ivSize){
+    List<Password> list = passwordDataAccessObject.getPasswordList(username);
+    ArrayList<String> ivList = new ArrayList<>();
+
+    byte[] ivExisted;
+    for (Password x : list) {
+      ivExisted = Arrays.copyOf(x.password, ivSize);
+      ivList.add(BaseEncoding.base16().encode(ivExisted));
+    }
+    return ivList;
+  }
+
+  private Password createEncryptedPassword(String username, String website, String loginName, String plainPassword, String key){
+    int ivSize = 12;
+    ArrayList<String> ivList = getIVList(username, ivSize);
+    byte[] iv = Crypto.generateIV(ivList, ivSize);
+    byte[] cipherPassword =
+            Crypto.encrypt(username, website, plainPassword, BaseEncoding.base16().decode(key), iv);
+    return new Password(username, website, loginName, cipherPassword);
   }
 }
