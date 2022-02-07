@@ -32,8 +32,9 @@ public class Crypto {
   }
 
   public static String decrypt(
-          @NonNull byte[] cipher, @NonNull byte[] associatedData,
+          @NonNull byte[] cipher, byte[] associatedData,
           @NonNull byte[] key) {
+    if(associatedData == null) associatedData = new byte[0];
     byte[] text = crypt(cipher, associatedData, null, key);
     if (text == null) return "authentication failed";
     return new String(text);
