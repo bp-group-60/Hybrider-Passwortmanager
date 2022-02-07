@@ -6,7 +6,6 @@ import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.io.Bas
 
 import java.util.ArrayList;
 
-import tu.bp21.passwortmanager.db.dao.PasswordDao;
 
 public class Crypto {
   private static native byte[] crypt(byte[] input, byte[] aad, byte[] iv, byte[] key);
@@ -18,19 +17,26 @@ public class Crypto {
 
   private static native byte[] hash(byte[] input, int input_length, byte[] salt, int salt_length);
 
-
   public static byte[] generateKey(@NonNull String passwordToDerive, @NonNull byte[] salt) {
     byte[] input = passwordToDerive.getBytes();
     return generateKeyNative(input, input.length, salt, salt.length);
   }
 
   public static byte[] encrypt(
-          @NonNull String username, @NonNull String website, @NonNull String plainText, @NonNull byte[] key, @NonNull byte[] iv) {
+      @NonNull String username,
+      @NonNull String website,
+      @NonNull String plainText,
+      @NonNull byte[] key,
+      @NonNull byte[] iv) {
     byte[] input = plainText.getBytes();
     return crypt(input, (username + website).getBytes(), iv, key);
   }
 
-  public static String decrypt(@NonNull String username, @NonNull String website, @NonNull byte[] cipher, @NonNull byte[] key) {
+  public static String decrypt(
+      @NonNull String username,
+      @NonNull String website,
+      @NonNull byte[] cipher,
+      @NonNull byte[] key) {
     byte[] text = crypt(cipher, (username + website).getBytes(), null, key);
     if (text == null) return "authentication failed";
     return new String(text);
