@@ -146,7 +146,7 @@ class InterfacePasswordTest {
       String loginName,
       String password) {
     byte[] salt = Crypto.generateSecureByteArray(16);
-    byte[] associatedData = (username+website).getBytes();
+    byte[] associatedData = (username + website).getBytes();
     key = Crypto.generateKey(masterPassword, salt);
     keyAsHex = BaseEncoding.base16().encode(key);
     userDao.addUser(new User(username, email, masterPassword.getBytes()));
@@ -165,12 +165,10 @@ class InterfacePasswordTest {
   void checkExpectedDB(
       String username, String website, String loginName, String password, byte[] key) {
     Password expected = passwordDao.getPassword(username, website);
-    byte[] associatedData = (username+website).getBytes();
+    byte[] associatedData = (username + website).getBytes();
     assertTrue(expected != null);
     assertTrue(expected.loginName.equals(loginName));
-    assertTrue(
-        Crypto.decrypt(expected.password, associatedData, key)
-            .equals(password));
+    assertTrue(Crypto.decrypt(expected.password, associatedData, key).equals(password));
   }
 
   @Nested
