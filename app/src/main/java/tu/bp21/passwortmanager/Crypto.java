@@ -14,12 +14,12 @@ public class Crypto {
   private static native byte[] generateKeyNative(
       byte[] input, int input_length, byte[] salt, int salt_length);
 
-  public static native byte[] generateSecureByteArray(int size);
+  public static native byte[] generateSecureByteArray(@NonNull int size);
 
   private static native byte[] hash(byte[] input, int input_length, byte[] salt, int salt_length);
 
 
-  public static byte[] generateKey(String passwordToDerive, byte[] salt) {
+  public static byte[] generateKey(@NonNull String passwordToDerive, @NonNull byte[] salt) {
     byte[] input = passwordToDerive.getBytes();
     return generateKeyNative(input, input.length, salt, salt.length);
   }
@@ -30,20 +30,20 @@ public class Crypto {
     return crypt(input, (username + website).getBytes(), iv, key);
   }
 
-  public static String decrypt(String username, String website, byte[] cipher, byte[] key) {
+  public static String decrypt(@NonNull String username, @NonNull String website, @NonNull byte[] cipher, @NonNull byte[] key) {
     byte[] text = crypt(cipher, (username + website).getBytes(), null, key);
     if (text == null) return "authentication failed";
     return new String(text);
   }
 
-  public static byte[] computeHash(String password, byte[] salt) {
+  public static byte[] computeHash(@NonNull String password, @NonNull byte[] salt) {
     byte[] input = password.getBytes();
     byte[] output = hash(input, input.length, salt, salt.length);
     if (output == null) throw new RuntimeException("Hash failed. Not enough RAM");
     return output;
   }
 
-  public static byte[] generateUniqueIV(ArrayList<String> ivList, int size) {
+  public static byte[] generateUniqueIV(ArrayList<String> ivList, @NonNull int size) {
 
     byte[] ivNew = generateSecureByteArray(size);
     if (ivList == null || ivList.size() == 0) return ivNew;
