@@ -14,7 +14,7 @@ public class Crypto {
   private static native byte[] generateKeyNative(
       byte[] input, int input_length, byte[] salt, int salt_length);
 
-  public static native byte[] generateSecureByteArray(@NonNull int size);
+  public static native byte[] generateSecureByteArray(int size);
 
   private static native byte[] hash(byte[] input, int input_length, byte[] salt, int salt_length);
 
@@ -43,7 +43,7 @@ public class Crypto {
     return output;
   }
 
-  public static byte[] generateUniqueIV(ArrayList<String> ivList, @NonNull int size) {
+  public static byte[] generateUniqueIV(ArrayList<String> ivList, int size) {
 
     byte[] ivNew = generateSecureByteArray(size);
     if (ivList == null || ivList.size() == 0) return ivNew;
