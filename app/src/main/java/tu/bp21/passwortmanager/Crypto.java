@@ -27,7 +27,8 @@ public class Crypto {
     return generateKeyNative(input, input.length, salt, salt.length);
   }
 
-  public static byte[] encrypt(String username, String website, String plainText, byte[] key, byte[] iv) {
+  public static byte[] encrypt(
+      String username, String website, String plainText, byte[] key, byte[] iv) {
     byte[] input = plainText.getBytes();
     return crypt(input, (username + website).getBytes(), iv, key);
   }
@@ -48,7 +49,7 @@ public class Crypto {
   public static byte[] generateIV(ArrayList<String> ivList, int size) {
 
     byte[] ivNew = generateSecureByteArray(size);
-    if(ivList == null || ivList.size() == 0) return ivNew;
+    if (ivList == null || ivList.size() == 0) return ivNew;
     while (ivList.contains(BaseEncoding.base16().encode(ivNew)))
       ivNew = generateSecureByteArray(size);
     return ivNew;

@@ -4,7 +4,6 @@ import android.webkit.JavascriptInterface;
 
 import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.io.BaseEncoding;
 
-
 import tu.bp21.passwortmanager.Crypto;
 
 public class InterfaceCrypto {

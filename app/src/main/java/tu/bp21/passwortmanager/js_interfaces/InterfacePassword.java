@@ -22,7 +22,8 @@ public class InterfacePassword {
   @JavascriptInterface
   public boolean createPassword(
       String username, String website, String loginName, String plainPassword, String key) {
-    Password newPassword = createEncryptedPassword(username,website,loginName,plainPassword,key);
+    Password newPassword =
+        createEncryptedPassword(username, website, loginName, plainPassword, key);
 
     try {
       passwordDataAccessObject.addPassword(newPassword);
@@ -37,7 +38,8 @@ public class InterfacePassword {
   @JavascriptInterface
   public boolean updatePassword(
       String username, String website, String loginName, String plainPassword, String key) {
-    Password newPassword = createEncryptedPassword(username,website,loginName,plainPassword,key);
+    Password newPassword =
+        createEncryptedPassword(username, website, loginName, plainPassword, key);
 
     try {
       passwordDataAccessObject.updatePassword(newPassword);
@@ -84,7 +86,7 @@ public class InterfacePassword {
     return plainPassword;
   }
 
-  private ArrayList<String> getIVList(String username, int ivSize){
+  private ArrayList<String> getIVList(String username, int ivSize) {
     List<Password> list = passwordDataAccessObject.getPasswordList(username);
     ArrayList<String> ivList = new ArrayList<>();
 
@@ -96,12 +98,13 @@ public class InterfacePassword {
     return ivList;
   }
 
-  private Password createEncryptedPassword(String username, String website, String loginName, String plainPassword, String key){
+  private Password createEncryptedPassword(
+      String username, String website, String loginName, String plainPassword, String key) {
     int ivSize = 12;
     ArrayList<String> ivList = getIVList(username, ivSize);
     byte[] iv = Crypto.generateIV(ivList, ivSize);
     byte[] cipherPassword =
-            Crypto.encrypt(username, website, plainPassword, BaseEncoding.base16().decode(key), iv);
+        Crypto.encrypt(username, website, plainPassword, BaseEncoding.base16().decode(key), iv);
     return new Password(username, website, loginName, cipherPassword);
   }
 }
