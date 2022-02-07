@@ -111,9 +111,9 @@ class InterfaceWebsiteTest {
     Website expected = getWebsite(username, website, url);
 
     assertTrue(expected != null);
-    assertTrue(expected.user.equals(username));
-    assertTrue(expected.website.equals(website));
-    assertTrue(expected.url.equals(url));
+    assertEquals(expected.user, username);
+    assertEquals(expected.website, website);
+    assertEquals(expected.url, url);
   }
 
   /**

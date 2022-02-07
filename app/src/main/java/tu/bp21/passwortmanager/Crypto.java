@@ -16,8 +16,9 @@ public class Crypto {
 
   private static native byte[] hash(byte[] input, int input_length, byte[] salt, int salt_length);
 
-  public static byte[] generateKey(@NonNull String passwordToDerive, @NonNull byte[] salt) {
+  public static byte[] generateKey(@NonNull String passwordToDerive, byte[] salt) {
     byte[] input = passwordToDerive.getBytes();
+    if(salt==null) salt = new byte[0];
     return generateKeyNative(input, input.length, salt, salt.length);
   }
 

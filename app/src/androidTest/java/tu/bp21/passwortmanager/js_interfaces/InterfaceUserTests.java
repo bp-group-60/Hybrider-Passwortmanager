@@ -152,7 +152,7 @@ class InterfaceUserTests {
           interfaceUser.deleteUser(
               differentUsername, BaseEncoding.base16().encode(differentPassword.getBytes())));
       assertNotNull(userDao.getUser(username));
-      assertTrue(Arrays.equals(password.getBytes(), userDao.getUser(username).password));
+      assertArrayEquals(password.getBytes(), userDao.getUser(username).password);
     }
   }
 }

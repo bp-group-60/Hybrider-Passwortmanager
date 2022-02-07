@@ -194,8 +194,8 @@ class CryptoTest {
 
       byte[] cipher = encryptWithGCM(expected, associatedData, key);
       String actual = Crypto.decrypt(cipher, associatedData, actualKey);
-      assertFalse(expected.equals(actual));
-      assertTrue(actual.equals("authentication failed"));
+      assertNotEquals(expected, actual);
+      assertEquals("authentication failed", actual);
     }
 
     @Test
@@ -213,8 +213,8 @@ class CryptoTest {
 
       byte[] cipher = encryptWithGCM(expected, associatedData1, key);
       String actual = Crypto.decrypt(cipher, associatedData2, hexKey);
-      assertFalse(expected.equals(actual));
-      assertTrue(actual.equals("authentication failed"));
+      assertNotEquals(expected, actual);
+      assertEquals("authentication failed", actual);
     }
 
     @Test
@@ -233,8 +233,8 @@ class CryptoTest {
       while (oldByte == cipher[position]) cipher[position] = (byte) (random.nextInt(256) - 128);
 
       String actual = Crypto.decrypt(cipher, associatedData, hexKey);
-      assertFalse(expected.equals(actual));
-      assertTrue(actual.equals("authentication failed"));
+      assertNotEquals(expected, actual);
+      assertEquals("authentication failed", actual);
     }
 
     /**
@@ -248,7 +248,7 @@ class CryptoTest {
       byte[] hexKey = key.getEncoded();
       byte[] cipher = encryptWithGCM(expected, aadtoEncrypt, key);
       String actual = Crypto.decrypt(cipher, associatedData, hexKey);
-      assertTrue(expected.equals(actual));
+      assertEquals(expected, actual);
     }
   }
 
@@ -294,7 +294,7 @@ class CryptoTest {
       assertArrayEquals(expected, actual);
       assertEquals(hashSize + salt.length, actual.length);
 
-      assertThrows(IllegalArgumentException.class, () -> Crypto.computeHash(null, salt));
+      assertThrows(NullPointerException.class, () -> Crypto.computeHash(null, salt));
     }
 
     /** compute scrypt hash with bouncy castle library */
@@ -331,7 +331,7 @@ class CryptoTest {
       addRandomIV(ivList, ivSize, amount);
       Exception exception =
           assertThrows(RuntimeException.class, () -> Crypto.generateUniqueIV(ivList, ivSize));
-      assertTrue(exception.getMessage().equals("reached maximum amount of entries"));
+      assertEquals("reached maximum amount of entries", exception.getMessage());
       byte[] iv = Crypto.generateSecureByteArray(1);
       assertTrue(ivList.contains(BaseEncoding.base16().encode(iv)));
     }
@@ -391,10 +391,10 @@ class CryptoTest {
     void generateKeyEmptyOrNullPassword() {
       String emptyPassword = "";
       byte[] salt = Crypto.generateSecureByteArray(random.nextInt(65));
-      assertThrows(IllegalArgumentException.class, () -> Crypto.generateKey(emptyPassword, salt));
+      byte[] key = Crypto.generateKey(emptyPassword, salt);
+      assertEquals(keySize, key.length);
 
-      String nullPassword = null;
-      assertThrows(IllegalArgumentException.class, () -> Crypto.generateKey(nullPassword, salt));
+      assertThrows(NullPointerException.class, () -> Crypto.generateKey(null, salt));
     }
 
     @Test
@@ -402,12 +402,11 @@ class CryptoTest {
     void generateKeyTestEmptyOrNullSalt() {
       String passwordToDerive = generateRandomString(40);
       byte[] emptySalt = new byte[0];
-      assertThrows(
-          IllegalArgumentException.class, () -> Crypto.generateKey(passwordToDerive, emptySalt));
+      byte[] key = Crypto.generateKey(passwordToDerive, emptySalt);
+      assertEquals(keySize, key.length);
 
-      byte[] nullSalt = null;
-      assertThrows(
-          IllegalArgumentException.class, () -> Crypto.generateKey(passwordToDerive, nullSalt));
+      key = Crypto.generateKey(passwordToDerive, null);
+      assertEquals(keySize, key.length);
     }
   }
 

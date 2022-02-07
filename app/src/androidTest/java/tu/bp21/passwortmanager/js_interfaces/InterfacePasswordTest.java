@@ -167,8 +167,8 @@ class InterfacePasswordTest {
     Password expected = passwordDao.getPassword(username, website);
     byte[] associatedData = (username + website).getBytes();
     assertTrue(expected != null);
-    assertTrue(expected.loginName.equals(loginName));
-    assertTrue(Crypto.decrypt(expected.password, associatedData, key).equals(password));
+    assertEquals(expected.loginName, loginName);
+    assertEquals(Crypto.decrypt(expected.password, associatedData, key), password);
   }
 
   @Nested
@@ -337,7 +337,7 @@ class InterfacePasswordTest {
           randomPassword);
       String actualLoginName =
           interfacePassword.getLoginName(randomUser, randomMasterPassword, randomWebsite);
-      assertTrue(expectedLoginName.equals(actualLoginName));
+      assertEquals(expectedLoginName, actualLoginName);
     }
 
     @ParameterizedTest
@@ -355,7 +355,7 @@ class InterfacePasswordTest {
       initDB(username, randomEmail, masterPassword, website, randomLoginName, randomPassword);
       String actualLoginName =
           interfacePassword.getLoginName(actualUserName, actualMasterPassword, actualWebsite);
-      assertTrue(expectedLoginName.equals(actualLoginName));
+      assertEquals(expectedLoginName, actualLoginName);
     }
   }
 
@@ -376,7 +376,7 @@ class InterfacePasswordTest {
           expectedPassword);
       String actualPassword =
           interfacePassword.getPassword(randomUser, randomMasterPassword, randomWebsite, keyAsHex);
-      assertTrue(expectedPassword.equals(actualPassword));
+      assertEquals(expectedPassword, actualPassword);
     }
 
     @ParameterizedTest
@@ -395,7 +395,7 @@ class InterfacePasswordTest {
       String actualPassword =
           interfacePassword.getPassword(
               actualUserName, actualMasterPassword, actualWebsite, keyAsHex);
-      assertTrue(expectedPassword.equals(actualPassword));
+      assertEquals(expectedPassword, actualPassword);
     }
   }
 
