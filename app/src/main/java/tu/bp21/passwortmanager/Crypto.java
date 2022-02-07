@@ -42,7 +42,6 @@ public class Crypto {
   public static byte[] computeHash(@NonNull String password, byte[] salt) {
     if(salt == null) salt = new byte[0];
     byte[] input = password.getBytes();
-    if(input.length == 0) throw new IllegalArgumentException("empty input");
     byte[] output = hash(input, input.length, salt, salt.length);
     if (output == null) throw new RuntimeException("Hash failed. Not enough RAM");
     return output;

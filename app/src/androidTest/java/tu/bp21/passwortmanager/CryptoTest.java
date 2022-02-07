@@ -82,10 +82,9 @@ class CryptoTest {
       byte[] salt = Crypto.generateSecureByteArray(new Random().nextInt(64)+1);
       int outputLength = 64;
       String password = generateRandomString(40);
-      byte[] expected =
-              SCrypt.generate(password.getBytes(), salt, (int) Math.pow(2, 18), 8, 1, outputLength);
-      expected = Arrays.concatenate(salt, expected);
+      byte[] expected = computeExpectedHash(password,salt,outputLength);
       byte[] actual = Crypto.computeHash(password, salt);
+
       assertArrayEquals(expected, actual);
       assertEquals(outputLength + salt.length, actual.length);
     }
@@ -96,11 +95,12 @@ class CryptoTest {
       byte[] salt = new byte[0];
       int outputLength = 64;
       String password = generateRandomString(new Random().nextInt(40) + 1);
-      byte[] expected =
-              SCrypt.generate(password.getBytes(), salt, (int) Math.pow(2, 18), 8, 1, outputLength);
+      byte[] expected = computeExpectedHash(password,salt,outputLength);
       byte[] actual = Crypto.computeHash(password, salt);
+
       assertArrayEquals(expected, actual);
       assertEquals(outputLength, actual.length);
+
       actual = Crypto.computeHash(password, null);
       assertArrayEquals(expected, actual);
       assertEquals(outputLength, actual.length);
@@ -110,9 +110,22 @@ class CryptoTest {
     @DisplayName("Case: empty or null plaintext")
     void computeHashEmpty(){
       byte[] salt = Crypto.generateSecureByteArray(new Random().nextInt(64)+1);
+      int outputLength = 64;
+      String password = "";
+      byte[] expected = computeExpectedHash(password,salt,outputLength);
+      byte[] actual = Crypto.computeHash(password, salt);
+
+      assertArrayEquals(expected, actual);
+      assertEquals(outputLength + salt.length, actual.length);
+
       assertThrows(NullPointerException.class, () -> Crypto.computeHash(null,salt));
-      Exception exception = assertThrows(IllegalArgumentException.class, () -> Crypto.computeHash("",salt));
-      assertTrue(exception.getMessage().equals("empty input"));
+    }
+
+    byte[] computeExpectedHash(String plaintext, byte[] salt, int outputLength){
+      byte[] expected =
+              SCrypt.generate(plaintext.getBytes(), salt, (int) Math.pow(2, 18), 8, 1, outputLength);
+      expected = Arrays.concatenate(salt, expected);
+      return expected;
     }
   }
 }
