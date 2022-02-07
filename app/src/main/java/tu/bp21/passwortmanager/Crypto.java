@@ -22,27 +22,24 @@ public class Crypto {
   }
 
   public static byte[] encrypt(
-          @NonNull String plainText, byte[] associatedData,
-          @NonNull byte[] key,
-          @NonNull byte[] iv) {
+      @NonNull String plainText, byte[] associatedData, @NonNull byte[] key, @NonNull byte[] iv) {
     byte[] input = plainText.getBytes();
-    if(key.length != 32 || iv.length != 12) return null;
-    if(associatedData==null) associatedData = new byte[0];
+    if (key.length != 32 || iv.length != 12) return null;
+    if (associatedData == null) associatedData = new byte[0];
     return crypt(input, associatedData, iv, key);
   }
 
   public static String decrypt(
-          @NonNull byte[] cipher, @NonNull byte[] associatedData,
-          @NonNull byte[] key) {
+      @NonNull byte[] cipher, @NonNull byte[] associatedData, @NonNull byte[] key) {
     byte[] text = crypt(cipher, associatedData, null, key);
     if (text == null) return "authentication failed";
     return new String(text);
   }
 
   public static byte[] computeHash(@NonNull String password, byte[] salt) {
-    if(salt == null) salt = new byte[0];
+    if (salt == null) salt = new byte[0];
     byte[] input = password.getBytes();
-    if(input.length == 0) throw new IllegalArgumentException("empty input");
+    if (input.length == 0) throw new IllegalArgumentException("empty input");
     byte[] output = hash(input, input.length, salt, salt.length);
     if (output == null) throw new RuntimeException("Hash failed. Not enough RAM");
     return output;

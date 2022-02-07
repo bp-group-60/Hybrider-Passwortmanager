@@ -104,7 +104,7 @@ public class InterfacePassword {
     int ivSize = 12;
     ArrayList<String> ivList = getIVList(username, ivSize);
     byte[] iv = Crypto.generateUniqueIV(ivList, ivSize);
-    byte[] associatedData = (username+website).getBytes();
+    byte[] associatedData = (username + website).getBytes();
     byte[] cipherPassword =
         Crypto.encrypt(plainPassword, associatedData, BaseEncoding.base16().decode(key), iv);
     return new Password(username, website, loginName, cipherPassword);
