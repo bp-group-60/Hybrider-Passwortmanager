@@ -44,7 +44,7 @@ class InterfaceCryptoTest {
     @DisplayName("Test for generateKey")
     class generateKeyTest{
         @ParameterizedTest
-        @CsvFileSource(resources = "/Crypto/hashPassword.csv", numLinesToSkip = 1)
+        @CsvFileSource(resources = "/Crypto/generateKey.csv", numLinesToSkip = 1)
         @DisplayName("Case:")
         void generateKeyTest(String displayCase, String passwordToDerive, String salt) {
             passwordToDerive = convertNullToEmptyString(passwordToDerive);
