@@ -2,22 +2,20 @@ import {getSessionPassword, getSessionUser, getSessionKey} from "../../sessionHa
 
 export function getPasswordList(user, password) {
   // array structure: [[website, loginName], ...]
-  return JSON.parse(Java_InterfacePassword.getPasswordList(user, password)).dataArray;
+  return JSON.parse(Java_InterfacePassword.getPasswordList(user)).dataArray;
 }
 
 export function getLoginName(id) {
   let user = getSessionUser();
-  let password = getSessionPassword();
 
-  return Java_InterfacePassword.getLoginName(user, password, id);
+  return Java_InterfacePassword.getLoginName(user, id);
 }
 
-export function getPassword(id) {
+export function getPassword(website) {
   let user = getSessionUser();
-  let password = getSessionPassword();
   let key = getSessionKey();
 
-  return Java_InterfacePassword.getPassword(user, password, id, key);
+  return Java_InterfacePassword.getPassword(user, website, key);
 }
 
 export function createPassword(user, website, loginName, password) {

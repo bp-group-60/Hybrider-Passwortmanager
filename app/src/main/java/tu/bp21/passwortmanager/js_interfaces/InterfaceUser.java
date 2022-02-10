@@ -23,10 +23,10 @@ public class InterfaceUser {
   }
 
   @JavascriptInterface
-  public boolean checkUser(String username, String authentHash) {
+  public boolean checkUser(String username, String hashedUserPassword) {
     User user = userDataAccessObject.getUser(username);
     if (user != null) {
-      byte[] cipher = BaseEncoding.base16().decode(authentHash.toUpperCase());
+      byte[] cipher = BaseEncoding.base16().decode(hashedUserPassword.toUpperCase());
       if (Arrays.equals(user.password, cipher)) {
         return true;
       }
@@ -51,8 +51,8 @@ public class InterfaceUser {
   }
 
   @JavascriptInterface
-  public boolean deleteUser(String username, String authentHash) {
-    if (!checkUser(username, authentHash)) return false;
+  public boolean deleteUser(String username, String hashedUserPassword) {
+    if (!checkUser(username, hashedUserPassword)) return false;
 
     User checkedUser = new User(username);
 

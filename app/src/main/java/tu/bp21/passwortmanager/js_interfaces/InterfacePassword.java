@@ -31,7 +31,6 @@ public class InterfacePassword {
       e.printStackTrace();
       return false;
     }
-
     return true;
   }
 
@@ -47,7 +46,6 @@ public class InterfacePassword {
       e.printStackTrace();
       return false;
     }
-
     return true;
   }
 
@@ -61,25 +59,23 @@ public class InterfacePassword {
       e.printStackTrace();
       return false;
     }
-
     return true;
   }
 
   @JavascriptInterface
-  public String getPasswordList(String user, String hash) {
+  public String getPasswordList(String user) {
     List list = passwordDataAccessObject.getPasswordList(user);
     return "{\"dataArray\":" + list.toString() + "}";
   }
 
   @JavascriptInterface
-  public String getLoginName(String user, String password, String id) {
-    return passwordDataAccessObject.getPassword(user, id).loginName;
+  public String getLoginName(String user, String website) {
+    return passwordDataAccessObject.getPassword(user, website).loginName;
   }
 
   @JavascriptInterface
-  public String getPassword(String user, String password, String id, String key) {
-    byte[] cipherPassword = passwordDataAccessObject.getPassword(user, id).password;
-    String website = passwordDataAccessObject.getPassword(user, id).websiteName;
+  public String getPassword(String user, String website, String key) {
+    byte[] cipherPassword = passwordDataAccessObject.getPassword(user, website).password;
     byte[] associatedData = (user + website).getBytes();
     String plainPassword =
         Crypto.decrypt(cipherPassword, associatedData, BaseEncoding.base16().decode(key));
