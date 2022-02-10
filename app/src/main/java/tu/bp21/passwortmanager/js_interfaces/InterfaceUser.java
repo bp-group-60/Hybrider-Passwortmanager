@@ -18,15 +18,15 @@ public class InterfaceUser {
   }
 
   @JavascriptInterface
-  public boolean existUser(String user) {
-    return userDataAccessObject.getUser(user) != null;
+  public boolean existUser(String username) {
+    return userDataAccessObject.getUser(username) != null;
   }
 
   @JavascriptInterface
-  public boolean checkUser(String username, String userPassword) {
+  public boolean checkUser(String username, String authentHash) {
     User user = userDataAccessObject.getUser(username);
     if (user != null) {
-      byte[] cipher = BaseEncoding.base16().decode(userPassword.toUpperCase());
+      byte[] cipher = BaseEncoding.base16().decode(authentHash.toUpperCase());
       if (Arrays.equals(user.password, cipher)) {
         return true;
       }
@@ -51,13 +51,13 @@ public class InterfaceUser {
   }
 
   @JavascriptInterface
-  public boolean deleteUser(String username, String userPassword) {
-    if (!checkUser(username, userPassword)) return false;
+  public boolean deleteUser(String username, String authentHash) {
+    if (!checkUser(username, authentHash)) return false;
 
-    User newUser = new User(username);
+    User checkedUser = new User(username);
 
     try {
-      if (userDataAccessObject.deleteUser(newUser) == 0)
+      if (userDataAccessObject.deleteUser(checkedUser) == 0)
         throw new RuntimeException("nothing was deleted");
     } catch (Exception e) {
       e.printStackTrace();

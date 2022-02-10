@@ -2,7 +2,7 @@ package tu.bp21.passwortmanager.js_interfaces;
 
 import android.webkit.JavascriptInterface;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import tu.bp21.passwortmanager.db.dao.WebsiteDao;
 import tu.bp21.passwortmanager.db.Website;
@@ -30,10 +30,10 @@ public class InterfaceWebsite {
 
   @JavascriptInterface
   public boolean deleteUrl(String user, String website, String url) {
-    Website newUrl = new Website(user, website, url);
+    Website UrlToDelete = new Website(user, website, url);
 
     try {
-      if (websiteDataAccessObject.deleteWebsite(newUrl) == 0)
+      if (websiteDataAccessObject.deleteWebsite(UrlToDelete) == 0)
         throw new RuntimeException("nothing was deleted");
     } catch (Exception e) {
       e.printStackTrace();
@@ -45,8 +45,7 @@ public class InterfaceWebsite {
 
   @JavascriptInterface
   public String getUrlList(String user, String website) {
-    ArrayList<String> list = new ArrayList<>();
-    websiteDataAccessObject.getWebsiteList(user, website).forEach(x -> list.add(x.toString()));
+    List list = websiteDataAccessObject.getWebsiteList(user, website);
     return "{\"dataArray\":" + list.toString() + "}";
   }
 }
