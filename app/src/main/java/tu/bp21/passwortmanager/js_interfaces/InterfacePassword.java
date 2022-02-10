@@ -67,8 +67,7 @@ public class InterfacePassword {
 
   @JavascriptInterface
   public String getPasswordList(String user, String hash) {
-    ArrayList<String> list = new ArrayList<>();
-    passwordDataAccessObject.getPasswordList(user).forEach(x -> list.add(x.toString()));
+    List list = passwordDataAccessObject.getPasswordList(user);
     return "{\"dataArray\":" + list.toString() + "}";
   }
 
