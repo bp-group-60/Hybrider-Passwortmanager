@@ -96,13 +96,13 @@ class InterfacePasswordTest {
     addRandomPassword(expectedUser, list);
     assertEquals(
         "{\"dataArray\":" + list + "}",
-        interfacePassword.getPasswordList(expectedUser, randomMasterPassword));
+        interfacePassword.getPasswordOverviewList(expectedUser));
     assertNotEquals(
         "{\"dataArray\":" + list + "}",
-        interfacePassword.getPasswordList(differentUser, randomMasterPassword));
+        interfacePassword.getPasswordOverviewList(differentUser));
     assertEquals(
         "{\"dataArray\":[]}",
-        interfacePassword.getPasswordList(differentUser, randomMasterPassword));
+        interfacePassword.getPasswordOverviewList(differentUser));
   }
 
   /**
@@ -164,9 +164,16 @@ class InterfacePasswordTest {
   @DisplayName("Test for createPassword")
   class createPasswordTest {
 
-    @Test
+    @ParameterizedTest
+    @CsvFileSource(resources = "/Password/createPasswordSuccess.csv", numLinesToSkip = 1)
     @DisplayName("Case: Success")
-    void createPasswordSuccess() {
+    void createPasswordSuccess(String loginName, String password) {
+      if(loginName != null)
+        loginName = randomLoginName;
+      if(password!= null)
+        password = randomPassword;
+      loginName = convertNullToEmptyString(loginName);
+      password = convertNullToEmptyString(password);
       userDao.addUser(new User(randomUser, randomEmail, randomMasterPassword.getBytes()));
       byte[] salt = Crypto.generateSecureByteArray(16);
       key = Crypto.generateKey(randomMasterPassword, salt);
@@ -174,11 +181,11 @@ class InterfacePasswordTest {
           interfacePassword.createPassword(
               randomUser,
               randomWebsite,
-              randomLoginName,
-              randomPassword,
+              loginName,
+              password,
               BaseEncoding.base16().encode(key));
       assertTrue(worked);
-      checkExpectedDB(randomUser, randomWebsite, randomLoginName, randomPassword, key);
+      checkExpectedDB(randomUser, randomWebsite, loginName, password, key);
     }
 
     @ParameterizedTest
@@ -205,13 +212,8 @@ class InterfacePasswordTest {
         String displayCase,
         String userExistedInDB,
         String userToCreate,
-        String websiteToCreate,
-        String loginNameToCreate,
-        String passwordToCreate) {
-      userToCreate = convertNullToEmptyString(userToCreate);
+        String websiteToCreate) {
       websiteToCreate = convertNullToEmptyString(websiteToCreate);
-      loginNameToCreate = convertNullToEmptyString(loginNameToCreate);
-      passwordToCreate = convertNullToEmptyString(passwordToCreate);
       userDao.addUser(new User(userExistedInDB, randomEmail, randomMasterPassword.getBytes()));
       byte[] salt = Crypto.generateSecureByteArray(16);
       key = Crypto.generateKey(randomMasterPassword, salt);
@@ -219,8 +221,8 @@ class InterfacePasswordTest {
           interfacePassword.createPassword(
               userToCreate,
               websiteToCreate,
-              loginNameToCreate,
-              passwordToCreate,
+              randomLoginName,
+              randomPassword,
               BaseEncoding.base16().encode(key));
       assertFalse(worked);
       assertNull(passwordDao.getPassword(userToCreate, websiteToCreate));
@@ -314,8 +316,8 @@ class InterfacePasswordTest {
   class getLoginNameTest {
 
     @Test
-    @DisplayName("Case: Success")
-    void getLoginNameSuccess() {
+    @DisplayName("Case: Standard")
+    void getLoginNameStandard() {
       String expectedLoginName = randomLoginName;
       initDB(
           randomUser,
@@ -325,7 +327,7 @@ class InterfacePasswordTest {
           expectedLoginName,
           randomPassword);
       String actualLoginName =
-          interfacePassword.getLoginName(randomUser, randomMasterPassword, randomWebsite);
+          interfacePassword.getLoginName(randomUser, randomWebsite);
       assertEquals(expectedLoginName, actualLoginName);
     }
 
@@ -335,15 +337,13 @@ class InterfacePasswordTest {
     void getLoginNameFailure(
         String displayCase,
         String username,
-        String masterPassword,
         String website,
         String actualUserName,
-        String actualMasterPassword,
         String actualWebsite) {
       String expectedLoginName = "";
-      initDB(username, randomEmail, masterPassword, website, randomLoginName, randomPassword);
+      initDB(username, randomEmail, randomMasterPassword, website, randomLoginName, randomPassword);
       String actualLoginName =
-          interfacePassword.getLoginName(actualUserName, actualMasterPassword, actualWebsite);
+          interfacePassword.getLoginName(actualUserName, actualWebsite);
       assertEquals(expectedLoginName, actualLoginName);
     }
   }
@@ -353,8 +353,8 @@ class InterfacePasswordTest {
   class getPasswordTest {
 
     @Test
-    @DisplayName("Case: Success")
-    void getPasswordSuccess() {
+    @DisplayName("Case: Standard")
+    void getPasswordStandard() {
       String expectedPassword = randomPassword;
       initDB(
           randomUser,
@@ -364,7 +364,7 @@ class InterfacePasswordTest {
           randomLoginName,
           expectedPassword);
       String actualPassword =
-          interfacePassword.getPassword(randomUser, randomMasterPassword, randomWebsite, keyAsHex);
+          interfacePassword.getPassword(randomUser, randomWebsite, keyAsHex);
       assertEquals(expectedPassword, actualPassword);
     }
 
@@ -374,16 +374,14 @@ class InterfacePasswordTest {
     void getPasswordFailure(
         String displayCase,
         String username,
-        String masterPassword,
         String website,
         String actualUserName,
-        String actualMasterPassword,
         String actualWebsite) {
       String expectedPassword = "";
-      initDB(username, randomEmail, masterPassword, website, randomLoginName, randomPassword);
+      initDB(username, randomEmail, randomMasterPassword, website, randomLoginName, randomPassword);
       String actualPassword =
           interfacePassword.getPassword(
-              actualUserName, actualMasterPassword, actualWebsite, keyAsHex);
+              actualUserName, actualWebsite, keyAsHex);
       assertEquals(expectedPassword, actualPassword);
     }
   }
