@@ -1,14 +1,14 @@
-import {getSessionPassword, getSessionUser, getSessionKey} from "../../sessionHandler.js";
+import {getSessionUser, getSessionKey} from "../../sessionHandler.js";
 
-export function getPasswordList(user, password) {
+export function getPasswordOverviewList(user) {
   // array structure: [[website, loginName], ...]
-  return JSON.parse(Java_InterfacePassword.getPasswordList(user)).dataArray;
+  return JSON.parse(Java_InterfacePassword.getPasswordOverviewList(user)).dataArray;
 }
 
-export function getLoginName(id) {
+export function getLoginName(website) {
   let user = getSessionUser();
 
-  return Java_InterfacePassword.getLoginName(user, id);
+  return Java_InterfacePassword.getLoginName(user, website);
 }
 
 export function getPassword(website) {

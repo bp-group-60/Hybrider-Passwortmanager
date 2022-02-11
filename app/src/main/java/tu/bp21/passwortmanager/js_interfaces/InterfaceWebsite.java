@@ -16,6 +16,10 @@ public class InterfaceWebsite {
 
   @JavascriptInterface
   public boolean saveUrl(String user, String website, String url) {
+    if (url.equals("")) {
+      return false;
+    }
+
     Website newUrl = new Website(user, website, url);
 
     try {
@@ -30,11 +34,12 @@ public class InterfaceWebsite {
 
   @JavascriptInterface
   public boolean deleteUrl(String user, String website, String url) {
-    Website UrlToDelete = new Website(user, website, url);
+    Website urlToDelete = new Website(user, website, url);
 
     try {
-      if (websiteDataAccessObject.deleteWebsite(UrlToDelete) == 0)
+      if (websiteDataAccessObject.deleteWebsite(urlToDelete) == 0) {
         throw new RuntimeException("nothing was deleted");
+      }
     } catch (Exception e) {
       e.printStackTrace();
       return false;
@@ -45,7 +50,7 @@ public class InterfaceWebsite {
 
   @JavascriptInterface
   public String getUrlList(String user, String website) {
-    List list = websiteDataAccessObject.getWebsiteList(user, website);
+    List<Website> list = websiteDataAccessObject.getWebsiteList(user, website);
     return "{\"dataArray\":" + list.toString() + "}";
   }
 }

@@ -22,6 +22,10 @@ public class InterfacePassword {
   @JavascriptInterface
   public boolean createPassword(
       String username, String website, String loginName, String plainPassword, String key) {
+    if (website.equals("")) {
+      return false;
+    }
+
     Password newPassword =
         createEncryptedPassword(username, website, loginName, plainPassword, key);
 
@@ -41,7 +45,9 @@ public class InterfacePassword {
         createEncryptedPassword(username, website, loginName, plainPassword, key);
 
     try {
-      passwordDataAccessObject.updatePassword(newPassword);
+      if (passwordDataAccessObject.updatePassword(newPassword) == 0) {
+        throw new RuntimeException("nothing was updated");
+      }
     } catch (Exception e) {
       e.printStackTrace();
       return false;
@@ -53,8 +59,9 @@ public class InterfacePassword {
   public boolean deletePassword(String user, String website) {
     Password newPassword = new Password(user, website);
     try {
-      if (passwordDataAccessObject.deletePassword(newPassword) == 0)
+      if (passwordDataAccessObject.deletePassword(newPassword) == 0) {
         throw new RuntimeException("nothing was deleted");
+      }
     } catch (Exception e) {
       e.printStackTrace();
       return false;
@@ -63,23 +70,34 @@ public class InterfacePassword {
   }
 
   @JavascriptInterface
-  public String getPasswordList(String user) {
-    List list = passwordDataAccessObject.getPasswordList(user);
+  public String getPasswordOverviewList(String user) {
+    List<Password> list = passwordDataAccessObject.getPasswordList(user);
     return "{\"dataArray\":" + list.toString() + "}";
   }
 
   @JavascriptInterface
   public String getLoginName(String user, String website) {
-    return passwordDataAccessObject.getPassword(user, website).loginName;
+    Password queryResult = passwordDataAccessObject.getPassword(user, website);
+
+    if (queryResult == null) {
+      return "";
+    }
+
+    return queryResult.loginName;
   }
 
   @JavascriptInterface
   public String getPassword(String user, String website, String key) {
-    byte[] cipherPassword = passwordDataAccessObject.getPassword(user, website).password;
+    Password queryResult = passwordDataAccessObject.getPassword(user, website);
+
+    if (queryResult == null) {
+      return "";
+    }
+
+    byte[] cipherPassword = queryResult.password;
     byte[] associatedData = (user + website).getBytes();
-    String plainPassword =
-        Crypto.decrypt(cipherPassword, associatedData, BaseEncoding.base16().decode(key));
-    return plainPassword;
+
+    return Crypto.decrypt(cipherPassword, associatedData, BaseEncoding.base16().decode(key));
   }
 
   private ArrayList<String> getIVList(String username, int ivSize) {

@@ -1,4 +1,4 @@
-import {getPasswordList} from '../extern/database/passwordOperations.js';
+import {getPasswordOverviewList} from '../extern/database/passwordOperations.js';
 import {
   onclickAddButton,
   onclickDeleteUser,
@@ -7,13 +7,13 @@ import {
   onclickMoreButton
 } from './onclick/listviewOnclick.js';
 
-export function updateListview(user, password) {
+export function updateListview(user) {
   document.getElementById('overview').innerHTML = '';
-  createList(user, password);
+  createList(user);
 }
 
-function createList(user, password) {
-  let list = getPasswordList(user, password);
+function createList(user) {
+  let list = getPasswordOverviewList(user);
 
   for (let i = 0; i < list.length; i++) {
     addToListview(`${list[i][0]} / ${list[i][1]}`, list[i][0]);
