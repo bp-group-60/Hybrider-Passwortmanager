@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // enable WebViews inspection with chrome://inspect
-//    WebView.setWebContentsDebuggingEnabled(true);
+    //    WebView.setWebContentsDebuggingEnabled(true);
 
     ApplicationDatabase database =
         Room.databaseBuilder(this, ApplicationDatabase.class, "database")
