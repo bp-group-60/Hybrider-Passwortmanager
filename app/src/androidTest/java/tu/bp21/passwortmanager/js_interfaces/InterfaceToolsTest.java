@@ -58,7 +58,6 @@ class InterfaceToolsTest {
             interfaceTools.copyToClipboardWithTimeout(expectedText, timeout);
             String actualText = clipboard.getPrimaryClip().getItemAt(0).getText().toString();
             assertEquals(expectedText, actualText);
-            Thread.sleep(10);
             assumingThat(timeout>=0, () -> {
                 Thread.sleep(timeout);
                 String currentActualText = clipboard.getPrimaryClip().getItemAt(0).getText().toString();
