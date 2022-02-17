@@ -1,0 +1,5 @@
+case,text,timeout
+Default,kgpkawpg awf22g@,2000
+Empty text,,2000
+timeout 0,kgpkawpg awf22g@,0
+timeout negative,kgpkawpg awf22g@,-3241
