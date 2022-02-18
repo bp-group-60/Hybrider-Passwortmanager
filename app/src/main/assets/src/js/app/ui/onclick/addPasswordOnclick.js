@@ -23,6 +23,13 @@ export function commitButtonOnclick(page) {
   };
 }
 
+export function generateRandomPasswordOnclick(page) {
+    //todo webAssembly GenPasswd einfügen
+    //todo GenPasswd hier einbetten
+    //todo Generiertes Passwort in passwort-Feld setzen
+    //document.getElementById('password').value = generatedRandomPassword;
+}
+
 export function showPasswordOnclick(page) {
   return () => {
     if (page.querySelector('#passwordCheckbox').checked) {

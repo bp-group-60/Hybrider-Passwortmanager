@@ -3,6 +3,7 @@ import {commitButtonOnclick, showPasswordOnclick} from './onclick/addPasswordOnc
 
 export function addOnclickAddPasswordView(page) {
   page.querySelector('#addUrl').onclick = addUrlOnclick(page);
+  page.querySelector('#generateRandomPassword').onclick = generateRandomPasswordOnclick(page);
   page.querySelector('#commitButton').onclick = commitButtonOnclick(page);
   page.querySelector('#passwordCheckbox').onclick = showPasswordOnclick(page);
 }
