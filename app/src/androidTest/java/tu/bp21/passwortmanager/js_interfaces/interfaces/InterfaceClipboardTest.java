@@ -68,7 +68,6 @@ class InterfaceClipboardTest {
                 Thread.sleep(100);
                 String actualText = clipboard.getPrimaryClip().getItemAt(0).getText().toString();
                 assertEquals(expectedText, actualText);
-
               });
 
       assumingThat(
