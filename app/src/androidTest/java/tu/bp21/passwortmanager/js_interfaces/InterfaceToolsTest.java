@@ -55,11 +55,18 @@ class InterfaceToolsTest {
     @DisplayName("Case: ")
     void copyToClipboardWithTimeoutSuccess(String displayCase, String text, long timeout)
         throws Exception {
-      String expectedText = convertNullToEmptyString(text);
-      interfaceTools.copyToClipboardWithTimeout(expectedText, timeout);
-      Thread.sleep(100);
-      String actualText = clipboard.getPrimaryClip().getItemAt(0).getText().toString();
-      assertEquals(expectedText, actualText);
+
+      assumingThat(
+              timeout != 0,
+              () -> {
+                String expectedText = convertNullToEmptyString(text);
+                interfaceTools.copyToClipboardWithTimeout(expectedText, timeout);
+                Thread.sleep(100);
+                String actualText = clipboard.getPrimaryClip().getItemAt(0).getText().toString();
+                assertEquals(expectedText, actualText);
+
+              });
+
       assumingThat(
           timeout >= 0,
           () -> {
@@ -67,9 +74,9 @@ class InterfaceToolsTest {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
               assertNull(clipboard.getPrimaryClip());
             } else {
-              String currentActualText =
+              String actualText =
                   clipboard.getPrimaryClip().getItemAt(0).getText().toString();
-              assertEquals("", currentActualText);
+              assertEquals("", actualText);
               assertEquals(1, clipboard.getPrimaryClip().getItemCount());
             }
           });
