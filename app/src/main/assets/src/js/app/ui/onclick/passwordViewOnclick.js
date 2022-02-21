@@ -8,6 +8,7 @@ import {copyToClipboardWithTimeout} from "../../extern/tools.js";
 export function editButtonOnclick(page) {
   return () => {
     page.querySelector('#editButton').style.display = 'none';
+    page.querySelector('#generateRandomPassword').style.display = '';
     page.querySelector('#abortButton').style.display = '';
     page.querySelector('#commitButton').style.display = '';
 
