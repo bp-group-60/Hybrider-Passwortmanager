@@ -23,11 +23,24 @@ export function commitButtonOnclick(page) {
   };
 }
 
-export function generateRandomPasswordOnclick(page) {
+
+
+export function generateRandomPasswordOnclick(page,len) {
     //todo webAssembly GenPasswd einfügen
+    var GeneratePasswordmodule = Module.cwrap("GenerateRandomPasswortbyC06", null, ["number","number"]);
     //todo GenPasswd hier einbetten
+    var output_array = new Int32Array(Module.HEAP32.buffer, 0, len);
+    var bytes_per_element = ouput_array.BYTES_PER_ELEMENT;
+    var output_ptr = Module._malloc(len * bytes_per_element);
+    Module.HEAP32.set(ouput_array, output_ptr / bytes_per_element);
+    GeneratePasswordmodule(output_ptr, len);
+    output_array = new Int32Array(Module.HEAP32.buffer, output_ptr, len);
+    generatedRandomPassword = String.fromCharCode.apply(null, output_array);
+
+    Module._free(output_ptr);
     //todo Generiertes Passwort in passwort-Feld setzen
-    //document.getElementById('password').value = generatedRandomPassword;
+    document.querySelector("#password").value = generatedRandomPassword;
+    //page.getElementById('password').value = generatedRandomPassword;
 }
 
 export function showPasswordOnclick(page) {
