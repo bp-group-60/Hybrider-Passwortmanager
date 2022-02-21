@@ -25,7 +25,7 @@ export function commitButtonOnclick(page) {
 
 
 
-export function generateRandomPasswordOnclick(page,len) {
+/*export function generateRandomPasswordOnclick(page,len) {
     //todo webAssembly GenPasswd einfügen
     var GeneratePasswordmodule = Module.cwrap("GenerateRandomPasswortbyC06", null, ["number","number"]);
     //todo GenPasswd hier einbetten
@@ -41,7 +41,7 @@ export function generateRandomPasswordOnclick(page,len) {
     //todo Generiertes Passwort in passwort-Feld setzen
     document.querySelector("#password").value = generatedRandomPassword;
     //page.getElementById('password').value = generatedRandomPassword;
-}
+}*/
 
 export function showPasswordOnclick(page) {
   return () => {
