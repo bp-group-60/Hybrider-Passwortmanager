@@ -36,7 +36,7 @@ export function generateRandomPasswordOnclick(page,len) {
         var generatedPassword = String.fromCharCode.apply(null, output_array);
 
         Module._free(output_ptr);
-        //todo Generiertes Passwort in passwort-Feld setzen
+
         page.querySelector("#password").value = generatedPassword;
         //page.getElementById('password').value = generatedRandomPassword;
     }
