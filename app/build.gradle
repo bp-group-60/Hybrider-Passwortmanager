@@ -72,3 +72,13 @@ dependencies {
 	implementation "androidx.room:room-runtime:$room_version"
 	annotationProcessor "androidx.room:room-compiler:$room_version"
 }
+
+task buildWebassembly(type: Exec, description("C -> Webassembly Compile run")) {
+	commandLine '/emcc', file('src/main/assets/src/js/app/ui/webAssembly/passwordGenerate.c').absolutePath, '-o',
+			file('src/main/assets/src/js/app/ui/webAssembly/passwordGenerateEnvironment.js'), '-s', 'WASM=1', '-s',
+			'EXPORTED_FUNCTIONS=\'["malloc","free","_GenerateRandomPasswortbyC06"]\'', '-s', 'EXTRA_EXPORTED_RUNTIME_METHODS=\'["cwrap", "getValue", "setValue"]\''
+}
+
+tasks.withType(JavaCompile) {
+	compileTask -> compileTask.dependsOn buildWebassembly
+}
