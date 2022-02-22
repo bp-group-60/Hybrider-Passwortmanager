@@ -23,7 +23,7 @@ export function commitButtonOnclick(page) {
   };
 }
 
-export function generateRandomPasswordOnclick(page,len) {
+export function generateRandomPasswordOnclick(page, len) {
   return () => {
     var GeneratePasswordmodule = Module.cwrap("GenerateRandomPasswortbyC06", null, ["number","number"]);
 
@@ -38,6 +38,25 @@ export function generateRandomPasswordOnclick(page,len) {
     Module._free(output_ptr);
 
     page.querySelector("#password").value = generatedPassword;
+    //page.getElementById('password').value = generatedRandomPassword;
+  }
+}
+
+export function generateRandomUsernameOnclick(page, len) {
+  return () => {
+    var GenerateUsernameModule = Module.cwrap("GenerateRandomPasswortbyC06", null, ["number","number"]);
+
+    var output_array = new Int32Array(Module.HEAP32.buffer, 0, len);
+    var bytes_per_element = output_array.BYTES_PER_ELEMENT;
+    var output_ptr = Module._malloc(len * bytes_per_element);
+    Module.HEAP32.set(output_array, output_ptr / bytes_per_element);
+    GenerateUsernameModule(output_ptr, len);
+    output_array = new Int32Array(Module.HEAP32.buffer, output_ptr, len);
+    var generatedUsername = String.fromCharCode.apply(null, output_array);
+
+    Module._free(output_ptr);
+
+    page.querySelector("#username").value = generatedUsername;
     //page.getElementById('password').value = generatedRandomPassword;
     }
 }

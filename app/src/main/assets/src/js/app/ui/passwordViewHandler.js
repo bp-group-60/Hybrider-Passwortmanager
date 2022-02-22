@@ -10,7 +10,7 @@ import {
   onclickEditSave,
   showPasswordOnclick,
 } from './onclick/passwordViewOnclick.js';
-import {generateRandomPasswordOnclick} from './onclick/addPasswordOnclick.js';
+import {generateRandomPasswordOnclick, generateRandomUsernameOnclick} from './onclick/addPasswordOnclick.js';
 import {createUrlItem} from './urlHandler.js';
 
 export function addOnclickPasswordView(page) {
@@ -18,7 +18,8 @@ export function addOnclickPasswordView(page) {
   page.querySelector('#passwordCheckbox').onclick = showPasswordOnclick(page);
 
   page.querySelector('#editButton').onclick = editButtonOnclick(page);
-  page.querySelector('#generateRandomPassword').onclick = generateRandomPasswordOnclick(page,8);
+  page.querySelector('#generateRandomUsername').onclick = generateRandomUsernameOnclick(page,8);
+  page.querySelector('#generateRandomPassword').onclick = generateRandomPasswordOnclick(page,12);
 
   page.querySelector('#addUrl').onclick = addUrlOnclick(page);
   page.querySelector('#abortButton').onclick = editAbortOnclick(page);
@@ -28,6 +29,7 @@ export function addOnclickPasswordView(page) {
 
 export function updatePasswordView(page) {
   page.querySelector('#editButton').style.display = '';
+  page.querySelector('#generateRandomUsername').style.display = 'none';
   page.querySelector('#generateRandomPassword').style.display = 'none';
   page.querySelector('#abortButton').style.display = 'none';
   page.querySelector('#commitButton').style.display = 'none';
