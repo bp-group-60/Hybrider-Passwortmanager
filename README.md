@@ -1,20 +1,12 @@
 # Hybrider Passwortmanager
 
+<!-- Shift to Wiki -->
 Introduction:
 
-OpenSSL Library:    cpp/include + cpp/libs
-OnsenUI:            assests/onsenui
-Webassembly:        assets/src/js/ui/webAssembly
-Room-Database:      
-
-
-Requirements:
-Webassembly:        emscripten -> https://emscripten.org/docs/getting_started/Tutorial.html (Windows 10+ or Linux/MacOS)
-
-
-
-
-
+OpenSSL Library:		cpp/include + cpp/libs
+OnsenUI:				assests/onsenui
+Webassembly:			assets/src/webAssembly
+Room-Database:			
 
 
 <div id="top"></div>
@@ -38,46 +30,43 @@ Webassembly:        emscripten -> https://emscripten.org/docs/getting_started/Tu
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/bp-group-60/Hybrider-Passwortmanager">
-    <img src="app/src/main/ic_launcher-playstore.png" alt="Logo" width="80" height="80">
-  </a>
+	<a href="https://github.com/bp-group-60/Hybrider-Passwortmanager">
+		<img src="images/logo.png" alt="Logo" width="80" height="80">
+	</a>
 
 <h3 align="center">Hybrider Passwortmanager</h3>
-
-  <p align="center">
-    project_description
-    <br />
-    <a href="https://github.com/bp-group-60/Hybrider-Passwortmanager/wiki"><strong>Explore the docs »</strong></a>
-    <br />
-  </p>
+	<p align="center">
+		is created for the data flow analysis
+		<br />
+		<a href="https://github.com/bp-group-60/Hybrider-Passwortmanager/wiki"><strong>Explore the wiki »</strong></a>
+		<br />
+	</p>
 </div>
 
 
 
 <!-- TABLE OF CONTENTS -->
 <details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
-  </ol>
+	<summary>Table of Contents</summary>
+	<ol>
+		<li>
+			<a href="#about-the-project">About The Project</a>
+			<ul>
+				<li><a href="#built-with">Built With</a></li>
+			</ul>
+		</li>
+		<li>
+			<a href="#getting-started">Getting Started</a>
+			<ul>
+				<li><a href="#prerequisites">Prerequisites</a></li>
+				<li><a href="#installation">Installation</a></li>
+			</ul>
+		</li>
+		<li><a href="#usage">Usage</a></li>
+		<li><a href="#roadmap">Roadmap</a></li>
+		<li><a href="#license">License</a></li>
+		<li><a href="#acknowledgments">Acknowledgments</a></li>
+	</ol>
 </details>
 
 
@@ -85,9 +74,10 @@ Webassembly:        emscripten -> https://emscripten.org/docs/getting_started/Tu
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+The App is devided into 2 sections: the frontend and the backend. The frontend has a login/register site and the password-overview page to see, edit and add passwords. On the backend side, we have a `Java Dataflowmanager` to get the data from the `SQLite Datbase` and encrypt & decrypt the data in the `C-Cryption` section, so the requested informations can be forwarded to the frontend and been shown there.
 
-Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `github_username`, `repo_name`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `project_title`, `project_description`
+A dataflow-diagram is shwon below:<br>
+[![Dataflow Diagram][dataflow-diagram]](https://example.com)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -95,14 +85,11 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 
 ### Built With
 
-* [Next.js](https://nextjs.org/)
-* [React.js](https://reactjs.org/)
-* [Vue.js](https://vuejs.org/)
-* [Angular](https://angular.io/)
-* [Svelte](https://svelte.dev/)
-* [Laravel](https://laravel.com)
-* [Bootstrap](https://getbootstrap.com)
-* [JQuery](https://jquery.com)
+* [OnsenUI](https://nextjs.org/)
+* [Python](https://www.python.org/)
+* [emscripten](https://emscripten.org/docs/)
+* [prebuilt openSSL-Library](https://github.com/PurpleI2P/OpenSSL-for-Android-Prebuilt)
+* [Room Database](https://developer.android.com/reference/android/arch/persistence/room/RoomDatabase)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -110,33 +97,21 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 
 <!-- GETTING STARTED -->
 ## Getting Started
-
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+Open this Project in an IDE of your choice (Android Stuido preferred) and install the app (e.g. android emulator).
 
 ### Prerequisites
-
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
+For editing the project, Android Sdk is required! If there are pending changes to Webassembly, you also need emscripten to be runnable and therefore Python to be installed already.
+* Android Studio
+	```
+	[https://developer.android.com/studio]
+	```
 
 ### Installation
-
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/bp-group-60/Hybrider-Passwortmanager.git
-   ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
+1. Clone the repo
+	 ```sh
+	 git clone https://github.com/bp-group-60/Hybrider-Passwortmanager.git
+	 ```
+2. Import in IDE (Android Studio or MS Visual Studio Code tested)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -144,10 +119,10 @@ This is an example of how to list things you need to use the software and how to
 
 <!-- USAGE EXAMPLES -->
 ## Usage
+After starting the app on the phone, there is a login screen. If you dont have any account, you can create one using the register site and insert your username, email and masterpassword. The masterpassword will be hashed and used for verification during the login process. After a successful login, the user can see his password list with the application name and the username, which has been used there. The user is capable to add new passwords or select an entry. Adding a password requires an application name, a username and password. The app supports generating passwords to you. Optional the user can add URLs to the password entry.<br>
+When the user selects an password entry, he can copy the password into clipboard or edit or even delete the entry. While editing the entry, the user now can only change username, password and URLs. The password generation is also usable in the edit screen.
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
+_For more and detailed explaination of each part of every section, please visit the [Wiki](https://github.com/bp-group-60/Hybrider-Passwortmanager/wiki)_
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -156,50 +131,22 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 <!-- ROADMAP -->
 ## Roadmap
 
-- [ ] Feature 1
-- [ ] Feature 2
-- [ ] Feature 3
-    - [ ] Nested Feature
-
-See the [open issues](https://github.com/bp-group-60/Hybrider-Passwortmanager/issues) for a full list of proposed features (and known issues).
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
-<!-- CONTRIBUTING -->
-## Contributing
-
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
-Don't forget to give the project a star! Thanks again!
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+- [x] login & register page
+	- [x] add multiple users
+		- [x] hashing masterpassword
+- [x] show passwords
+	- [x] proper cryption during saving
+	- [x] username/password generation
+	- [x] add multiple URLs
+	- [x] edit/remove entrys
 
 <p align="right">(<a href="#top">back to top</a>)</p>
-
 
 
 <!-- LICENSE -->
 ## License
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
-<!-- CONTACT -->
-## Contact
-
-Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - email@email_client.com
-
-Project Link: [https://github.com/bp-group-60/Hybrider-Passwortmanager](https://github.com/bp-group-60/Hybrider-Passwortmanager)
+Distributed under the MIT License. See `LICENSE` for more information.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -208,11 +155,7 @@ Project Link: [https://github.com/bp-group-60/Hybrider-Passwortmanager](https://
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
 
-* []()
-* []()
-* []()
-
-<p align="right">(<a href="#top">back to top</a>)</p>
+* [emscripten Tutorial](https://emscripten.org/docs/getting_started/Tutorial.html)
 
 
 
@@ -228,6 +171,4 @@ Project Link: [https://github.com/bp-group-60/Hybrider-Passwortmanager](https://
 [issues-url]: https://github.com/bp-group-60/Hybrider-Passwortmanager/issues
 [license-shield]: https://img.shields.io/github/license/bp-group-60/Hybrider-Passwortmanager.svg?style=for-the-badge
 [license-url]: https://github.com/bp-group-60/Hybrider-Passwortmanager/blob/master/LICENSE.txt
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/linkedin_username
-[product-screenshot]: images/screenshot.png
+[dataflow-diagram]: images/diagram.png
