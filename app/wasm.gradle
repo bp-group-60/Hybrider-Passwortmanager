@@ -1,0 +1,23 @@
+task buildWebassembly() {
+    doLast {
+        if (System.properties['os.name'].toLowerCase().contains('windows')) {
+            println "it's Windows"
+            exec {
+                workingDir "$projectDir/build/emsdk"
+                commandLine 'echo', 'windows'
+            }
+        } else {
+            println "it's not Windows"
+            exec {
+                workingDir "$projectDir/build/emsdk/upstream/emscripten"
+                commandLine "./emcc"
+                args '../../../../src/main/assets/src/webassembly/passwordGenerate.c'
+            }
+        }
+    }
+}
+
+configure(buildWebassembly) {
+    group = 'build assets'
+    description = 'executes makefile in src/main/assets/src/webassembly/'
+}

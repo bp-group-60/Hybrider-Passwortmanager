@@ -72,3 +72,5 @@ dependencies {
 	implementation "androidx.room:room-runtime:$room_version"
 	annotationProcessor "androidx.room:room-compiler:$room_version"
 }
+apply from: "emscripten.gradle"
+apply from: "wasm.gradle"
