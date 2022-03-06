@@ -3,10 +3,10 @@ task buildWebassembly(dependsOn: 'init_emcc') {
         def source = new File("$projectDir/src/main/assets/src/webassembly/")
         def config = new File(source.absolutePath + "/config/")
         def destination = new File(source.absolutePath + "/generated/passwordGenerateEnvironment.js")
+
         if (!new File(source.absolutePath + "/generated").exists())
-            exec{
-                commandLine "mkdir", source.absolutePath + "/generated"
-            }
+            new File(source.absolutePath + "/generated").mkdir()
+
         def arguments = new ArrayList<String>()
 
         arguments.add("-s")
@@ -19,8 +19,6 @@ task buildWebassembly(dependsOn: 'init_emcc') {
         arguments.add("-o")
         arguments.add(destination)
         arguments.add(source.absolutePath + "/passwordGenerate.c")
-
-        println arguments.toString()
 
         if (System.properties['os.name'].toLowerCase().contains('windows')) {
             exec {
