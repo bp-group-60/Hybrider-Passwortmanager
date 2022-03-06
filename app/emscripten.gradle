@@ -10,12 +10,12 @@ task init_emcc() {
         if (System.properties['os.name'].toLowerCase().contains('windows')) {
             exec {
                 workingDir "$projectDir/build/emsdk"
-                commandLine 'emsdk.bat'
+                commandLine 'cmd', '/c','emsdk.bat'
                 args 'install', 'tot'
             }
             exec {
                 workingDir "$projectDir/build/emsdk"
-                commandLine 'emsdk.bat'
+                commandLine 'cmd', '/c', 'emsdk.bat'
                 args 'activate', 'tot'
             }
         } else {

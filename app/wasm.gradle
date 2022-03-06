@@ -1,17 +1,38 @@
-task buildWebassembly() {
+task buildWebassembly(dependsOn: 'init_emcc') {
     doLast {
+        def source = new File("$projectDir/src/main/assets/src/webassembly/")
+        def config = new File(source.absolutePath + "/config/")
+        def destination = new File(source.absolutePath + "/generated/passwordGenerateEnvironment.js")
+        if (!new File(source.absolutePath + "/generated").exists())
+            exec{
+                commandLine "mkdir", source.absolutePath + "/generated"
+            }
+        def arguments = new ArrayList<String>()
+
+        arguments.add("-s")
+        arguments.add("WASM=1")
+
+        for(File file:config.listFiles()){
+            arguments.add("-s")
+            arguments.add(file.name + "=" + "@" + file.absolutePath)
+        }
+        arguments.add("-o")
+        arguments.add(destination)
+        arguments.add(source.absolutePath + "/passwordGenerate.c")
+
+        println arguments.toString()
+
         if (System.properties['os.name'].toLowerCase().contains('windows')) {
-            println "it's Windows"
             exec {
-                workingDir "$projectDir/build/emsdk"
-                commandLine 'echo', 'windows'
+                workingDir "$projectDir/build/emsdk/upstream/emscripten"
+                commandLine 'cmd', '/c', "emcc.bat"
+                args arguments
             }
         } else {
-            println "it's not Windows"
             exec {
                 workingDir "$projectDir/build/emsdk/upstream/emscripten"
                 commandLine "./emcc"
-                args '../../../../src/main/assets/src/webassembly/passwordGenerate.c'
+                args arguments
             }
         }
     }
