@@ -36,6 +36,38 @@ task buildWebassembly(dependsOn: 'init_emcc') {
     }
 }
 
+task makeWASM(dependsOn: 'init_emcc') {
+    doLast {
+        def source = new File("$projectDir/src/main/assets/src/webassembly/")
+
+        def arguments = new ArrayList<String>()
+
+        arguments.add("make")
+        arguments.add("-C")
+        arguments.add(source.absolutePath)
+
+        if (!new File(source.absolutePath + "/generated").exists())
+            new File(source.absolutePath + "/generated").mkdir()
+
+        if (System.properties['os.name'].toLowerCase().contains('windows')) {
+            exec {
+                workingDir "$projectDir/build/emsdk/upstream/emscripten"
+                commandLine 'cmd', '/c', "emmake.bat"
+                args arguments
+            }
+        } else {
+            exec {
+                workingDir "$projectDir/build/emsdk/upstream/emscripten"
+                commandLine "./emmake"
+                args arguments
+            }
+        }
+    }
+}
+
+
+preBuild.dependsOn("makeWASM")
+
 configure(buildWebassembly) {
     group = 'build assets'
     description = 'executes makefile in src/main/assets/src/webassembly/'
