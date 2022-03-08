@@ -33,19 +33,7 @@ task init_emcc() {
     }
 }
 
-task rebuild_emcc() {
-    doLast {
-        project.delete "$projectDir/build/emsdk"
-        init_emcc
-    }
-}
-
 configure(init_emcc) {
     group = 'emscripten'
     description = 'downloads and initializes emscripten if not in build path'
-}
-
-configure(rebuild_emcc) {
-    group = 'emscripten'
-    description = 'deletes emscripten path and downloads again emscripten'
 }
