@@ -1,44 +1,6 @@
 task buildWebassembly(dependsOn: 'init_emcc') {
     doLast {
         def source = new File("$projectDir/src/main/assets/src/webassembly/")
-        def config = new File(source.absolutePath + "/config/")
-        def destination = new File(source.absolutePath + "/generated/passwordGenerateEnvironment.js")
-
-        if (!new File(source.absolutePath + "/generated").exists())
-            new File(source.absolutePath + "/generated").mkdir()
-
-        def arguments = new ArrayList<String>()
-
-        arguments.add("-s")
-        arguments.add("WASM=1")
-
-        for(File file:config.listFiles()){
-            arguments.add("-s")
-            arguments.add(file.name + "=" + "@" + file.absolutePath)
-        }
-        arguments.add("-o")
-        arguments.add(destination)
-        arguments.add(source.absolutePath + "/passwordGenerate.c")
-
-        if (System.properties['os.name'].toLowerCase().contains('windows')) {
-            exec {
-                workingDir "$projectDir/build/emsdk/upstream/emscripten"
-                commandLine 'cmd', '/c', "emcc.bat"
-                args arguments
-            }
-        } else {
-            exec {
-                workingDir "$projectDir/build/emsdk/upstream/emscripten"
-                commandLine "./emcc"
-                args arguments
-            }
-        }
-    }
-}
-
-task makeWASM(dependsOn: 'init_emcc') {
-    doLast {
-        def source = new File("$projectDir/src/main/assets/src/webassembly/")
 
         def arguments = new ArrayList<String>()
 
@@ -65,8 +27,7 @@ task makeWASM(dependsOn: 'init_emcc') {
     }
 }
 
-
-preBuild.dependsOn("makeWASM")
+preBuild.dependsOn("buildWebassembly")
 
 configure(buildWebassembly) {
     group = 'build assets'
