@@ -5,7 +5,6 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-
 import androidx.webkit.WebViewAssetLoader;
 
 public class AssetWebViewClient extends WebViewClient {
@@ -14,7 +13,9 @@ public class AssetWebViewClient extends WebViewClient {
 
   public AssetWebViewClient(Context context) {
     assetLoader =
+        // default assets folder helper class
         new WebViewAssetLoader.Builder()
+            // used to define path in url
             .addPathHandler("/assets/", new WebViewAssetLoader.AssetsPathHandler(context))
             .build();
   }
@@ -23,8 +24,12 @@ public class AssetWebViewClient extends WebViewClient {
   public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
     WebResourceResponse intercepted = assetLoader.shouldInterceptRequest(request.getUrl());
 
-    if (intercepted != null && request.getUrl().toString().endsWith("js")) {
-      intercepted.setMimeType("text/javascript");
+    if (intercepted != null) {
+      if (request.getUrl().toString().endsWith("js")) {
+        intercepted.setMimeType("text/javascript");
+      } else if (request.getUrl().toString().endsWith("wasm")) {
+        intercepted.setMimeType("application/wasm");
+      }
     }
 
     return intercepted;

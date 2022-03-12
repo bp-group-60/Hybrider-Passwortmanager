@@ -30,9 +30,6 @@ public class MainActivity extends AppCompatActivity {
       getSupportActionBar().hide();
     }
 
-    // enable WebViews inspection with chrome://inspect
-    //    WebView.setWebContentsDebuggingEnabled(true);
-
     ApplicationDatabase database =
         Room.databaseBuilder(this, ApplicationDatabase.class, "database")
             .allowMainThreadQueries()
@@ -68,7 +65,9 @@ public class MainActivity extends AppCompatActivity {
       webView.evaluateJavascript(
           "back()",
           value -> {
-            if (value != null) webView.goBack();
+            if (value != null) {
+              webView.goBack();
+            }
           });
     } else {
       super.onBackPressed();
