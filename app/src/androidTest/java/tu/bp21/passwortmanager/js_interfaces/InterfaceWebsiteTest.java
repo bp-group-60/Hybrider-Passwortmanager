@@ -17,13 +17,14 @@ import java.util.Random;
 
 import de.mannodermaus.junit5.ActivityScenarioExtension;
 import tu.bp21.passwortmanager.MainActivity;
-import tu.bp21.passwortmanager.db.ApplicationDatabase;
-import tu.bp21.passwortmanager.db.Password;
-import tu.bp21.passwortmanager.db.User;
-import tu.bp21.passwortmanager.db.Website;
-import tu.bp21.passwortmanager.db.dao.PasswordDao;
-import tu.bp21.passwortmanager.db.dao.UserDao;
-import tu.bp21.passwortmanager.db.dao.WebsiteDao;
+import tu.bp21.passwortmanager.db.database.ApplicationDatabase;
+import tu.bp21.passwortmanager.db.data_access_objects.UserDataAccessObject;
+import tu.bp21.passwortmanager.db.data_access_objects.WebsiteDataAccessObject;
+import tu.bp21.passwortmanager.db.entities.Password;
+import tu.bp21.passwortmanager.db.entities.User;
+import tu.bp21.passwortmanager.db.entities.Website;
+import tu.bp21.passwortmanager.db.data_access_objects.PasswordDataAccessObject;
+import tu.bp21.passwortmanager.js_interfaces.interfaces.InterfaceWebsite;
 
 class InterfaceWebsiteTest {
   static ApplicationDatabase database;
@@ -34,9 +35,9 @@ class InterfaceWebsiteTest {
       ActivityScenarioExtension.launch(MainActivity.class);
 
   InterfaceWebsite interfaceWebsite;
-  UserDao userDao;
-  PasswordDao passwordDao;
-  WebsiteDao websiteDao;
+  UserDataAccessObject userDataAccessObject;
+  PasswordDataAccessObject passwordDataAccessObject;
+  WebsiteDataAccessObject websiteDataAccessObject;
   String randomUser;
   String randomEmail;
   String randomLoginName;
@@ -61,11 +62,11 @@ class InterfaceWebsiteTest {
               .allowMainThreadQueries()
               .build();
     }
-    userDao = database.getUserDao();
-    passwordDao = database.getPasswordDao();
-    websiteDao = database.getWebsiteDao();
+    userDataAccessObject = database.getUserDao();
+    passwordDataAccessObject = database.getPasswordDao();
+    websiteDataAccessObject = database.getWebsiteDao();
 
-    interfaceWebsite = new InterfaceWebsite(websiteDao);
+    interfaceWebsite = new InterfaceWebsite(websiteDataAccessObject);
 
     randomUser = generateRandomString(20);
     randomEmail = generateRandomString(20) + "@email.de";
@@ -90,8 +91,8 @@ class InterfaceWebsiteTest {
       String website,
       String loginName,
       String password) {
-    userDao.addUser(new User(username, email, masterPassword.getBytes()));
-    passwordDao.addPassword(new Password(username, website, loginName, password.getBytes()));
+    userDataAccessObject.addUser(new User(username, email, masterPassword.getBytes()));
+    passwordDataAccessObject.addPassword(new Password(username, website, loginName, password.getBytes()));
   }
 
   /**
@@ -113,7 +114,7 @@ class InterfaceWebsiteTest {
    * @return
    */
   Website getWebsite(String username, String website, String url) {
-    for (Website web : websiteDao.getWebsiteList(username, website)) {
+    for (Website web : websiteDataAccessObject.getWebsiteList(username, website)) {
       if (web.url.equals(url)) return web;
     }
     return null;
@@ -130,7 +131,7 @@ class InterfaceWebsiteTest {
       url = generateRandomString(20) + ".com";
       Website toAdd = new Website(username, website, url);
       list.add(toAdd);
-      websiteDao.addWebsite(toAdd);
+      websiteDataAccessObject.addWebsite(toAdd);
     }
     list.sort(new WebsiteComparator());
   }
@@ -163,7 +164,7 @@ class InterfaceWebsiteTest {
           randomWebsite,
           randomLoginName,
           randomPassword);
-      websiteDao.addWebsite(new Website(randomUser, randomWebsite, randomUrl));
+      websiteDataAccessObject.addWebsite(new Website(randomUser, randomWebsite, randomUrl));
       assertFalse(interfaceWebsite.saveUrl(randomUser, randomWebsite, randomUrl));
       checkExpectedDB(randomUser, randomWebsite, randomUrl);
     }
@@ -205,7 +206,7 @@ class InterfaceWebsiteTest {
           randomWebsite,
           randomLoginName,
           randomPassword);
-      websiteDao.addWebsite(new Website(randomUser, randomWebsite, randomUrl));
+      websiteDataAccessObject.addWebsite(new Website(randomUser, randomWebsite, randomUrl));
       assertTrue(interfaceWebsite.deleteUrl(randomUser, randomWebsite, randomUrl));
       assertNull(getWebsite(randomUser, randomWebsite, randomUrl));
     }
@@ -228,7 +229,7 @@ class InterfaceWebsiteTest {
           websiteExistedInDB,
           randomLoginName,
           randomPassword);
-      websiteDao.addWebsite(new Website(usernameExistedInDB, websiteExistedInDB, urlExistedInDB));
+      websiteDataAccessObject.addWebsite(new Website(usernameExistedInDB, websiteExistedInDB, urlExistedInDB));
       assertFalse(interfaceWebsite.deleteUrl(usernameGiven, websiteGiven, urlGiven));
       checkExpectedDB(usernameExistedInDB, websiteExistedInDB, urlExistedInDB);
     }

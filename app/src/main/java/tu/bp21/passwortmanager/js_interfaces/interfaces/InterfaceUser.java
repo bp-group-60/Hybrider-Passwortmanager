@@ -1,4 +1,4 @@
-package tu.bp21.passwortmanager.js_interfaces;
+package tu.bp21.passwortmanager.js_interfaces.interfaces;
 
 import android.webkit.JavascriptInterface;
 
@@ -6,14 +6,14 @@ import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.io.Bas
 
 import java.util.Arrays;
 
-import tu.bp21.passwortmanager.Crypto;
-import tu.bp21.passwortmanager.db.dao.UserDao;
-import tu.bp21.passwortmanager.db.User;
+import tu.bp21.passwortmanager.cryptography.Crypto;
+import tu.bp21.passwortmanager.db.data_access_objects.UserDataAccessObject;
+import tu.bp21.passwortmanager.db.entities.User;
 
 public class InterfaceUser {
-  private final UserDao userDataAccessObject;
+  private final UserDataAccessObject userDataAccessObject;
 
-  public InterfaceUser(UserDao userDataAccessObject) {
+  public InterfaceUser(UserDataAccessObject userDataAccessObject) {
     this.userDataAccessObject = userDataAccessObject;
   }
 

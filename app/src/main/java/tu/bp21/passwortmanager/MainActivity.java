@@ -6,12 +6,13 @@ import android.webkit.WebView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
-import tu.bp21.passwortmanager.js_interfaces.InterfaceCrypto;
-import tu.bp21.passwortmanager.js_interfaces.InterfacePassword;
-import tu.bp21.passwortmanager.js_interfaces.InterfaceTools;
-import tu.bp21.passwortmanager.js_interfaces.InterfaceUser;
-import tu.bp21.passwortmanager.js_interfaces.InterfaceWebsite;
-import tu.bp21.passwortmanager.db.ApplicationDatabase;
+import tu.bp21.passwortmanager.js_interfaces.interfaces.InterfaceCrypto;
+import tu.bp21.passwortmanager.js_interfaces.interfaces.InterfacePassword;
+import tu.bp21.passwortmanager.js_interfaces.interfaces.InterfaceTools;
+import tu.bp21.passwortmanager.js_interfaces.interfaces.InterfaceUser;
+import tu.bp21.passwortmanager.js_interfaces.interfaces.InterfaceWebsite;
+import tu.bp21.passwortmanager.db.database.ApplicationDatabase;
+import tu.bp21.passwortmanager.web_view_client.AssetWebViewClient;
 
 /** Main entry point for app. */
 public class MainActivity extends AppCompatActivity {

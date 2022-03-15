@@ -22,6 +22,7 @@ import org.junit.jupiter.params.provider.CsvFileSource;
 
 import de.mannodermaus.junit5.ActivityScenarioExtension;
 import tu.bp21.passwortmanager.MainActivity;
+import tu.bp21.passwortmanager.js_interfaces.interfaces.InterfaceTools;
 
 class InterfaceToolsTest {
   static MainActivity mainActivity;

@@ -1,4 +1,4 @@
-package tu.bp21.passwortmanager;
+package tu.bp21.passwortmanager.cryptography;
 
 import androidx.annotation.NonNull;
 

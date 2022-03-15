@@ -10,7 +10,7 @@
 
 
 JNIEXPORT jbyteArray JNICALL
-Java_tu_bp21_passwortmanager_Crypto_crypt(JNIEnv *env, jobject thiz, jbyteArray input, jbyteArray aad, jbyteArray iv,
+Java_tu_bp21_passwortmanager_cryptography_Crypto_crypt(JNIEnv *env, jobject thiz, jbyteArray input, jbyteArray aad, jbyteArray iv,
                                           jbyteArray key) {
     int len_buffer, output_len;
     int tag_len = 16;
@@ -90,7 +90,7 @@ Java_tu_bp21_passwortmanager_Crypto_crypt(JNIEnv *env, jobject thiz, jbyteArray 
 }
 
 JNIEXPORT jbyteArray JNICALL
-Java_tu_bp21_passwortmanager_Crypto_generateKeyNative(JNIEnv *env, jobject thiz, jbyteArray input,
+Java_tu_bp21_passwortmanager_cryptography_Crypto_generateKeyNative(JNIEnv *env, jobject thiz, jbyteArray input,
                                                       jint input_length, jbyteArray salt, jint salt_length) {
     jbyte  *input_ptr = (*env)->GetByteArrayElements(env , input, 0);
     jbyte  *salt_ptr = (*env)->GetByteArrayElements(env , salt, 0);
@@ -112,7 +112,7 @@ Java_tu_bp21_passwortmanager_Crypto_generateKeyNative(JNIEnv *env, jobject thiz,
 }
 
 JNIEXPORT jbyteArray JNICALL
-Java_tu_bp21_passwortmanager_Crypto_generateSecureByteArray(JNIEnv *env, jclass clazz, jint size) {
+Java_tu_bp21_passwortmanager_cryptography_Crypto_generateSecureByteArray(JNIEnv *env, jclass clazz, jint size) {
     //generate salt
     jbyte *output = calloc (size, sizeof (jbyte));
     RAND_bytes(output, size);
@@ -128,7 +128,7 @@ Java_tu_bp21_passwortmanager_Crypto_generateSecureByteArray(JNIEnv *env, jclass 
 }
 
 JNIEXPORT jbyteArray JNICALL
-Java_tu_bp21_passwortmanager_Crypto_hash(JNIEnv *env, jclass clazz, jbyteArray input,
+Java_tu_bp21_passwortmanager_cryptography_Crypto_hash(JNIEnv *env, jclass clazz, jbyteArray input,
                                          jint input_length, jbyteArray salt, jint salt_length) {
     jbyte  *input_ptr = (*env)->GetByteArrayElements(env , input, 0);
     jbyte  *salt_ptr = (*env)->GetByteArrayElements(env , salt, 0);

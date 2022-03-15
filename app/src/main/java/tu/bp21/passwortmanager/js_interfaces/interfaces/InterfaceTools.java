@@ -1,4 +1,4 @@
-package tu.bp21.passwortmanager.js_interfaces;
+package tu.bp21.passwortmanager.js_interfaces.interfaces;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 

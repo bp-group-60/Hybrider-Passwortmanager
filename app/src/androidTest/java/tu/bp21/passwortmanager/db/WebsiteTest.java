@@ -6,6 +6,8 @@ import org.junit.jupiter.api.*;
 
 import static tu.bp21.passwortmanager.StringFunction.*;
 
+import tu.bp21.passwortmanager.db.entities.Website;
+
 class WebsiteTest {
 
   @Test

@@ -1,4 +1,4 @@
-package tu.bp21.passwortmanager;
+package tu.bp21.passwortmanager.web_view_client;
 
 import android.content.Context;
 import android.webkit.WebResourceRequest;

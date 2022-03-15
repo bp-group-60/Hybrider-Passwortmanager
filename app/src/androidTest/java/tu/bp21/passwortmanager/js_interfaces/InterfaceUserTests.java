@@ -16,15 +16,16 @@ import org.junit.jupiter.params.provider.CsvFileSource;
 import java.util.Arrays;
 
 import de.mannodermaus.junit5.ActivityScenarioExtension;
-import tu.bp21.passwortmanager.Crypto;
+import tu.bp21.passwortmanager.cryptography.Crypto;
 import tu.bp21.passwortmanager.MainActivity;
-import tu.bp21.passwortmanager.db.ApplicationDatabase;
-import tu.bp21.passwortmanager.db.Password;
-import tu.bp21.passwortmanager.db.User;
-import tu.bp21.passwortmanager.db.Website;
-import tu.bp21.passwortmanager.db.dao.PasswordDao;
-import tu.bp21.passwortmanager.db.dao.UserDao;
-import tu.bp21.passwortmanager.db.dao.WebsiteDao;
+import tu.bp21.passwortmanager.db.database.ApplicationDatabase;
+import tu.bp21.passwortmanager.db.entities.Password;
+import tu.bp21.passwortmanager.db.entities.User;
+import tu.bp21.passwortmanager.db.entities.Website;
+import tu.bp21.passwortmanager.db.data_access_objects.PasswordDataAccessObject;
+import tu.bp21.passwortmanager.db.data_access_objects.UserDataAccessObject;
+import tu.bp21.passwortmanager.db.data_access_objects.WebsiteDataAccessObject;
+import tu.bp21.passwortmanager.js_interfaces.interfaces.InterfaceUser;
 
 class InterfaceUserTests {
   static MainActivity mainActivity;
@@ -35,7 +36,7 @@ class InterfaceUserTests {
       ActivityScenarioExtension.launch(MainActivity.class);
 
   InterfaceUser interfaceUser;
-  UserDao userDao;
+  UserDataAccessObject userDataAccessObject;
   String randomEmail;
 
   @AfterAll
@@ -54,9 +55,9 @@ class InterfaceUserTests {
               .allowMainThreadQueries()
               .build();
     }
-    userDao = database.getUserDao();
+    userDataAccessObject = database.getUserDao();
 
-    interfaceUser = new InterfaceUser(userDao);
+    interfaceUser = new InterfaceUser(userDataAccessObject);
     randomEmail = generateRandomString(20) + "@email.de";
   }
 
@@ -69,7 +70,7 @@ class InterfaceUserTests {
   @ParameterizedTest
   @CsvFileSource(resources = "/User/testUser.csv", numLinesToSkip = 1)
   void testExistUser(String userToAdd, String passwordToAdd, String userNotExist) throws Exception {
-    userDao.addUser(new User(userToAdd, randomEmail, passwordToAdd.getBytes()));
+    userDataAccessObject.addUser(new User(userToAdd, randomEmail, passwordToAdd.getBytes()));
     assertFalse(interfaceUser.existUser(userNotExist));
     assertTrue(interfaceUser.existUser(userToAdd));
   }
@@ -84,7 +85,7 @@ class InterfaceUserTests {
       String passwordToCheck) {
     byte[] rightPassword = passwordToAdd.getBytes();
     byte[] wrongPassword = passwordToCheck.getBytes();
-    userDao.addUser(new User(userToAdd, randomEmail, rightPassword));
+    userDataAccessObject.addUser(new User(userToAdd, randomEmail, rightPassword));
     assertFalse(interfaceUser.checkUser(userToCheck, BaseEncoding.base16().encode(wrongPassword)));
     assertTrue(interfaceUser.checkUser(userToAdd, BaseEncoding.base16().encode(rightPassword)));
   }
@@ -93,12 +94,12 @@ class InterfaceUserTests {
   @CsvFileSource(resources = "/User/testUser.csv", numLinesToSkip = 1)
   void testCreateUser(String userToCreate, String passwordToCreate) {
     assertTrue(interfaceUser.createUser(userToCreate, randomEmail, passwordToCreate));
-    byte[] salt = Arrays.copyOf(userDao.getUser(userToCreate).password, 16);
+    byte[] salt = Arrays.copyOf(userDataAccessObject.getUser(userToCreate).password, 16);
     byte[] encryptedPassword = Crypto.computeHash(passwordToCreate, salt);
-    assertTrue(userDao.getUser(userToCreate) != null);
-    assertEquals(userToCreate, userDao.getUser(userToCreate).username);
-    assertEquals(randomEmail, userDao.getUser(userToCreate).email);
-    assertArrayEquals(encryptedPassword, userDao.getUser(userToCreate).password);
+    assertTrue(userDataAccessObject.getUser(userToCreate) != null);
+    assertEquals(userToCreate, userDataAccessObject.getUser(userToCreate).username);
+    assertEquals(randomEmail, userDataAccessObject.getUser(userToCreate).email);
+    assertArrayEquals(encryptedPassword, userDataAccessObject.getUser(userToCreate).password);
     assertFalse(interfaceUser.createUser(userToCreate, randomEmail, passwordToCreate));
   }
 
@@ -116,20 +117,20 @@ class InterfaceUserTests {
           password = generateRandomString(20),
           url = generateRandomString(20),
           website2 = website1 + ".de";
-      PasswordDao passwordDao = database.getPasswordDao();
-      WebsiteDao websiteDao = database.getWebsiteDao();
-      userDao.addUser(new User(username, randomEmail, masterPassword.getBytes()));
-      passwordDao.addPassword(new Password(username, website1, loginName, password.getBytes()));
-      passwordDao.addPassword(new Password(username, website2, loginName, password.getBytes()));
-      websiteDao.addWebsite(new Website(username, website1, url));
+      PasswordDataAccessObject passwordDataAccessObject = database.getPasswordDao();
+      WebsiteDataAccessObject websiteDataAccessObject = database.getWebsiteDao();
+      userDataAccessObject.addUser(new User(username, randomEmail, masterPassword.getBytes()));
+      passwordDataAccessObject.addPassword(new Password(username, website1, loginName, password.getBytes()));
+      passwordDataAccessObject.addPassword(new Password(username, website2, loginName, password.getBytes()));
+      websiteDataAccessObject.addWebsite(new Website(username, website1, url));
 
       assertTrue(
           interfaceUser.deleteUser(
               username, BaseEncoding.base16().encode(masterPassword.getBytes())));
-      assertNull(userDao.getUser(username));
-      assertNull(passwordDao.getPassword(username, website1));
-      assertNull(passwordDao.getPassword(username, website2));
-      assertTrue(websiteDao.getWebsiteList(username, website1).isEmpty());
+      assertNull(userDataAccessObject.getUser(username));
+      assertNull(passwordDataAccessObject.getPassword(username, website1));
+      assertNull(passwordDataAccessObject.getPassword(username, website2));
+      assertTrue(websiteDataAccessObject.getWebsiteList(username, website1).isEmpty());
     }
 
     @ParameterizedTest
@@ -141,13 +142,13 @@ class InterfaceUserTests {
         String password,
         String differentUsername,
         String differentPassword) {
-      userDao.addUser(new User(username, randomEmail, password.getBytes()));
+      userDataAccessObject.addUser(new User(username, randomEmail, password.getBytes()));
 
       assertFalse(
           interfaceUser.deleteUser(
               differentUsername, BaseEncoding.base16().encode(differentPassword.getBytes())));
-      assertNotNull(userDao.getUser(username));
-      assertArrayEquals(password.getBytes(), userDao.getUser(username).password);
+      assertNotNull(userDataAccessObject.getUser(username));
+      assertArrayEquals(password.getBytes(), userDataAccessObject.getUser(username).password);
     }
   }
 }

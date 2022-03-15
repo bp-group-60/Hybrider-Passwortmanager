@@ -17,6 +17,8 @@ import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
+import tu.bp21.passwortmanager.cryptography.Crypto;
+
 class CryptoTest {
 
   static {

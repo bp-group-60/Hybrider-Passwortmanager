@@ -1,10 +1,10 @@
-package tu.bp21.passwortmanager.js_interfaces;
+package tu.bp21.passwortmanager.js_interfaces.interfaces;
 
 import android.webkit.JavascriptInterface;
 
 import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.io.BaseEncoding;
 
-import tu.bp21.passwortmanager.Crypto;
+import tu.bp21.passwortmanager.cryptography.Crypto;
 
 public class InterfaceCrypto {
 

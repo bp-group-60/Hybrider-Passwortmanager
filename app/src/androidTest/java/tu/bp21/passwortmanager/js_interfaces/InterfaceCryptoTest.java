@@ -10,7 +10,8 @@ import org.junit.jupiter.params.provider.CsvFileSource;
 
 import static tu.bp21.passwortmanager.StringFunction.*;
 
-import tu.bp21.passwortmanager.Crypto;
+import tu.bp21.passwortmanager.cryptography.Crypto;
+import tu.bp21.passwortmanager.js_interfaces.interfaces.InterfaceCrypto;
 
 class InterfaceCryptoTest {
   static {

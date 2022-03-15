@@ -1,16 +1,16 @@
-package tu.bp21.passwortmanager.js_interfaces;
+package tu.bp21.passwortmanager.js_interfaces.interfaces;
 
 import android.webkit.JavascriptInterface;
 
 import java.util.List;
 
-import tu.bp21.passwortmanager.db.dao.WebsiteDao;
-import tu.bp21.passwortmanager.db.Website;
+import tu.bp21.passwortmanager.db.data_access_objects.WebsiteDataAccessObject;
+import tu.bp21.passwortmanager.db.entities.Website;
 
 public class InterfaceWebsite {
-  private final WebsiteDao websiteDataAccessObject;
+  private final WebsiteDataAccessObject websiteDataAccessObject;
 
-  public InterfaceWebsite(WebsiteDao websiteDataAccessObject) {
+  public InterfaceWebsite(WebsiteDataAccessObject websiteDataAccessObject) {
     this.websiteDataAccessObject = websiteDataAccessObject;
   }
 

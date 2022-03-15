@@ -18,15 +18,16 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import de.mannodermaus.junit5.ActivityScenarioExtension;
-import tu.bp21.passwortmanager.Crypto;
+import tu.bp21.passwortmanager.cryptography.Crypto;
 import tu.bp21.passwortmanager.MainActivity;
-import tu.bp21.passwortmanager.db.ApplicationDatabase;
-import tu.bp21.passwortmanager.db.Password;
-import tu.bp21.passwortmanager.db.User;
-import tu.bp21.passwortmanager.db.Website;
-import tu.bp21.passwortmanager.db.dao.PasswordDao;
-import tu.bp21.passwortmanager.db.dao.UserDao;
-import tu.bp21.passwortmanager.db.dao.WebsiteDao;
+import tu.bp21.passwortmanager.db.database.ApplicationDatabase;
+import tu.bp21.passwortmanager.db.data_access_objects.UserDataAccessObject;
+import tu.bp21.passwortmanager.db.data_access_objects.WebsiteDataAccessObject;
+import tu.bp21.passwortmanager.db.entities.Password;
+import tu.bp21.passwortmanager.db.entities.User;
+import tu.bp21.passwortmanager.db.entities.Website;
+import tu.bp21.passwortmanager.db.data_access_objects.PasswordDataAccessObject;
+import tu.bp21.passwortmanager.js_interfaces.interfaces.InterfacePassword;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName(value = "Tests for InterfacePassword")
@@ -39,8 +40,8 @@ class InterfacePasswordTest {
       ActivityScenarioExtension.launch(MainActivity.class);
 
   InterfacePassword interfacePassword;
-  UserDao userDao;
-  PasswordDao passwordDao;
+  UserDataAccessObject userDataAccessObject;
+  PasswordDataAccessObject passwordDataAccessObject;
   String randomUser;
   String randomEmail;
   String randomLoginName;
@@ -66,10 +67,10 @@ class InterfacePasswordTest {
               .allowMainThreadQueries()
               .build();
     }
-    userDao = database.getUserDao();
-    passwordDao = database.getPasswordDao();
+    userDataAccessObject = database.getUserDao();
+    passwordDataAccessObject = database.getPasswordDao();
 
-    interfacePassword = new InterfacePassword(passwordDao);
+    interfacePassword = new InterfacePassword(passwordDataAccessObject);
 
     randomUser = generateRandomString(20);
     randomEmail = generateRandomString(20) + "@email.de";
@@ -91,7 +92,7 @@ class InterfacePasswordTest {
     String differentUser = generateRandomString(20);
     while (differentUser.equals(expectedUser)) differentUser = generateRandomString(20);
 
-    userDao.addUser(new User(expectedUser, randomEmail, randomMasterPassword.getBytes()));
+    userDataAccessObject.addUser(new User(expectedUser, randomEmail, randomMasterPassword.getBytes()));
     ArrayList<Password> list = new ArrayList<>();
     addRandomPassword(expectedUser, list);
     assertEquals(
@@ -114,7 +115,7 @@ class InterfacePasswordTest {
       loginName = generateRandomString(20);
       Password toAdd = new Password(username, website, loginName, password.getBytes());
       list.add(toAdd);
-      passwordDao.addPassword(toAdd);
+      passwordDataAccessObject.addPassword(toAdd);
     }
     list.sort(new PasswordComparator());
   }
@@ -134,8 +135,8 @@ class InterfacePasswordTest {
     byte[] associatedData = (username + website).getBytes();
     key = Crypto.generateKey(masterPassword, salt);
     keyAsHex = BaseEncoding.base16().encode(key);
-    userDao.addUser(new User(username, email, masterPassword.getBytes()));
-    passwordDao.addPassword(
+    userDataAccessObject.addUser(new User(username, email, masterPassword.getBytes()));
+    passwordDataAccessObject.addPassword(
         new Password(
             username,
             website,
@@ -149,7 +150,7 @@ class InterfacePasswordTest {
    */
   void checkExpectedDB(
       String username, String website, String loginName, String password, byte[] key) {
-    Password expected = passwordDao.getPassword(username, website);
+    Password expected = passwordDataAccessObject.getPassword(username, website);
     byte[] associatedData = (username + website).getBytes();
     assertTrue(expected != null);
     assertEquals(expected.loginName, loginName);
@@ -168,7 +169,7 @@ class InterfacePasswordTest {
       if (password != null) password = randomPassword;
       loginName = convertNullToEmptyString(loginName);
       password = convertNullToEmptyString(password);
-      userDao.addUser(new User(randomUser, randomEmail, randomMasterPassword.getBytes()));
+      userDataAccessObject.addUser(new User(randomUser, randomEmail, randomMasterPassword.getBytes()));
       byte[] salt = Crypto.generateSecureByteArray(16);
       key = Crypto.generateKey(randomMasterPassword, salt);
       boolean worked =
@@ -201,7 +202,7 @@ class InterfacePasswordTest {
     void createPasswordFailure(
         String displayCase, String userExistedInDB, String userToCreate, String websiteToCreate) {
       websiteToCreate = convertNullToEmptyString(websiteToCreate);
-      userDao.addUser(new User(userExistedInDB, randomEmail, randomMasterPassword.getBytes()));
+      userDataAccessObject.addUser(new User(userExistedInDB, randomEmail, randomMasterPassword.getBytes()));
       byte[] salt = Crypto.generateSecureByteArray(16);
       key = Crypto.generateKey(randomMasterPassword, salt);
       boolean worked =
@@ -212,7 +213,7 @@ class InterfacePasswordTest {
               randomPassword,
               BaseEncoding.base16().encode(key));
       assertFalse(worked);
-      assertNull(passwordDao.getPassword(userToCreate, websiteToCreate));
+      assertNull(passwordDataAccessObject.getPassword(userToCreate, websiteToCreate));
     }
   }
 
@@ -276,12 +277,12 @@ class InterfacePasswordTest {
           randomLoginName,
           randomPassword);
       String randomUrl = generateRandomString(20);
-      WebsiteDao websiteDao = database.getWebsiteDao();
-      websiteDao.addWebsite(new Website(randomUser, randomWebsite, randomUrl));
+      WebsiteDataAccessObject websiteDataAccessObject = database.getWebsiteDao();
+      websiteDataAccessObject.addWebsite(new Website(randomUser, randomWebsite, randomUrl));
 
       assertTrue(interfacePassword.deletePassword(randomUser, randomWebsite));
-      assertNull(passwordDao.getPassword(randomUser, randomWebsite));
-      assertTrue(websiteDao.getWebsiteList(randomUser, randomWebsite).isEmpty());
+      assertNull(passwordDataAccessObject.getPassword(randomUser, randomWebsite));
+      assertTrue(websiteDataAccessObject.getWebsiteList(randomUser, randomWebsite).isEmpty());
     }
 
     @ParameterizedTest

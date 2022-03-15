@@ -1,4 +1,4 @@
-package tu.bp21.passwortmanager.db.dao;
+package tu.bp21.passwortmanager.db.data_access_objects;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -7,10 +7,10 @@ import androidx.room.Query;
 
 import java.util.List;
 
-import tu.bp21.passwortmanager.db.Website;
+import tu.bp21.passwortmanager.db.entities.Website;
 
 @Dao
-public interface WebsiteDao {
+public interface WebsiteDataAccessObject {
   @Insert
   void addWebsite(Website website);
 

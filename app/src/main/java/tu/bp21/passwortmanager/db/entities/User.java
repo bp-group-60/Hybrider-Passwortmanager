@@ -1,4 +1,4 @@
-package tu.bp21.passwortmanager.db;
+package tu.bp21.passwortmanager.db.entities;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;

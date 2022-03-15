@@ -1,14 +1,14 @@
-package tu.bp21.passwortmanager.db.dao;
+package tu.bp21.passwortmanager.db.data_access_objects;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
-import tu.bp21.passwortmanager.db.User;
+import tu.bp21.passwortmanager.db.entities.User;
 
 @Dao
-public interface UserDao {
+public interface UserDataAccessObject {
   @Insert
   void addUser(User user);
 

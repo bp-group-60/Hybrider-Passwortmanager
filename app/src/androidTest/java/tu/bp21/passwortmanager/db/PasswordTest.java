@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
 
 import tu.bp21.passwortmanager.StringFunction;
+import tu.bp21.passwortmanager.db.entities.Password;
 
 public class PasswordTest {
 

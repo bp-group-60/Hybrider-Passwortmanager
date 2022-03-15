@@ -1,4 +1,4 @@
-package tu.bp21.passwortmanager.db.dao;
+package tu.bp21.passwortmanager.db.data_access_objects;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -7,10 +7,10 @@ import androidx.room.Query;
 import androidx.room.Update;
 import java.util.List;
 
-import tu.bp21.passwortmanager.db.Password;
+import tu.bp21.passwortmanager.db.entities.Password;
 
 @Dao
-public interface PasswordDao {
+public interface PasswordDataAccessObject {
   @Insert
   void addPassword(Password password);
 
