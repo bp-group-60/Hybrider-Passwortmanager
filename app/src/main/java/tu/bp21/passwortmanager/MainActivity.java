@@ -36,24 +36,24 @@ public class MainActivity extends AppCompatActivity {
             .allowMainThreadQueries()
             .build();
 
-    InterfaceUser jsiUser = new InterfaceUser(database.getUserDao());
-    InterfacePassword jsiPassword = new InterfacePassword(database.getPasswordDao());
-    InterfaceWebsite jsiWebsite = new InterfaceWebsite(database.getWebsiteDao());
-    InterfaceCrypto jsiCrypto = new InterfaceCrypto();
+    InterfaceUser jsInterfaceUser = new InterfaceUser(database.getUserDao());
+    InterfacePassword jsInterfacePassword = new InterfacePassword(database.getPasswordDao());
+    InterfaceWebsite jsInterfaceWebsite = new InterfaceWebsite(database.getWebsiteDao());
+    InterfaceCrypto jsInterfaceCrypto = new InterfaceCrypto();
 
-    InterfaceTools jsiTools = new InterfaceTools(this);
+    InterfaceTools jsInterfaceTools = new InterfaceTools(this);
 
     webView = new WebView(this);
     webView.setWebViewClient(new AssetWebViewClient(this));
 
     webView.getSettings().setJavaScriptEnabled(true);
 
-    webView.addJavascriptInterface(jsiUser, "Java_InterfaceUser");
-    webView.addJavascriptInterface(jsiPassword, "Java_InterfacePassword");
-    webView.addJavascriptInterface(jsiWebsite, "Java_InterfaceWebsite");
-    webView.addJavascriptInterface(jsiCrypto, "Java_InterfaceCrypto");
+    webView.addJavascriptInterface(jsInterfaceUser, "Java_InterfaceUser");
+    webView.addJavascriptInterface(jsInterfacePassword, "Java_InterfacePassword");
+    webView.addJavascriptInterface(jsInterfaceWebsite, "Java_InterfaceWebsite");
+    webView.addJavascriptInterface(jsInterfaceCrypto, "Java_InterfaceCrypto");
 
-    webView.addJavascriptInterface(jsiTools, "Java_InterfaceTools");
+    webView.addJavascriptInterface(jsInterfaceTools, "Java_InterfaceTools");
 
     webView.loadUrl("https://appassets.androidplatform.net/assets/src/html/index.html");
 

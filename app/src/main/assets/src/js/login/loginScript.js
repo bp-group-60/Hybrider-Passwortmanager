@@ -34,7 +34,6 @@ function registerNewUser(user, email, password) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  //const loginForm = document.querySelector('#Anmeldung');
   const loginForm = document.getElementById('Anmeldung');
   const createAccountForm = document.getElementById('KontoErstellen');
 
@@ -62,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  document.querySelectorAll('.form__input').forEach(inputElement => {
+  document.querySelectorAll('.input-form').forEach(inputElement => {
     inputElement.addEventListener('blur', e => {
       //Mindestlänge Benutzername
       if (e.target.id === 'signupUsername') {

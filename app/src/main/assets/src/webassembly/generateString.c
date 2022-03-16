@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <stdio.h>
-#include <emscripten.h> // note we added the emscripten header
+#include <emscripten.h>
 
 
 void EMSCRIPTEN_KEEPALIVE GenerateRandomString(int *output, int outputSize) {

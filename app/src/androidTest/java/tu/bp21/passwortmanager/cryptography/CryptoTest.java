@@ -1,4 +1,4 @@
-package tu.bp21.passwortmanager;
+package tu.bp21.passwortmanager.cryptography;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static tu.bp21.passwortmanager.StringFunction.generateRandomString;
