@@ -2,13 +2,8 @@ package tu.bp21.passwortmanager;
 
 import androidx.test.espresso.web.webdriver.DriverAtoms;
 import androidx.test.espresso.web.webdriver.Locator;
-import static androidx.test.espresso.web.assertion.WebViewAssertions.webMatches;
 import static androidx.test.espresso.web.sugar.Web.onWebView;
-import static androidx.test.espresso.web.webdriver.DriverAtoms.clearElement;
 import static androidx.test.espresso.web.webdriver.DriverAtoms.findElement;
-import static androidx.test.espresso.web.webdriver.DriverAtoms.getText;
-import static androidx.test.espresso.web.webdriver.DriverAtoms.webClick;
-import static org.hamcrest.CoreMatchers.containsString;
 
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;
@@ -37,11 +32,8 @@ class MainActivityTest {
   }
 
   @Test
-  void test(){
-    onWebView().withElement(findElement(Locator.ID, "user"))
-            .perform(DriverAtoms.webKeys("abc"));
-
-
+  void test() {
+    onWebView().withElement(findElement(Locator.ID, "user")).perform(DriverAtoms.webKeys("abc"));
   }
 
   @AfterEach
