@@ -35,7 +35,7 @@ public class ClipboardTimeoutWorker extends Worker {
                 Toast.makeText(
                         getApplicationContext(), "Zwischenspeicher geleert", Toast.LENGTH_SHORT)
                     .show(),
-                durationInMilliseconds);
+            durationInMilliseconds);
 
     return Result.success();
   }

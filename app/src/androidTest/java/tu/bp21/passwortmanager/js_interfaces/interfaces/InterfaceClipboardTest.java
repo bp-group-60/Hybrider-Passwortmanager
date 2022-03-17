@@ -30,7 +30,6 @@ class InterfaceClipboardTest {
   InterfaceClipboard interfaceClipboard;
   int maxLength;
 
-
   @RegisterExtension
   final ActivityScenarioExtension<MainActivity> scenarioExtension =
       ActivityScenarioExtension.launch(MainActivity.class);
@@ -44,7 +43,6 @@ class InterfaceClipboardTest {
     clipboard = (ClipboardManager) mainActivity.getSystemService(Context.CLIPBOARD_SERVICE);
     interfaceClipboard = new InterfaceClipboard(mainActivity);
     maxLength = 100;
-
   }
 
   @AfterEach
@@ -61,14 +59,14 @@ class InterfaceClipboardTest {
         throws Exception {
 
       assumingThat(
-              timeout != 0,
-              () -> {
-                String expectedText = convertNullToEmptyString(text);
-                interfaceClipboard.copyToClipboardWithTimeout(expectedText, timeout);
-                Thread.sleep(100);
-                String actualText = clipboard.getPrimaryClip().getItemAt(0).getText().toString();
-                assertEquals(expectedText, actualText);
-              });
+          timeout != 0,
+          () -> {
+            String expectedText = convertNullToEmptyString(text);
+            interfaceClipboard.copyToClipboardWithTimeout(expectedText, timeout);
+            Thread.sleep(100);
+            String actualText = clipboard.getPrimaryClip().getItemAt(0).getText().toString();
+            assertEquals(expectedText, actualText);
+          });
 
       assumingThat(
           timeout >= 0,
@@ -77,8 +75,7 @@ class InterfaceClipboardTest {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
               assertNull(clipboard.getPrimaryClip());
             } else {
-              String actualText =
-                  clipboard.getPrimaryClip().getItemAt(0).getText().toString();
+              String actualText = clipboard.getPrimaryClip().getItemAt(0).getText().toString();
               assertEquals("", actualText);
               assertEquals(1, clipboard.getPrimaryClip().getItemCount());
             }

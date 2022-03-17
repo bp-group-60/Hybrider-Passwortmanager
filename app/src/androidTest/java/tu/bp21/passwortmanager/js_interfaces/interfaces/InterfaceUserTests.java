@@ -121,8 +121,10 @@ class InterfaceUserTests {
       PasswordDataAccessObject passwordDataAccessObject = database.getPasswordDataAccessObject();
       WebsiteDataAccessObject websiteDataAccessObject = database.getWebsiteDataAccessObject();
       userDataAccessObject.addUser(new User(username, randomEmail, masterPassword.getBytes()));
-      passwordDataAccessObject.addPassword(new Password(username, websiteName1, loginName, plainUserPassword.getBytes()));
-      passwordDataAccessObject.addPassword(new Password(username, websiteName2, loginName, plainUserPassword.getBytes()));
+      passwordDataAccessObject.addPassword(
+          new Password(username, websiteName1, loginName, plainUserPassword.getBytes()));
+      passwordDataAccessObject.addPassword(
+          new Password(username, websiteName2, loginName, plainUserPassword.getBytes()));
       websiteDataAccessObject.addWebsite(new Website(username, websiteName1, url));
 
       assertTrue(
@@ -149,7 +151,8 @@ class InterfaceUserTests {
           interfaceUser.deleteUser(
               differentUsername, BaseEncoding.base16().encode(differentPassword.getBytes())));
       assertNotNull(userDataAccessObject.getUser(username));
-      assertArrayEquals(plainUserPassword.getBytes(), userDataAccessObject.getUser(username).password);
+      assertArrayEquals(
+          plainUserPassword.getBytes(), userDataAccessObject.getUser(username).password);
     }
   }
 }

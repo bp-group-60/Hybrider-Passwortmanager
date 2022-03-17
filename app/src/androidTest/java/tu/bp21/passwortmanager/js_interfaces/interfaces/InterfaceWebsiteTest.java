@@ -93,7 +93,8 @@ class InterfaceWebsiteTest {
       String loginName,
       String plainUserPassword) {
     userDataAccessObject.addUser(new User(username, email, masterPassword.getBytes()));
-    passwordDataAccessObject.addPassword(new Password(username, websiteName, loginName, plainUserPassword.getBytes()));
+    passwordDataAccessObject.addPassword(
+        new Password(username, websiteName, loginName, plainUserPassword.getBytes()));
   }
 
   /**
@@ -230,7 +231,8 @@ class InterfaceWebsiteTest {
           websiteExistedInDB,
           randomLoginName,
           randomUserPassword);
-      websiteDataAccessObject.addWebsite(new Website(usernameExistedInDB, websiteExistedInDB, urlExistedInDB));
+      websiteDataAccessObject.addWebsite(
+          new Website(usernameExistedInDB, websiteExistedInDB, urlExistedInDB));
       assertFalse(interfaceWebsite.deleteUrl(usernameGiven, websiteGiven, urlGiven));
       checkExpectedDB(usernameExistedInDB, websiteExistedInDB, urlExistedInDB);
     }
@@ -253,7 +255,8 @@ class InterfaceWebsiteTest {
           randomUserPassword);
       addRandomWebsiteUrl(randomUser, randomWebsiteName, list);
       assertEquals(
-          "{\"dataArray\":" + list + "}", interfaceWebsite.getUrlList(randomUser, randomWebsiteName));
+          "{\"dataArray\":" + list + "}",
+          interfaceWebsite.getUrlList(randomUser, randomWebsiteName));
     }
 
     @ParameterizedTest

@@ -22,7 +22,7 @@ public class Password {
   public byte[] password;
 
   public Password(
-          @NonNull String username, @NonNull String websiteName, String loginName, byte[] password) {
+      @NonNull String username, @NonNull String websiteName, String loginName, byte[] password) {
     this.username = username;
     this.websiteName = websiteName;
     this.loginName = loginName;
