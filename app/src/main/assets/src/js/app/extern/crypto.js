@@ -1,7 +1,7 @@
-export function generateKey(plainPassword, salt) {
-  return Java_InterfaceCrypto.generateKey(plainPassword, salt);
+export function generateKey(plainUserPassword, salt) {
+  return Java_InterfaceCrypto.generateKey(plainUserPassword, salt);
 }
 
-export function hashPassword(userPassword, salt) {
-  return Java_InterfaceCrypto.hashPassword(userPassword, salt);
+export function hashPassword(plainUserPassword, salt) {
+  return Java_InterfaceCrypto.hashPassword(plainUserPassword, salt);
 }

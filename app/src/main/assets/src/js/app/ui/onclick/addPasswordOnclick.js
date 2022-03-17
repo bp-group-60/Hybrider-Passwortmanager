@@ -6,16 +6,13 @@ import {generateRandomString,IdentityFunction} from '../../extern/webassembly/st
 
 export function commitButtonOnclick(page) {
   return () => {
-
-    console.log('TODO: validate data');
-
-    let name = document.getElementById('name').value;
-    let loginName = document.getElementById('username').value;
-    let password = document.getElementById('password').value;
-    let successful = createPassword(getSessionUser(), name, loginName, password);
+    let websiteName = document.getElementById('website-name').value;
+    let loginName = document.getElementById('login-name').value;
+    let loginPassword = document.getElementById('login-password').value;
+    let successful = createPassword(getSessionUser(), websiteName, loginName, loginPassword);
 
     if (successful) {
-      saveUrlList(getSessionUser(), name, getAddedUrls(page));
+      saveUrlList(getSessionUser(), websiteName, getAddedUrls(page));
       document.querySelector('#onsen-navigator').popPage();
       ons.notification.toast('Passwort hinzugefügt!', {timeout: 3000});
     } else {
@@ -26,7 +23,7 @@ export function commitButtonOnclick(page) {
 
 export function generateRandomPasswordOnclick(page, length) {
   return () => {
-    page.querySelector("#password").value = generateRandomString(length);
+    page.querySelector("#login-password").value = generateRandomString(length);
   }
 }
 
@@ -34,7 +31,7 @@ export function generateRandomPasswordOnclick(page, length) {
 export function generateRandomUsernameOnclick(page, length) {
   return () => {
     let randomString = generateRandomString(length)
-    page.querySelector("#username").value = randomString + IdentityFunction(randomString);
+    page.querySelector("#login-name").value = randomString + IdentityFunction(randomString);
     }
 }
 
@@ -42,9 +39,9 @@ export function generateRandomUsernameOnclick(page, length) {
 export function showPasswordOnclick(page) {
   return () => {
     if (page.querySelector('#password-checkbox').checked) {
-      page.querySelector('#password').children[0].type = 'text';
+      page.querySelector('#login-password').children[0].type = 'text';
     } else {
-      page.querySelector('#password').children[0].type = 'password';
+      page.querySelector('#login-password').children[0].type = 'password';
     }
   };
 }

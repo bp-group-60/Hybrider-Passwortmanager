@@ -31,8 +31,8 @@ export function onclickLogout(page) {
   };
 }
 
-export function onclickListItem(title) {
+export function onclickListItem(websiteName) {
   return () => {
-    document.querySelector('#onsen-navigator').pushPage('onsPages/passwordView.html', {data: {id: title}});
+    document.querySelector('#onsen-navigator').pushPage('onsPages/passwordView.html', {data: {websiteName: websiteName}});
   };
 }

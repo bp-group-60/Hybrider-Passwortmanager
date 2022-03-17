@@ -18,8 +18,8 @@ export function editButtonOnclick(page) {
       .querySelectorAll('.removeIcon')
       .forEach((icon) => (icon.style.display = ''));
 
-    page.querySelector('#username').children[0].readOnly = false;
-    page.querySelector('#password').children[0].readOnly = false;
+    page.querySelector('#login-name').children[0].readOnly = false;
+    page.querySelector('#login-password').children[0].readOnly = false;
     page.querySelector('#password-copy').style.display = 'none';
 
     page.querySelector('ons-toolbar .center').innerHTML = 'Bearbeiten';
@@ -34,19 +34,19 @@ export function editAbortOnclick(page) {
 
 export function onclickEditSave(page) {
   return () => {
-    let name = page.data.id;
-    let loginName = document.getElementById('username').value;
-    let password = document.getElementById('password').value;
+    let websiteName = page.data.websiteName;
+    let loginName = document.getElementById('login-name').value;
+    let loginPassword = document.getElementById('login-password').value;
     let successful = updatePassword(
       getSessionUser(),
-      name,
+      websiteName,
       loginName,
-      password
+      loginPassword
     );
 
     if (successful) {
-      saveUrlList(getSessionUser(), name, getAddedUrls(page));
-      deleteUrlList(getSessionUser(), name, getRemovedUrls(page));
+      saveUrlList(getSessionUser(), websiteName, getAddedUrls(page));
+      deleteUrlList(getSessionUser(), websiteName, getRemovedUrls(page));
       ons.notification.toast('Änderungen gespeichert!', {timeout: 3000});
 
       updatePasswordView(page);
@@ -62,8 +62,8 @@ export function onclickDeletePassword(page) {
       .confirm('Passwort wirklich löschen?')
       .then(function (input) {
         if (input === 1) {
-          let name = page.data.id;
-          deletePassword(getSessionUser(), name);
+          let websiteName = page.data.websiteName;
+          deletePassword(getSessionUser(), websiteName);
           document.querySelector('#onsen-navigator').popPage();
           ons.notification.toast('Passwort wurde gelöscht!', {timeout: 3000});
         }
@@ -73,7 +73,7 @@ export function onclickDeletePassword(page) {
 
 export function copyPasswordOnclick(page) {
   return () => {
-    copyToClipboardWithTimeout(page.querySelector('#password').value, 20000);
+    copyToClipboardWithTimeout(page.querySelector('#login-password').value, 20000);
     ons.notification.toast('Passwort wurde kopiert', {timeout: 3000});
   };
 }
@@ -81,9 +81,9 @@ export function copyPasswordOnclick(page) {
 export function showPasswordOnclick(page) {
   return () => {
     if (page.querySelector('#password-checkbox').checked) {
-      page.querySelector('#password').children[0].type = 'text';
+      page.querySelector('#login-password').children[0].type = 'text';
     } else {
-      page.querySelector('#password').children[0].type = 'password';
+      page.querySelector('#login-password').children[0].type = 'password';
     }
   };
 }

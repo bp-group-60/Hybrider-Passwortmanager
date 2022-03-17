@@ -35,17 +35,17 @@ export function updatePasswordView(page) {
   page.querySelector('#commit-button').style.display = 'none';
 
   page.querySelector('#add-url').style.display = 'none';
-  page.querySelector('#username').children[0].readOnly = true;
-  page.querySelector('#password').children[0].readOnly = true;
+  page.querySelector('#login-name').children[0].readOnly = true;
+  page.querySelector('#login-password').children[0].readOnly = true;
   page.querySelector('#password-copy').style.display = '';
 
-  page.querySelector('ons-toolbar .center').innerHTML = page.data.id;
+  page.querySelector('ons-toolbar .center').innerHTML = page.data.websiteName;
 
   page.querySelector('#url-items').innerHTML = '';
-  getUrlList(getSessionUser(), page.data.id).forEach(url => {
+  getUrlList(getSessionUser(), page.data.websiteName).forEach(url => {
     page.querySelector('#url-items').append(createUrlItem(url));
   })
 
-  page.querySelector('#username').value = getLoginName(page.data.id);
-  page.querySelector('#password').value = getPassword(page.data.id);
+  page.querySelector('#login-name').value = getLoginName(page.data.websiteName);
+  page.querySelector('#login-password').value = getPassword(page.data.websiteName);
 }

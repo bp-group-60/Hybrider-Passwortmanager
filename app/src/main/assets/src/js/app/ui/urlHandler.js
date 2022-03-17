@@ -19,23 +19,23 @@ export function createUrlItem(url) {
 }
 
 export function getAddedUrls(page) {
-  let a = [];
+  let listOfUrl = [];
   page.querySelector('#url-items').childNodes.forEach(item => {
     if (item.getAttribute('data-unsaved') === 'true' &&
       item.getAttribute('data-removed') === 'false') {
-      a.push(item.querySelector('ons-input').value);
+      listOfUrl.push(item.querySelector('ons-input').value);
     }
   });
-  return a.filter(elm => elm !== '');
+  return listOfUrl.filter(elm => elm !== '');
 }
 
 export function getRemovedUrls(page) {
-  let a = [];
+  let listOfUrl = [];
   page.querySelector('#url-items').childNodes.forEach(item => {
     if (item.getAttribute('data-unsaved') === 'true' &&
       item.getAttribute('data-removed') === 'true') {
-      a.push(item.innerText);
+      listOfUrl.push(item.innerText);
     }
   });
-  return a;
+  return listOfUrl;
 }

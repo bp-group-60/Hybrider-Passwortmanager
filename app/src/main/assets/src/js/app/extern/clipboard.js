@@ -1,5 +1,6 @@
 export function copyToClipboard(text) {
-  Java_InterfaceTools.copyToClipboardWithTimeout(text, -1);
+  let timeout = -1;
+  Java_InterfaceTools.copyToClipboardWithTimeout(text, timeout);
 }
 
 export function copyToClipboardWithTimeout(text, timeout) {

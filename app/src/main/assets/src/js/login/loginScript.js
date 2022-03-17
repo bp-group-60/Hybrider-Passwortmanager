@@ -2,19 +2,19 @@ import {clearInputError, setFormMessage, setInputError} from './loginMessages.js
 import {checkUser, createUser, existUser, getSalt} from '../app/extern/database/userOperations.js';
 import {hashPassword, generateKey} from '../app/extern/crypto.js';
 
-function checkUserAvailable(user) {
-  if (existUser(user)) {
-    let e = document.getElementById('signup-username');
-    setInputError(e, 'Benutzername bereits vergeben');
+function checkUserAvailable(username) {
+  if (existUser(username)) {
+    let inputUsername = document.getElementById('signup-username');
+    setInputError(inputUsername, 'Benutzername bereits vergeben');
   }
 }
 
-function checkLoginInformation(user, password) {
-  sessionStorage.setItem('user', user);
-  let salt = getSalt(user);
+function checkLoginInformation(username, password) {
+  sessionStorage.setItem('user', username);
+  let salt = getSalt(username);
   let hashedPassword = hashPassword(password, salt);
   sessionStorage.setItem('password', hashedPassword);
-  if (checkUser(user, hashedPassword)) {
+  if (checkUser(username, hashedPassword)) {
     sessionStorage.setItem('key', generateKey(password, salt));
     window.location.href = './app.html';
   } else {
@@ -23,8 +23,8 @@ function checkLoginInformation(user, password) {
   }
 }
 
-function registerNewUser(user, email, password) {
-  if (createUser(user, email, password)) {
+function registerNewUser(username, email, password) {
+  if (createUser(username, email, password)) {
     sessionStorage.setItem('regist', true);
     window.location.href = './index.html';
   } else {
@@ -43,9 +43,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     loginForm.addEventListener('submit', e => {
       e.preventDefault();
-      let user = document.getElementById('user').value;
-      let password = document.getElementById('password').value;
-      checkLoginInformation(user, password);
+      let username = document.getElementById('input-username').value;
+      let password = document.getElementById('input-userPassword').value;
+      checkLoginInformation(username, password);
     });
   }
 
@@ -53,11 +53,11 @@ document.addEventListener('DOMContentLoaded', () => {
     createAccountForm.addEventListener('submit', e => {
       e.preventDefault();
 
-      let user = document.getElementById('signup-username').value;
-      let email = document.getElementById('signup-email').value;
-      let password = document.getElementById('signup-password').value;
+      let signupUsername = document.getElementById('signup-username').value;
+      let signupEmail = document.getElementById('signup-email').value;
+      let signupPassword = document.getElementById('signup-password').value;
 
-      registerNewUser(user, email, password);
+      registerNewUser(signupUsername, signupEmail, signupPassword);
     });
   }
 
@@ -80,17 +80,17 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       //Passwortfelder aktiv
       if (e.target.id === 'signup-password' || e.target.id === 'signup-password-confirm') {
-        const pwd1 = document.getElementById('signup-password');
-        const pwd2 = document.getElementById('signup-password-confirm');
+        const signupPassword = document.getElementById('signup-password');
+        const signupPasswordConfirm = document.getElementById('signup-password-confirm');
         //Passwortlänge
-        if (pwd1.value.length > 0 && pwd1.value.length < 8) {
-          setInputError(pwd1, 'Passwort muss mindestens 8 Zeichen enthalten');
+        if (signupPassword.value.length > 0 && signupPassword.value.length < 8) {
+          setInputError(signupPassword, 'Passwort muss mindestens 8 Zeichen enthalten');
         }
         // Groß-/Kleinschreibung + Zahlen + Sonderzeichen
 
         //Passwortabgleich
-        if (pwd2.value.length > 0 && pwd1.value !== pwd2.value) {
-          setInputError(pwd2, 'Passwörter stimmen nicht überein');
+        if (signupPasswordConfirm.value.length > 0 && signupPassword.value !== signupPasswordConfirm.value) {
+          setInputError(signupPasswordConfirm, 'Passwörter stimmen nicht überein');
         }
       }
     });

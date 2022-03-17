@@ -1,33 +1,33 @@
 import {getSessionUser, getSessionKey} from "../../sessionHandler.js";
 
-export function getPasswordOverviewList(user) {
+export function getPasswordOverviewList(username) {
   // array structure: [[website, loginName], ...]
-  return JSON.parse(Java_InterfacePassword.getPasswordOverviewList(user)).dataArray;
+  return JSON.parse(Java_InterfacePassword.getPasswordOverviewList(username)).dataArray;
 }
 
-export function getLoginName(website) {
-  let user = getSessionUser();
+export function getLoginName(websiteName) {
+  let username = getSessionUser();
 
-  return Java_InterfacePassword.getLoginName(user, website);
+  return Java_InterfacePassword.getLoginName(username, websiteName);
 }
 
-export function getPassword(website) {
-  let user = getSessionUser();
+export function getPassword(websiteName) {
+  let username = getSessionUser();
   let key = getSessionKey();
 
-  return Java_InterfacePassword.getPassword(user, website, key);
+  return Java_InterfacePassword.getPassword(username, websiteName, key);
 }
 
-export function createPassword(user, website, loginName, password) {
+export function createPassword(username, websiteName, loginName, loginPassword) {
   let key = getSessionKey();
-  return Java_InterfacePassword.createPassword(user, website, loginName, password, key);
+  return Java_InterfacePassword.createPassword(username, websiteName, loginName, loginPassword, key);
 }
 
-export function updatePassword(user, website, loginName, password) {
+export function updatePassword(username, websiteName, loginName, loginPassword) {
   let key = getSessionKey();
-  return Java_InterfacePassword.updatePassword(user, website, loginName, password, key);
+  return Java_InterfacePassword.updatePassword(username, websiteName, loginName, loginPassword, key);
 }
 
-export function deletePassword(user, website) {
-  return Java_InterfacePassword.deletePassword(user, website);
+export function deletePassword(username, websiteName) {
+  return Java_InterfacePassword.deletePassword(username, websiteName);
 }

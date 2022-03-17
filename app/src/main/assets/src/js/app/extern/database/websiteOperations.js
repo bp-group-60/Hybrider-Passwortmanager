@@ -1,19 +1,19 @@
-export function getUrlList(user, website) {
-  return JSON.parse(Java_InterfaceWebsite.getUrlList(user, website)).dataArray;
+export function getUrlList(username, websiteName) {
+  return JSON.parse(Java_InterfaceWebsite.getUrlList(username, websiteName)).dataArray;
 }
 
-export function saveUrlList(user, website, list) {
-  list.forEach(elm => saveUrl(user, website, elm));
+export function saveUrlList(username, websiteName, list) {
+  list.forEach(elm => saveUrl(username, websiteName, elm));
 }
 
-export function saveUrl(user, website, url) {
-  return Java_InterfaceWebsite.saveUrl(user, website, url);
+export function saveUrl(username, websiteName, url) {
+  return Java_InterfaceWebsite.saveUrl(username, websiteName, url);
 }
 
-export function deleteUrlList(user, website, list) {
-  list.forEach(elm => deleteUrl(user, website, elm));
+export function deleteUrlList(username, websiteName, list) {
+  list.forEach(elm => deleteUrl(username, websiteName, elm));
 }
 
-export function deleteUrl(user, website, url) {
-  return Java_InterfaceWebsite.deleteUrl(user, website, url);
+export function deleteUrl(username, websiteName, url) {
+  return Java_InterfaceWebsite.deleteUrl(username, websiteName, url);
 }

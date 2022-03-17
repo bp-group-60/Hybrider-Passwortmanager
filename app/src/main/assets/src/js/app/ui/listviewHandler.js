@@ -7,24 +7,24 @@ import {
   onclickMoreButton
 } from './onclick/listviewOnclick.js';
 
-export function updateListview(user) {
+export function updateListview(loginName) {
   document.getElementById('overview').innerHTML = '';
-  createList(user);
+  createList(loginName);
 }
 
-function createList(user) {
-  let list = getPasswordOverviewList(user);
+function createList(loginName) {
+  let list = getPasswordOverviewList(loginName);
 
   for (let i = 0; i < list.length; i++) {
     addToListview(`${list[i][0]} / ${list[i][1]}`, list[i][0]);
   }
 }
 
-function addToListview(name, id) {
+function addToListview(loginName, websiteName) {
   let listItem = ons.createElement('<ons-list-item modifier="chevron" tappable>');
 
-  listItem.onclick = onclickListItem(id);
-  listItem.innerText = name;
+  listItem.onclick = onclickListItem(websiteName);
+  listItem.innerText = loginName;
 
   document.getElementById('overview').append(listItem);
 }
