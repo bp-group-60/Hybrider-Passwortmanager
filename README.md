@@ -63,25 +63,16 @@ Room-Database:
 			</ul>
 		</li>
 		<li><a href="#usage">Usage</a></li>
-		<li><a href="#roadmap">Roadmap</a></li>
+		<li><a href="#features">Features</a></li>
 		<li><a href="#license">License</a></li>
 		<li><a href="#acknowledgments">Acknowledgments</a></li>
 	</ol>
 </details>
 
-
-
 <!-- ABOUT THE PROJECT -->
-## About The Project
+## About The Project -- deprecated, transfer in wiki detailed explanation
 
 The App is devided into 2 sections: the frontend and the backend. The frontend has a login/register site and the password-overview page to see, edit and add passwords. On the backend side, we have a `Java Dataflowmanager` to get the data from the `SQLite Datbase` and encrypt & decrypt the data in the `C-Cryption` section, so the requested informations can be forwarded to the frontend and been shown there.
-
-A dataflow-diagram is shwon below:<br>
-[![Dataflow Diagram][dataflow-diagram]](https://example.com)
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
 
 ### Built With
 
@@ -91,20 +82,9 @@ A dataflow-diagram is shwon below:<br>
 * [prebuilt openSSL-Library](https://github.com/PurpleI2P/OpenSSL-for-Android-Prebuilt)
 * [Room Database](https://developer.android.com/reference/android/arch/persistence/room/RoomDatabase)
 
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
 <!-- GETTING STARTED -->
 ## Getting Started
-Open this Project in an IDE of your choice (Android Stuido preferred) and install the app (e.g. android emulator).
-
-### Prerequisites
-For editing the project, Android Sdk is required! If there are pending changes to Webassembly, you also need emscripten to be runnable and therefore Python to be installed already.
-* Android Studio
-	```
-	[https://developer.android.com/studio]
-	```
+For editing and building the project [Android Studio](https://developer.android.com/studio) comes with all reqirements and is therefore recommended.
 
 ### Installation
 1. Clone the repo
@@ -113,44 +93,35 @@ For editing the project, Android Sdk is required! If there are pending changes t
 	 ```
 2. Import in IDE (Android Studio or MS Visual Studio Code tested)
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+or just use the build in vcs tools
 
+### Building
+For building this project use gradle's default build configuration.
 
+### Running
+To get proper functionality at least SDK 24 (Android 7) and a WebView version that supports ES6 is required.
 
 <!-- USAGE EXAMPLES -->
-## Usage
+## Usage -- deprecated, transfer in wiki detailed explanation
 After starting the app on the phone, there is a login screen. If you dont have any account, you can create one using the register site and insert your username, email and masterpassword. The masterpassword will be hashed and used for verification during the login process. After a successful login, the user can see his password list with the application name and the username, which has been used there. The user is capable to add new passwords or select an entry. Adding a password requires an application name, a username and password. The app supports generating passwords to you. Optional the user can add URLs to the password entry.<br>
 When the user selects an password entry, he can copy the password into clipboard or edit or even delete the entry. While editing the entry, the user now can only change username, password and URLs. The password generation is also usable in the edit screen.
 
 _For more and detailed explaination of each part of every section, please visit the [Wiki](https://github.com/bp-group-60/Hybrider-Passwortmanager/wiki)_
 
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
-<!-- ROADMAP -->
-## Roadmap
-
-- [x] login & register page
-	- [x] add multiple users
-		- [x] hashing masterpassword
-- [x] show passwords
-	- [x] proper cryption during saving
-	- [x] username/password generation
-	- [x] add multiple URLs
-	- [x] edit/remove entrys
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
+<!-- FEATURES -->
+## Features
+After starting the app on the phone you can:
+* create an account and login into the app
+* create and view login information for a website including:
+  * url items (saved in plain)
+  * login name (saved in plain)
+  * login password (saved encrypted)
+* manage all saved data
 
 <!-- LICENSE -->
 ## License
 
-Distributed under the MIT License. See `LICENSE` for more information.
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
+Distributed under the MIT License. See [LICENSE](https://github.com/bp-group-60/Hybrider-Passwortmanager/blob/main/LICENSE) for more information.
 
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
