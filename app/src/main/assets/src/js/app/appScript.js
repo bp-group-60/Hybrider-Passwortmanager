@@ -1,6 +1,5 @@
 import {addOnclickListview, updateListview} from './ui/listviewHandler.js';
-import {addOnclickPasswordView, updatePasswordView} from './ui/passwordViewHandler.js';
-import {addOnclickAddPasswordView} from './ui/addPasswordViewHandler.js';
+import {addOnclickPasswordView, initViewPassword, initNewPasswordView} from './ui/passwordViewHandler.js';
 
 import {getSessionUser, logout} from './sessionHandler.js';
 
@@ -21,14 +20,11 @@ document.addEventListener('init', function (event) {
 
   if (page.id === 'password-view') {
     addOnclickPasswordView(page);
-    updatePasswordView(page);
-  }
-
-  if (page.id === 'add-password') {
-    addOnclickAddPasswordView(page);
+    if (page.data.intend === 'view'){
+      initViewPassword(page);
+    }
+    if (page.data.intend === 'new') {
+      initNewPasswordView(page);
+    }
   }
 });
-
-window.back = function() {
-  document.querySelector('#onsen-navigator').popPage().catch(()=>logout());
-}
