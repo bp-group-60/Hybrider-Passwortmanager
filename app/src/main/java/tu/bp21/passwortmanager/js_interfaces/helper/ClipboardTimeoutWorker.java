@@ -28,14 +28,14 @@ public class ClipboardTimeoutWorker extends Worker {
     } else {
       clipboard.setPrimaryClip(ClipData.newPlainText("", ""));
     }
-
+    int durationInMilliseconds = 1000;
     new Handler(Looper.getMainLooper())
         .postDelayed(
             () ->
                 Toast.makeText(
                         getApplicationContext(), "Zwischenspeicher geleert", Toast.LENGTH_SHORT)
                     .show(),
-            1000);
+                durationInMilliseconds);
 
     return Result.success();
   }

@@ -14,7 +14,7 @@ export function addUrlOnclick(page) {
 
     newItem.append(urlInput);
     newItem.append(rightContent);
-    page.querySelector('#urlItems').append(newItem);
+    page.querySelector('#url-items').append(newItem);
   };
 }
 

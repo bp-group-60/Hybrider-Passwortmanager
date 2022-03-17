@@ -20,7 +20,7 @@ export function createUrlItem(url) {
 
 export function getAddedUrls(page) {
   let a = [];
-  page.querySelector('#urlItems').childNodes.forEach(item => {
+  page.querySelector('#url-items').childNodes.forEach(item => {
     if (item.getAttribute('data-unsaved') === 'true' &&
       item.getAttribute('data-removed') === 'false') {
       a.push(item.querySelector('ons-input').value);
@@ -31,7 +31,7 @@ export function getAddedUrls(page) {
 
 export function getRemovedUrls(page) {
   let a = [];
-  page.querySelector('#urlItems').childNodes.forEach(item => {
+  page.querySelector('#url-items').childNodes.forEach(item => {
     if (item.getAttribute('data-unsaved') === 'true' &&
       item.getAttribute('data-removed') === 'true') {
       a.push(item.innerText);

@@ -9,14 +9,14 @@ import tu.bp21.passwortmanager.cryptography.Crypto;
 public class InterfaceCrypto {
 
   @JavascriptInterface
-  public String hashPassword(String userPassword, String salt) {
-    byte[] cipher = Crypto.computeHash(userPassword, BaseEncoding.base16().decode(salt));
+  public String hashPassword(String plainUserPassword, String salt) {
+    byte[] cipher = Crypto.computeHash(plainUserPassword, BaseEncoding.base16().decode(salt));
     return BaseEncoding.base16().encode(cipher);
   }
 
   @JavascriptInterface
-  public String generateKey(String plainPassword, String salt) {
-    byte[] key = Crypto.generateKey(plainPassword, BaseEncoding.base16().decode(salt));
+  public String generateKey(String plainUserPassword, String salt) {
+    byte[] key = Crypto.generateKey(plainUserPassword, BaseEncoding.base16().decode(salt));
     return BaseEncoding.base16().encode(key);
   }
 }

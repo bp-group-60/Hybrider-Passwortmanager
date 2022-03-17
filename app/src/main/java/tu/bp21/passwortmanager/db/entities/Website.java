@@ -15,14 +15,14 @@ import androidx.room.ForeignKey;
           onUpdate = ForeignKey.CASCADE)
     })
 public class Website {
-  @NonNull public String website;
-  @NonNull public String user;
+  @NonNull public String websiteName;
+  @NonNull public String username;
 
   @NonNull public String url;
 
-  public Website(@NonNull String user, @NonNull String website, @NonNull String url) {
-    this.user = user;
-    this.website = website;
+  public Website(@NonNull String username, @NonNull String websiteName, @NonNull String url) {
+    this.username = username;
+    this.websiteName = websiteName;
     this.url = url;
   }
 

@@ -620,7 +620,7 @@ v2.3.0
  * ons-dialog: Fixed `mask-color` attribute.
  * ons-splitter: Fixed `animation` attribute issue.
  * angular1: Page loader now throws `destroy` event when page is unloaded.
- * angular1: `myNavigator.topPage.data` should now be ready by the time the controller runs. Fixed [#1854](https://github.com/OnsenUI/OnsenUI/issues/1854).
+ * angular1: `onsen-navigator.topPage.data` should now be ready by the time the controller runs. Fixed [#1854](https://github.com/OnsenUI/OnsenUI/issues/1854).
 
 ### Misc
 
@@ -664,7 +664,7 @@ v2.2.5
  * ons-carousel: Fixed [#1952](https://github.com/OnsenUI/OnsenUI/issues/1952).
  * ons-pull-hook: Fixed [#1970](https://github.com/OnsenUI/OnsenUI/issues/1970).
  * angular1: Page loader now throws `destroy` event when page is unloaded ([#1934](https://github.com/OnsenUI/OnsenUI/issues/1934)).
- * angular1: `myNavigator.topPage.data` should now be ready by the time the controller runs. Fixed [#1854](https://github.com/OnsenUI/OnsenUI/issues/1854).
+ * angular1: `onsen-navigator.topPage.data` should now be ready by the time the controller runs. Fixed [#1854](https://github.com/OnsenUI/OnsenUI/issues/1854).
 
 ### Misc
 

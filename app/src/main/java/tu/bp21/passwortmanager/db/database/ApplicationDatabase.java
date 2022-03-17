@@ -14,9 +14,9 @@ import tu.bp21.passwortmanager.db.entities.Website;
     entities = {User.class, Password.class, Website.class},
     version = 1)
 public abstract class ApplicationDatabase extends RoomDatabase {
-  public abstract UserDataAccessObject getUserDao();
+  public abstract UserDataAccessObject getUserDataAccessObject();
 
-  public abstract PasswordDataAccessObject getPasswordDao();
+  public abstract PasswordDataAccessObject getPasswordDataAccessObject();
 
-  public abstract WebsiteDataAccessObject getWebsiteDao();
+  public abstract WebsiteDataAccessObject getWebsiteDataAccessObject();
 }

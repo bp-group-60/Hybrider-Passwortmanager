@@ -22,13 +22,14 @@ import org.junit.jupiter.params.provider.CsvFileSource;
 
 import de.mannodermaus.junit5.ActivityScenarioExtension;
 import tu.bp21.passwortmanager.MainActivity;
-import tu.bp21.passwortmanager.js_interfaces.interfaces.InterfaceTools;
 
-class InterfaceToolsTest {
+class InterfaceClipboardTest {
   static MainActivity mainActivity;
   ClipboardManager clipboard;
 
-  InterfaceTools interfaceTools;
+  InterfaceClipboard interfaceClipboard;
+  int maxLength;
+
 
   @RegisterExtension
   final ActivityScenarioExtension<MainActivity> scenarioExtension =
@@ -41,7 +42,9 @@ class InterfaceToolsTest {
       scenario.onActivity(activity -> mainActivity = activity);
     }
     clipboard = (ClipboardManager) mainActivity.getSystemService(Context.CLIPBOARD_SERVICE);
-    interfaceTools = new InterfaceTools(mainActivity);
+    interfaceClipboard = new InterfaceClipboard(mainActivity);
+    maxLength = 100;
+
   }
 
   @AfterEach
@@ -57,7 +60,7 @@ class InterfaceToolsTest {
     void copyToClipboardWithTimeoutSuccess(String displayCase, String text, long timeout)
         throws Exception {
       String expectedText = convertNullToEmptyString(text);
-      interfaceTools.copyToClipboardWithTimeout(expectedText, timeout);
+      interfaceClipboard.copyToClipboardWithTimeout(expectedText, timeout);
       Thread.sleep(100);
       String actualText = clipboard.getPrimaryClip().getItemAt(0).getText().toString();
       assertEquals(expectedText, actualText);
@@ -79,10 +82,10 @@ class InterfaceToolsTest {
 
   @Test
   void clearClipboardTest() throws Exception {
-    String textToCopy = generateRandomString(100);
-    String lable = generateRandomString(100);
+    String textToCopy = generateRandomString(maxLength);
+    String lable = generateRandomString(maxLength);
     clipboard.setPrimaryClip(ClipData.newPlainText(lable, textToCopy));
-    interfaceTools.clearClipboard();
+    interfaceClipboard.clearClipboard();
     Thread.sleep(10);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
       assertNull(clipboard.getPrimaryClip());

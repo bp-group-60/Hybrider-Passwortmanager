@@ -16,12 +16,12 @@ import java.util.UUID;
 
 import tu.bp21.passwortmanager.js_interfaces.helper.ClipboardTimeoutWorker;
 
-public class InterfaceTools {
+public class InterfaceClipboard {
   private final ClipboardManager clipboard;
   private final WorkManager workManager;
   private UUID latestWorkId;
 
-  public InterfaceTools(Context context) {
+  public InterfaceClipboard(Context context) {
     clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
     workManager = WorkManager.getInstance(context);
   }
@@ -33,7 +33,8 @@ public class InterfaceTools {
     String lable = "Hybrider-Passwormanager:" + System.currentTimeMillis();
     clipboard.setPrimaryClip(ClipData.newPlainText(lable, text));
 
-    if (timeout >= 0) {
+    long minimumTimeout = 0;
+    if (timeout >= minimumTimeout) {
       Data.Builder data = new Data.Builder();
       data.putString("lable", lable);
 

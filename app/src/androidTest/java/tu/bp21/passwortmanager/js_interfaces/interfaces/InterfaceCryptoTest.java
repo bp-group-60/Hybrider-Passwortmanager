@@ -32,12 +32,12 @@ class InterfaceCryptoTest {
     @ParameterizedTest
     @CsvFileSource(resources = "/Crypto/hashPassword.csv", numLinesToSkip = 1)
     @DisplayName("Case:")
-    void hashPasswordTest(String displayCase, String userPassword, String salt) {
-      userPassword = convertNullToEmptyString(userPassword);
+    void hashPasswordTest(String displayCase, String plainUserPassword, String salt) {
+      plainUserPassword = convertNullToEmptyString(plainUserPassword);
       salt = convertNullToEmptyString(salt);
       byte[] byteSalt = BaseEncoding.base16().decode(salt);
-      String expected = BaseEncoding.base16().encode(Crypto.computeHash(userPassword, byteSalt));
-      String actual = interfaceCrypto.hashPassword(userPassword, salt);
+      String expected = BaseEncoding.base16().encode(Crypto.computeHash(plainUserPassword, byteSalt));
+      String actual = interfaceCrypto.hashPassword(plainUserPassword, salt);
       assertEquals(expected, actual);
     }
   }

@@ -12,11 +12,11 @@ import tu.bp21.passwortmanager.db.entities.Website;
 @Dao
 public interface WebsiteDataAccessObject {
   @Insert
-  void addWebsite(Website website);
+  void addWebsite(Website websiteEntity);
 
   @Delete
-  int deleteWebsite(Website website);
+  int deleteWebsite(Website websiteEntity);
 
-  @Query("SELECT * FROM Website WHERE user = :user AND website = :website")
+  @Query("SELECT * FROM Website WHERE username = :user AND websiteName = :website")
   List<Website> getWebsiteList(String user, String website);
 }

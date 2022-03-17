@@ -25,7 +25,6 @@ import tu.bp21.passwortmanager.db.entities.Website;
 import tu.bp21.passwortmanager.db.data_access_objects.PasswordDataAccessObject;
 import tu.bp21.passwortmanager.db.data_access_objects.UserDataAccessObject;
 import tu.bp21.passwortmanager.db.data_access_objects.WebsiteDataAccessObject;
-import tu.bp21.passwortmanager.js_interfaces.interfaces.InterfaceUser;
 
 class InterfaceUserTests {
   static MainActivity mainActivity;
@@ -38,6 +37,7 @@ class InterfaceUserTests {
   InterfaceUser interfaceUser;
   UserDataAccessObject userDataAccessObject;
   String randomEmail;
+  int maxLength;
 
   @AfterAll
   static void tearDown() throws Exception {
@@ -55,10 +55,11 @@ class InterfaceUserTests {
               .allowMainThreadQueries()
               .build();
     }
-    userDataAccessObject = database.getUserDao();
+    maxLength = 20;
+    userDataAccessObject = database.getUserDataAccessObject();
 
     interfaceUser = new InterfaceUser(userDataAccessObject);
-    randomEmail = generateRandomString(20) + "@email.de";
+    randomEmail = generateRandomString(maxLength) + "@email.de";
   }
 
   @AfterEach
@@ -110,27 +111,27 @@ class InterfaceUserTests {
     @Test
     @DisplayName("Case: Success")
     void deleteUserSuccess() {
-      String username = generateRandomString(20),
-          masterPassword = generateRandomString(20),
-          loginName = generateRandomString(20),
-          website1 = generateRandomString(20) + ".com",
-          password = generateRandomString(20),
-          url = generateRandomString(20),
-          website2 = website1 + ".de";
-      PasswordDataAccessObject passwordDataAccessObject = database.getPasswordDao();
-      WebsiteDataAccessObject websiteDataAccessObject = database.getWebsiteDao();
+      String username = generateRandomString(maxLength),
+          masterPassword = generateRandomString(maxLength),
+          loginName = generateRandomString(maxLength),
+          websiteName1 = generateRandomString(maxLength) + ".com",
+          plainUserPassword = generateRandomString(maxLength),
+          url = generateRandomString(maxLength),
+          websiteName2 = websiteName1 + ".de";
+      PasswordDataAccessObject passwordDataAccessObject = database.getPasswordDataAccessObject();
+      WebsiteDataAccessObject websiteDataAccessObject = database.getWebsiteDataAccessObject();
       userDataAccessObject.addUser(new User(username, randomEmail, masterPassword.getBytes()));
-      passwordDataAccessObject.addPassword(new Password(username, website1, loginName, password.getBytes()));
-      passwordDataAccessObject.addPassword(new Password(username, website2, loginName, password.getBytes()));
-      websiteDataAccessObject.addWebsite(new Website(username, website1, url));
+      passwordDataAccessObject.addPassword(new Password(username, websiteName1, loginName, plainUserPassword.getBytes()));
+      passwordDataAccessObject.addPassword(new Password(username, websiteName2, loginName, plainUserPassword.getBytes()));
+      websiteDataAccessObject.addWebsite(new Website(username, websiteName1, url));
 
       assertTrue(
           interfaceUser.deleteUser(
               username, BaseEncoding.base16().encode(masterPassword.getBytes())));
       assertNull(userDataAccessObject.getUser(username));
-      assertNull(passwordDataAccessObject.getPassword(username, website1));
-      assertNull(passwordDataAccessObject.getPassword(username, website2));
-      assertTrue(websiteDataAccessObject.getWebsiteList(username, website1).isEmpty());
+      assertNull(passwordDataAccessObject.getPassword(username, websiteName1));
+      assertNull(passwordDataAccessObject.getPassword(username, websiteName2));
+      assertTrue(websiteDataAccessObject.getWebsiteList(username, websiteName1).isEmpty());
     }
 
     @ParameterizedTest
@@ -139,16 +140,16 @@ class InterfaceUserTests {
     void deleteUserFailure(
         String displayCase,
         String username,
-        String password,
+        String plainUserPassword,
         String differentUsername,
         String differentPassword) {
-      userDataAccessObject.addUser(new User(username, randomEmail, password.getBytes()));
+      userDataAccessObject.addUser(new User(username, randomEmail, plainUserPassword.getBytes()));
 
       assertFalse(
           interfaceUser.deleteUser(
               differentUsername, BaseEncoding.base16().encode(differentPassword.getBytes())));
       assertNotNull(userDataAccessObject.getUser(username));
-      assertArrayEquals(password.getBytes(), userDataAccessObject.getUser(username).password);
+      assertArrayEquals(plainUserPassword.getBytes(), userDataAccessObject.getUser(username).password);
     }
   }
 }

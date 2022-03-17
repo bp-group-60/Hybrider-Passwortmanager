@@ -30,9 +30,9 @@ function addToListview(name, id) {
 }
 
 export function addOnclickListview(page) {
-  page.querySelector('#addButton').onclick = onclickAddButton(page);
+  page.querySelector('#add-button').onclick = onclickAddButton(page);
 
-  page.querySelector('#moreButton').onclick = onclickMoreButton(page);
-  page.querySelector('#deleteUser').onclick = onclickDeleteUser(page);
+  page.querySelector('#more-button').onclick = onclickMoreButton(page);
+  page.querySelector('#delete-user').onclick = onclickDeleteUser(page);
   page.querySelector('#logout').onclick = onclickLogout(page);
 }

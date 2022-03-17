@@ -21,16 +21,16 @@ public class InterfacePassword {
 
   @JavascriptInterface
   public boolean createPassword(
-      String username, String website, String loginName, String plainPassword, String key) {
-    if (website.equals("")) {
+      String username, String websiteName, String loginName, String plainUserPassword, String key) {
+    if (websiteName.equals("")) {
       return false;
     }
 
-    Password newPassword =
-        createEncryptedPassword(username, website, loginName, plainPassword, key);
+    Password newPasswordItem =
+        createEncryptedPassword(username, websiteName, loginName, plainUserPassword, key);
 
     try {
-      passwordDataAccessObject.addPassword(newPassword);
+      passwordDataAccessObject.addPassword(newPasswordItem);
     } catch (Exception e) {
       e.printStackTrace();
       return false;
@@ -40,12 +40,12 @@ public class InterfacePassword {
 
   @JavascriptInterface
   public boolean updatePassword(
-      String username, String website, String loginName, String plainPassword, String key) {
-    Password newPassword =
-        createEncryptedPassword(username, website, loginName, plainPassword, key);
+      String username, String websiteName, String loginName, String plainUserPassword, String key) {
+    Password newPasswordItem =
+        createEncryptedPassword(username, websiteName, loginName, plainUserPassword, key);
 
     try {
-      if (passwordDataAccessObject.updatePassword(newPassword) == 0) {
+      if (passwordDataAccessObject.updatePassword(newPasswordItem) == 0) {
         throw new RuntimeException("nothing was updated");
       }
     } catch (Exception e) {
@@ -56,10 +56,10 @@ public class InterfacePassword {
   }
 
   @JavascriptInterface
-  public boolean deletePassword(String user, String website) {
-    Password newPassword = new Password(user, website);
+  public boolean deletePassword(String username, String websiteName) {
+    Password newPasswordItem = new Password(username, websiteName);
     try {
-      if (passwordDataAccessObject.deletePassword(newPassword) == 0) {
+      if (passwordDataAccessObject.deletePassword(newPasswordItem) == 0) {
         throw new RuntimeException("nothing was deleted");
       }
     } catch (Exception e) {
@@ -70,14 +70,14 @@ public class InterfacePassword {
   }
 
   @JavascriptInterface
-  public String getPasswordOverviewList(String user) {
-    List<Password> list = passwordDataAccessObject.getPasswordList(user);
+  public String getPasswordOverviewList(String username) {
+    List<Password> list = passwordDataAccessObject.getPasswordList(username);
     return "{\"dataArray\":" + list.toString() + "}";
   }
 
   @JavascriptInterface
-  public String getLoginName(String user, String website) {
-    Password queryResult = passwordDataAccessObject.getPassword(user, website);
+  public String getLoginName(String username, String websiteName) {
+    Password queryResult = passwordDataAccessObject.getPassword(username, websiteName);
 
     if (queryResult == null) {
       return "";
@@ -87,15 +87,15 @@ public class InterfacePassword {
   }
 
   @JavascriptInterface
-  public String getPassword(String user, String website, String key) {
-    Password queryResult = passwordDataAccessObject.getPassword(user, website);
+  public String getPassword(String username, String websiteName, String key) {
+    Password queryResult = passwordDataAccessObject.getPassword(username, websiteName);
 
     if (queryResult == null) {
       return "";
     }
 
     byte[] cipherPassword = queryResult.password;
-    byte[] associatedData = (user + website).getBytes();
+    byte[] associatedData = (username + websiteName).getBytes();
 
     return Crypto.decrypt(cipherPassword, associatedData, BaseEncoding.base16().decode(key));
   }
@@ -113,13 +113,13 @@ public class InterfacePassword {
   }
 
   private Password createEncryptedPassword(
-      String username, String website, String loginName, String plainPassword, String key) {
+      String username, String websiteName, String loginName, String plainUserPassword, String key) {
     int ivSize = 12;
     ArrayList<String> ivList = getIVList(username, ivSize);
     byte[] iv = Crypto.generateUniqueIV(ivList, ivSize);
-    byte[] associatedData = (username + website).getBytes();
+    byte[] associatedData = (username + websiteName).getBytes();
     byte[] cipherPassword =
-        Crypto.encrypt(plainPassword, associatedData, BaseEncoding.base16().decode(key), iv);
-    return new Password(username, website, loginName, cipherPassword);
+        Crypto.encrypt(plainUserPassword, associatedData, BaseEncoding.base16().decode(key), iv);
+    return new Password(username, websiteName, loginName, cipherPassword);
   }
 }

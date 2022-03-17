@@ -29,47 +29,47 @@ body{
 
 }
 .container,
-.input-form,
-.button-form{
+.form-input,
+.form-button{
 	font: 500 1rem 'Quicksand',sans-serif;
 }
 
-.hidden-form{
+.form-hidden{
 	display: none;
 }
 
-.root-form > *:first-child{
+.form-root > *:first-child{
 	margin-top: 0;
 }
 
-.root-form > *:last-child{
+.form-root > *:last-child{
 	margin-top: 0;
 }
 
-.title-form{
+.form-title{
 	text-align: center;
 	margin-bottom: 2rem;
 }
 
-.message-form{
+.form-message{
 	text-align: center;
 	margin-bottom: 1rm;
 }
-.message-success-form{
+.form-message-success{
 	color:var(--color-success);
 }
-.error-message-form{
+.form-message-error{
 	color:var(--color-error);
 }
-.input-group-form{
+.form-input-group{
 	margin-bottom: 1rem;
 }
 
-.input-form:hover{
+.form-input:hover{
 	border-color: var(--color-primary);
 }
 
-.input-form{
+.form-input{
 	display: block;
 	width: 100%;
 	padding: 0.75rem;
@@ -81,24 +81,24 @@ body{
 	transition: background 0.2s,border-color 0.2s;
 }
 
-.input-form:focus{
+.form-input:focus{
 	border-color: var(--color-primary);
 	background: #ffffff;
 }
 
-.input-error-form {
+.form-input-error {
 		color: var(--color-error);
 		border-color: var(--color-error);
 }
 
 
-.input-error-message-form {
+.form-input-message-error {
 		margin-top: 0.5rem;
 		font-size: 0.85rem;
 		color: var(--color-error);
 }
 
-.button-form {
+.form-button {
 		width: 100%;
 		padding: 1rem 2rem;
 		margin-bottom: 16px;
@@ -113,25 +113,25 @@ body{
 
 }
 
-.button-form:hover {
+.form-button:hover {
 		background: var(--color-primary-dark);
 }
 
-.button-form:active {
+.form-button:active {
 		transform: scale(0.98);
 }
 
-.text-form {
+.form-text {
 		text-align: center;
 		margin: 16px;
 }
 
-.link-form{
+.form-link{
 		color: var(--color-secondary);
 		text-decoration: none;
 		cursor: pointer;
 }
 
-.link-form:hover {
+.form-link:hover {
 		text-decoration: underline;
 }

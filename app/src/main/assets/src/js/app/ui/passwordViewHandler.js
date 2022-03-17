@@ -14,36 +14,36 @@ import {generateRandomPasswordOnclick, generateRandomUsernameOnclick} from './on
 import {createUrlItem} from './urlHandler.js';
 
 export function addOnclickPasswordView(page) {
-  page.querySelector('#passwordCopy').onclick = copyPasswordOnclick(page);
-  page.querySelector('#passwordCheckbox').onclick = showPasswordOnclick(page);
+  page.querySelector('#password-copy').onclick = copyPasswordOnclick(page);
+  page.querySelector('#password-checkbox').onclick = showPasswordOnclick(page);
 
-  page.querySelector('#editButton').onclick = editButtonOnclick(page);
-  page.querySelector('#generateRandomUsername').onclick = generateRandomUsernameOnclick(page,8);
-  page.querySelector('#generateRandomPassword').onclick = generateRandomPasswordOnclick(page,12);
+  page.querySelector('#edit-button').onclick = editButtonOnclick(page);
+  page.querySelector('#generate-random-username').onclick = generateRandomUsernameOnclick(page,8);
+  page.querySelector('#generate-random-password').onclick = generateRandomPasswordOnclick(page,12);
 
-  page.querySelector('#addUrl').onclick = addUrlOnclick(page);
-  page.querySelector('#abortButton').onclick = editAbortOnclick(page);
-  page.querySelector('#commitButton').onclick = onclickEditSave(page);
-  page.querySelector('#deleteButton').onclick = onclickDeletePassword(page);
+  page.querySelector('#add-url').onclick = addUrlOnclick(page);
+  page.querySelector('#abort-button').onclick = editAbortOnclick(page);
+  page.querySelector('#commit-button').onclick = onclickEditSave(page);
+  page.querySelector('#delete-button').onclick = onclickDeletePassword(page);
 }
 
 export function updatePasswordView(page) {
-  page.querySelector('#editButton').style.display = '';
-  page.querySelector('#generateRandomUsername').style.display = 'none';
-  page.querySelector('#generateRandomPassword').style.display = 'none';
-  page.querySelector('#abortButton').style.display = 'none';
-  page.querySelector('#commitButton').style.display = 'none';
+  page.querySelector('#edit-button').style.display = '';
+  page.querySelector('#generate-random-username').style.display = 'none';
+  page.querySelector('#generate-random-password').style.display = 'none';
+  page.querySelector('#abort-button').style.display = 'none';
+  page.querySelector('#commit-button').style.display = 'none';
 
-  page.querySelector('#addUrl').style.display = 'none';
+  page.querySelector('#add-url').style.display = 'none';
   page.querySelector('#username').children[0].readOnly = true;
   page.querySelector('#password').children[0].readOnly = true;
-  page.querySelector('#passwordCopy').style.display = '';
+  page.querySelector('#password-copy').style.display = '';
 
   page.querySelector('ons-toolbar .center').innerHTML = page.data.id;
 
-  page.querySelector('#urlItems').innerHTML = '';
+  page.querySelector('#url-items').innerHTML = '';
   getUrlList(getSessionUser(), page.data.id).forEach(url => {
-    page.querySelector('#urlItems').append(createUrlItem(url));
+    page.querySelector('#url-items').append(createUrlItem(url));
   })
 
   page.querySelector('#username').value = getLoginName(page.data.id);

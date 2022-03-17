@@ -24,10 +24,10 @@ public class InterfaceUser {
 
   @JavascriptInterface
   public boolean checkUser(String username, String hashedUserPassword) {
-    User user = userDataAccessObject.getUser(username);
-    if (user != null) {
+    User userEntity = userDataAccessObject.getUser(username);
+    if (userEntity != null) {
       byte[] cipher = BaseEncoding.base16().decode(hashedUserPassword.toUpperCase());
-      if (Arrays.equals(user.password, cipher)) {
+      if (Arrays.equals(userEntity.password, cipher)) {
         return true;
       }
     }
@@ -35,18 +35,17 @@ public class InterfaceUser {
   }
 
   @JavascriptInterface
-  public boolean createUser(String username, String email, String userPassword) {
+  public boolean createUser(String username, String email, String plainUserPassword) {
     byte[] salt = Crypto.generateSecureByteArray(16);
-    byte[] hashValue = Crypto.computeHash(userPassword, salt);
-    User newUser = new User(username, email, hashValue);
+    byte[] hashValue = Crypto.computeHash(plainUserPassword, salt);
+    User newUserEntity = new User(username, email, hashValue);
 
     try {
-      userDataAccessObject.addUser(newUser);
+      userDataAccessObject.addUser(newUserEntity);
     } catch (Exception e) {
       e.printStackTrace();
       return false;
     }
-
     return true;
   }
 
@@ -54,10 +53,10 @@ public class InterfaceUser {
   public boolean deleteUser(String username, String hashedUserPassword) {
     if (!checkUser(username, hashedUserPassword)) return false;
 
-    User checkedUser = new User(username);
+    User checkedUserEntity = new User(username);
 
     try {
-      if (userDataAccessObject.deleteUser(checkedUser) == 0)
+      if (userDataAccessObject.deleteUser(checkedUserEntity) == 0)
         throw new RuntimeException("nothing was deleted");
     } catch (Exception e) {
       e.printStackTrace();
@@ -68,9 +67,9 @@ public class InterfaceUser {
 
   @JavascriptInterface
   public String getSalt(String username) {
-    User user = userDataAccessObject.getUser(username);
-    if (user != null) {
-      byte[] salt = Arrays.copyOf(user.password, 16);
+    User userEntity = userDataAccessObject.getUser(username);
+    if (userEntity != null) {
+      byte[] salt = Arrays.copyOf(userEntity.password, 16);
       return BaseEncoding.base16().encode(salt);
     }
     return "";

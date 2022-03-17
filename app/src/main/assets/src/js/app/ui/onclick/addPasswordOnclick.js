@@ -16,7 +16,7 @@ export function commitButtonOnclick(page) {
 
     if (successful) {
       saveUrlList(getSessionUser(), name, getAddedUrls(page));
-      document.querySelector('#myNavigator').popPage();
+      document.querySelector('#onsen-navigator').popPage();
       ons.notification.toast('Passwort hinzugefügt!', {timeout: 3000});
     } else {
       ons.notification.toast('Fehler beim speichern!', {timeout: 3000});
@@ -41,7 +41,7 @@ export function generateRandomUsernameOnclick(page, length) {
 
 export function showPasswordOnclick(page) {
   return () => {
-    if (page.querySelector('#passwordCheckbox').checked) {
+    if (page.querySelector('#password-checkbox').checked) {
       page.querySelector('#password').children[0].type = 'text';
     } else {
       page.querySelector('#password').children[0].type = 'password';

@@ -24,7 +24,6 @@ import tu.bp21.passwortmanager.db.entities.Password;
 import tu.bp21.passwortmanager.db.entities.User;
 import tu.bp21.passwortmanager.db.entities.Website;
 import tu.bp21.passwortmanager.db.data_access_objects.PasswordDataAccessObject;
-import tu.bp21.passwortmanager.js_interfaces.interfaces.InterfaceWebsite;
 
 class InterfaceWebsiteTest {
   static ApplicationDatabase database;
@@ -42,9 +41,10 @@ class InterfaceWebsiteTest {
   String randomEmail;
   String randomLoginName;
   String randomMasterPassword;
-  String randomWebsite;
-  String randomPassword;
+  String randomWebsiteName;
+  String randomUserPassword;
   String randomUrl;
+  int maxLength;
 
   @AfterAll
   static void tearDown() throws Exception {
@@ -62,19 +62,20 @@ class InterfaceWebsiteTest {
               .allowMainThreadQueries()
               .build();
     }
-    userDataAccessObject = database.getUserDao();
-    passwordDataAccessObject = database.getPasswordDao();
-    websiteDataAccessObject = database.getWebsiteDao();
+    maxLength = 20;
+    userDataAccessObject = database.getUserDataAccessObject();
+    passwordDataAccessObject = database.getPasswordDataAccessObject();
+    websiteDataAccessObject = database.getWebsiteDataAccessObject();
 
     interfaceWebsite = new InterfaceWebsite(websiteDataAccessObject);
 
-    randomUser = generateRandomString(20);
-    randomEmail = generateRandomString(20) + "@email.de";
-    randomLoginName = generateRandomString(20);
-    randomMasterPassword = generateRandomString(20);
-    randomWebsite = generateRandomString(20) + ".de";
-    randomPassword = generateRandomString(20);
-    randomUrl = generateRandomString(5) + "." + generateRandomString(20) + ".com";
+    randomUser = generateRandomString(maxLength);
+    randomEmail = generateRandomString(maxLength) + "@email.de";
+    randomLoginName = generateRandomString(maxLength);
+    randomMasterPassword = generateRandomString(maxLength);
+    randomWebsiteName = generateRandomString(maxLength) + ".de";
+    randomUserPassword = generateRandomString(maxLength);
+    randomUrl = generateRandomString(5) + "." + generateRandomString(maxLength) + ".com";
   }
 
   @AfterEach
@@ -88,33 +89,33 @@ class InterfaceWebsiteTest {
       String username,
       String email,
       String masterPassword,
-      String website,
+      String websiteName,
       String loginName,
-      String password) {
+      String plainUserPassword) {
     userDataAccessObject.addUser(new User(username, email, masterPassword.getBytes()));
-    passwordDataAccessObject.addPassword(new Password(username, website, loginName, password.getBytes()));
+    passwordDataAccessObject.addPassword(new Password(username, websiteName, loginName, plainUserPassword.getBytes()));
   }
 
   /**
    * this method checks if the given Url matches the Url of the given Website Entity specified by
-   * username and website
+   * username and websiteName
    */
-  void checkExpectedDB(String username, String website, String url) {
-    Website expected = getWebsite(username, website, url);
+  void checkExpectedDB(String username, String websiteName, String url) {
+    Website expected = getWebsite(username, websiteName, url);
 
     assertTrue(expected != null);
-    assertEquals(expected.user, username);
-    assertEquals(expected.website, website);
+    assertEquals(expected.username, username);
+    assertEquals(expected.websiteName, websiteName);
     assertEquals(expected.url, url);
   }
 
   /**
-   * this method finds the saved Website entity given the username, website and Url
+   * this method finds the saved Website entity given the username, websiteName and Url
    *
    * @return
    */
-  Website getWebsite(String username, String website, String url) {
-    for (Website web : websiteDataAccessObject.getWebsiteList(username, website)) {
+  Website getWebsite(String username, String websiteName, String url) {
+    for (Website web : websiteDataAccessObject.getWebsiteList(username, websiteName)) {
       if (web.url.equals(url)) return web;
     }
     return null;
@@ -122,14 +123,14 @@ class InterfaceWebsiteTest {
 
   /**
    * this method adds a random amount (less than 20) of entity Website into the DB under the given
-   * username and website the added entries are also saved into the ArrayList
+   * username and websiteName the added entries are also saved into the ArrayList
    */
-  void addRandomWebsiteUrl(String username, String website, ArrayList<Website> list) {
+  void addRandomWebsiteUrl(String username, String websiteName, ArrayList<Website> list) {
     String url;
     int amount = new Random().nextInt(20) + 1;
     for (int i = 0; i < amount; i++) {
-      url = generateRandomString(20) + ".com";
-      Website toAdd = new Website(username, website, url);
+      url = generateRandomString(maxLength) + ".com";
+      Website toAdd = new Website(username, websiteName, url);
       list.add(toAdd);
       websiteDataAccessObject.addWebsite(toAdd);
     }
@@ -147,11 +148,11 @@ class InterfaceWebsiteTest {
           randomUser,
           randomEmail,
           randomMasterPassword,
-          randomWebsite,
+          randomWebsiteName,
           randomLoginName,
-          randomPassword);
-      assertTrue(interfaceWebsite.saveUrl(randomUser, randomWebsite, randomUrl));
-      checkExpectedDB(randomUser, randomWebsite, randomUrl);
+          randomUserPassword);
+      assertTrue(interfaceWebsite.saveUrl(randomUser, randomWebsiteName, randomUrl));
+      checkExpectedDB(randomUser, randomWebsiteName, randomUrl);
     }
 
     @Test
@@ -161,12 +162,12 @@ class InterfaceWebsiteTest {
           randomUser,
           randomEmail,
           randomMasterPassword,
-          randomWebsite,
+          randomWebsiteName,
           randomLoginName,
-          randomPassword);
-      websiteDataAccessObject.addWebsite(new Website(randomUser, randomWebsite, randomUrl));
-      assertFalse(interfaceWebsite.saveUrl(randomUser, randomWebsite, randomUrl));
-      checkExpectedDB(randomUser, randomWebsite, randomUrl);
+          randomUserPassword);
+      websiteDataAccessObject.addWebsite(new Website(randomUser, randomWebsiteName, randomUrl));
+      assertFalse(interfaceWebsite.saveUrl(randomUser, randomWebsiteName, randomUrl));
+      checkExpectedDB(randomUser, randomWebsiteName, randomUrl);
     }
 
     @ParameterizedTest
@@ -186,7 +187,7 @@ class InterfaceWebsiteTest {
           randomMasterPassword,
           websiteExistedInDB,
           randomLoginName,
-          randomPassword);
+          randomUserPassword);
       assertFalse(interfaceWebsite.saveUrl(userGiven, websiteGiven, urlGiven));
       assertNull(getWebsite(userGiven, websiteGiven, urlGiven));
     }
@@ -203,12 +204,12 @@ class InterfaceWebsiteTest {
           randomUser,
           randomEmail,
           randomMasterPassword,
-          randomWebsite,
+          randomWebsiteName,
           randomLoginName,
-          randomPassword);
-      websiteDataAccessObject.addWebsite(new Website(randomUser, randomWebsite, randomUrl));
-      assertTrue(interfaceWebsite.deleteUrl(randomUser, randomWebsite, randomUrl));
-      assertNull(getWebsite(randomUser, randomWebsite, randomUrl));
+          randomUserPassword);
+      websiteDataAccessObject.addWebsite(new Website(randomUser, randomWebsiteName, randomUrl));
+      assertTrue(interfaceWebsite.deleteUrl(randomUser, randomWebsiteName, randomUrl));
+      assertNull(getWebsite(randomUser, randomWebsiteName, randomUrl));
     }
 
     @ParameterizedTest
@@ -228,7 +229,7 @@ class InterfaceWebsiteTest {
           randomMasterPassword,
           websiteExistedInDB,
           randomLoginName,
-          randomPassword);
+          randomUserPassword);
       websiteDataAccessObject.addWebsite(new Website(usernameExistedInDB, websiteExistedInDB, urlExistedInDB));
       assertFalse(interfaceWebsite.deleteUrl(usernameGiven, websiteGiven, urlGiven));
       checkExpectedDB(usernameExistedInDB, websiteExistedInDB, urlExistedInDB);
@@ -247,12 +248,12 @@ class InterfaceWebsiteTest {
           randomUser,
           randomEmail,
           randomMasterPassword,
-          randomWebsite,
+          randomWebsiteName,
           randomLoginName,
-          randomPassword);
-      addRandomWebsiteUrl(randomUser, randomWebsite, list);
+          randomUserPassword);
+      addRandomWebsiteUrl(randomUser, randomWebsiteName, list);
       assertEquals(
-          "{\"dataArray\":" + list + "}", interfaceWebsite.getUrlList(randomUser, randomWebsite));
+          "{\"dataArray\":" + list + "}", interfaceWebsite.getUrlList(randomUser, randomWebsiteName));
     }
 
     @ParameterizedTest
@@ -271,7 +272,7 @@ class InterfaceWebsiteTest {
           randomMasterPassword,
           websiteExistedInDB,
           randomLoginName,
-          randomPassword);
+          randomUserPassword);
       addRandomWebsiteUrl(usernameExistedInDB, websiteExistedInDB, list);
       assertNotEquals(
           "{\"dataArray\":" + list + "}", interfaceWebsite.getUrlList(usernameGiven, websiteGiven));

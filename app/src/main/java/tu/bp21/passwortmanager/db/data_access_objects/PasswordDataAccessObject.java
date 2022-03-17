@@ -12,17 +12,17 @@ import tu.bp21.passwortmanager.db.entities.Password;
 @Dao
 public interface PasswordDataAccessObject {
   @Insert
-  void addPassword(Password password);
+  void addPassword(Password passwordEntity);
 
   @Delete
-  int deletePassword(Password password);
+  int deletePassword(Password passwordEntity);
 
-  @Query("SELECT * FROM Password WHERE user = :user")
+  @Query("SELECT * FROM Password WHERE username = :user")
   List<Password> getPasswordList(String user);
 
-  @Query("SELECT * FROM Password WHERE user = :user AND websiteName = :website")
+  @Query("SELECT * FROM Password WHERE username = :user AND websiteName = :website")
   Password getPassword(String user, String website);
 
   @Update
-  int updatePassword(Password password);
+  int updatePassword(Password passwordEntity);
 }

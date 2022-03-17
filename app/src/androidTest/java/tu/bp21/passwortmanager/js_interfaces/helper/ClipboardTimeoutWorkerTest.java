@@ -46,22 +46,21 @@ class ClipboardTimeoutWorkerTest {
 
   @Test
   void doWorkTest() throws Exception {
-    String textToCopy = generateRandomString(100);
-    String lable = generateRandomString(100);
+    int maxLength = 100;
+    long timeInMilliseconds = 100;
+    int expectedItemCount = 1;
+    String textToCopy = generateRandomString(maxLength);
+    String lable = generateRandomString(maxLength);
     clipboard.setPrimaryClip(ClipData.newPlainText(lable, textToCopy));
     OneTimeWorkRequest oneTimeWorkRequest = OneTimeWorkRequest.from(ClipboardTimeoutWorker.class);
     workManager.beginWith(oneTimeWorkRequest).enqueue();
-    //        while(true){
-    //            if(workManager.getWorkInfoById(oneTimeWorkRequest.getId()).isDone())
-    //                break;
-    //        }
-    Thread.sleep(100);
+    Thread.sleep(timeInMilliseconds);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
       assertNull(clipboard.getPrimaryClip());
     } else {
       String actualText = clipboard.getPrimaryClip().getItemAt(0).getText().toString();
       assertEquals("", actualText);
-      assertEquals(1, clipboard.getPrimaryClip().getItemCount());
+      assertEquals(expectedItemCount, clipboard.getPrimaryClip().getItemCount());
     }
   }
 }

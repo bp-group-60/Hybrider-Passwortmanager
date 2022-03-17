@@ -3,24 +3,24 @@ import {getSessionPassword, getSessionUser} from '../../sessionHandler.js';
 import {deleteUrlList, saveUrlList,} from '../../extern/database/websiteOperations.js';
 import {getAddedUrls, getRemovedUrls} from '../urlHandler.js';
 import {updatePasswordView} from '../passwordViewHandler.js';
-import {copyToClipboardWithTimeout} from "../../extern/tools.js";
+import {copyToClipboardWithTimeout} from "../../extern/clipboard.js";
 
 export function editButtonOnclick(page) {
   return () => {
-    page.querySelector('#editButton').style.display = 'none';
-    page.querySelector('#generateRandomUsername').style.display = '';
-    page.querySelector('#generateRandomPassword').style.display = '';
-    page.querySelector('#abortButton').style.display = '';
-    page.querySelector('#commitButton').style.display = '';
+    page.querySelector('#edit-button').style.display = 'none';
+    page.querySelector('#generate-random-username').style.display = '';
+    page.querySelector('#generate-random-password').style.display = '';
+    page.querySelector('#abort-button').style.display = '';
+    page.querySelector('#commit-button').style.display = '';
 
-    page.querySelector('#addUrl').style.display = '';
+    page.querySelector('#add-url').style.display = '';
     page
       .querySelectorAll('.removeIcon')
       .forEach((icon) => (icon.style.display = ''));
 
     page.querySelector('#username').children[0].readOnly = false;
     page.querySelector('#password').children[0].readOnly = false;
-    page.querySelector('#passwordCopy').style.display = 'none';
+    page.querySelector('#password-copy').style.display = 'none';
 
     page.querySelector('ons-toolbar .center').innerHTML = 'Bearbeiten';
   };
@@ -64,7 +64,7 @@ export function onclickDeletePassword(page) {
         if (input === 1) {
           let name = page.data.id;
           deletePassword(getSessionUser(), name);
-          document.querySelector('#myNavigator').popPage();
+          document.querySelector('#onsen-navigator').popPage();
           ons.notification.toast('Passwort wurde gelöscht!', {timeout: 3000});
         }
       });
@@ -80,7 +80,7 @@ export function copyPasswordOnclick(page) {
 
 export function showPasswordOnclick(page) {
   return () => {
-    if (page.querySelector('#passwordCheckbox').checked) {
+    if (page.querySelector('#password-checkbox').checked) {
       page.querySelector('#password').children[0].type = 'text';
     } else {
       page.querySelector('#password').children[0].type = 'password';

@@ -16,15 +16,14 @@ import androidx.room.Ignore;
           onUpdate = ForeignKey.CASCADE)
     })
 public class Password {
-
-  @NonNull public String user;
+  @NonNull public String username;
   @NonNull public String websiteName;
   public String loginName;
   public byte[] password;
 
   public Password(
-      @NonNull String user, @NonNull String websiteName, String loginName, byte[] password) {
-    this.user = user;
+          @NonNull String username, @NonNull String websiteName, String loginName, byte[] password) {
+    this.username = username;
     this.websiteName = websiteName;
     this.loginName = loginName;
     this.password = password;
@@ -32,7 +31,7 @@ public class Password {
 
   @Ignore
   public Password(@NonNull String username, @NonNull String websiteName) {
-    this.user = username;
+    this.username = username;
     this.websiteName = websiteName;
   }
 

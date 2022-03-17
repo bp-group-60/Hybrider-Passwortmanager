@@ -19,16 +19,16 @@ document.addEventListener('init', function (event) {
     addOnclickListview(page);
   }
 
-  if (page.id === 'passwordView') {
+  if (page.id === 'password-view') {
     addOnclickPasswordView(page);
     updatePasswordView(page);
   }
 
-  if (page.id === 'addPassword') {
+  if (page.id === 'add-password') {
     addOnclickAddPasswordView(page);
   }
 });
 
 window.back = function() {
-  document.querySelector('#myNavigator').popPage().catch(()=>logout());
+  document.querySelector('#onsen-navigator').popPage().catch(()=>logout());
 }

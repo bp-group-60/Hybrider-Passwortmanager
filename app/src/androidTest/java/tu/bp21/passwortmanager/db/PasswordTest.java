@@ -9,33 +9,33 @@ import tu.bp21.passwortmanager.db.entities.Password;
 
 public class PasswordTest {
 
-  private Password passwordObj;
-  private Password wrongPasswordObj;
-  private String user, website, loginName;
+  private Password passwordEntity;
+  private Password wrongPasswordEntity;
+  private String username, websiteName, loginName;
   private byte[] password;
 
   @BeforeEach
   public void setUp() throws Exception {
-    user = "PasswordTestUser01";
-    website = "PasswordTestWebsite01";
+    username = "PasswordTestUser01";
+    websiteName = "PasswordTestWebsite01";
     loginName = "PasswordTestLoginName01";
     password = StringFunction.generateRandomString(40).getBytes();
 
-    passwordObj = new Password(user, website, loginName, password);
-    wrongPasswordObj = new Password(user, "wrong", loginName, password);
+    passwordEntity = new Password(username, websiteName, loginName, password);
+    wrongPasswordEntity = new Password(username, "wrong", loginName, password);
   }
 
   @AfterEach
   public void tearDown() throws Exception {
-    user = website = loginName = "";
+    username = websiteName = loginName = "";
     password = null;
-    passwordObj = wrongPasswordObj = null;
+    passwordEntity = wrongPasswordEntity = null;
   }
 
   @Test
   public void testToString() {
-    String expect = "[\"" + website + "\",\"" + loginName + "\"]";
-    assertEquals(expect, passwordObj.toString());
-    assertNotEquals(expect, wrongPasswordObj.toString());
+    String expect = "[\"" + websiteName + "\",\"" + loginName + "\"]";
+    assertEquals(expect, passwordEntity.toString());
+    assertNotEquals(expect, wrongPasswordEntity.toString());
   }
 }

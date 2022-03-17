@@ -12,13 +12,13 @@ class WebsiteTest {
 
   @Test
   void testToString() {
-    String user = generateRandomString(40);
-    String website = generateRandomString(40);
+    String username = generateRandomString(40);
+    String websiteName = generateRandomString(40);
     String url = generateRandomString(20) + ".com";
-    Website websiteObject = new Website(user, website, url);
+    Website websiteEntity = new Website(username, websiteName, url);
 
     String expected = "\"" + url + "\"";
-    String actual = websiteObject.toString();
+    String actual = websiteEntity.toString();
     assertEquals(expected, actual);
   }
 }

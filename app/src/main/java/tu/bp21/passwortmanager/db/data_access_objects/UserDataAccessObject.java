@@ -10,11 +10,11 @@ import tu.bp21.passwortmanager.db.entities.User;
 @Dao
 public interface UserDataAccessObject {
   @Insert
-  void addUser(User user);
+  void addUser(User userEntity);
 
   @Delete
-  int deleteUser(User user);
+  int deleteUser(User userEntity);
 
-  @Query("SELECT * FROM User WHERE username = :user")
-  User getUser(String user);
+  @Query("SELECT * FROM User WHERE username = :userName")
+  User getUser(String userName);
 }

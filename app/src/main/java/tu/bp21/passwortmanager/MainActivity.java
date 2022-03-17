@@ -8,7 +8,7 @@ import androidx.room.Room;
 
 import tu.bp21.passwortmanager.js_interfaces.interfaces.InterfaceCrypto;
 import tu.bp21.passwortmanager.js_interfaces.interfaces.InterfacePassword;
-import tu.bp21.passwortmanager.js_interfaces.interfaces.InterfaceTools;
+import tu.bp21.passwortmanager.js_interfaces.interfaces.InterfaceClipboard;
 import tu.bp21.passwortmanager.js_interfaces.interfaces.InterfaceUser;
 import tu.bp21.passwortmanager.js_interfaces.interfaces.InterfaceWebsite;
 import tu.bp21.passwortmanager.db.database.ApplicationDatabase;
@@ -36,12 +36,12 @@ public class MainActivity extends AppCompatActivity {
             .allowMainThreadQueries()
             .build();
 
-    InterfaceUser jsInterfaceUser = new InterfaceUser(database.getUserDao());
-    InterfacePassword jsInterfacePassword = new InterfacePassword(database.getPasswordDao());
-    InterfaceWebsite jsInterfaceWebsite = new InterfaceWebsite(database.getWebsiteDao());
+    InterfaceUser jsInterfaceUser = new InterfaceUser(database.getUserDataAccessObject());
+    InterfacePassword jsInterfacePassword = new InterfacePassword(database.getPasswordDataAccessObject());
+    InterfaceWebsite jsInterfaceWebsite = new InterfaceWebsite(database.getWebsiteDataAccessObject());
     InterfaceCrypto jsInterfaceCrypto = new InterfaceCrypto();
 
-    InterfaceTools jsInterfaceTools = new InterfaceTools(this);
+    InterfaceClipboard jsInterfaceClipboard = new InterfaceClipboard(this);
 
     webView = new WebView(this);
     webView.setWebViewClient(new AssetWebViewClient(this));
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     webView.addJavascriptInterface(jsInterfaceWebsite, "Java_InterfaceWebsite");
     webView.addJavascriptInterface(jsInterfaceCrypto, "Java_InterfaceCrypto");
 
-    webView.addJavascriptInterface(jsInterfaceTools, "Java_InterfaceTools");
+    webView.addJavascriptInterface(jsInterfaceClipboard, "Java_InterfaceTools");
 
     webView.loadUrl("https://appassets.androidplatform.net/assets/src/html/index.html");
 
