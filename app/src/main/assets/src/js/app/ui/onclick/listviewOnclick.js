@@ -3,7 +3,7 @@ import {deleteUser} from '../../extern/database/userOperations.js';
 
 export function onclickAddButton(page) {
   return () => {
-    document.querySelector('#onsen-navigator').pushPage('onsPages/addPassword.html');
+    document.querySelector('#onsen-navigator').pushPage('onsPages/passwordView.html', {data: {intend: 'new'}});
   };
 }
 
@@ -33,6 +33,6 @@ export function onclickLogout(page) {
 
 export function onclickListItem(websiteName) {
   return () => {
-    document.querySelector('#onsen-navigator').pushPage('onsPages/passwordView.html', {data: {websiteName: websiteName}});
+    document.querySelector('#onsen-navigator').pushPage('onsPages/passwordView.html', {data: {websiteName: websiteName, intend: 'view'}});
   };
 }

@@ -3,14 +3,14 @@ import {getLoginName, getPassword} from '../extern/database/passwordOperations.j
 import {getUrlList} from '../extern/database/websiteOperations.js';
 import {getSessionUser} from '../sessionHandler.js';
 import {
+  commitButtonOnclick,
   copyPasswordOnclick,
   editAbortOnclick,
-  editButtonOnclick,
+  editButtonOnclick, generateRandomPasswordOnclick, generateRandomUsernameOnclick,
   onclickDeletePassword,
   onclickEditSave,
   showPasswordOnclick,
 } from './onclick/passwordViewOnclick.js';
-import {generateRandomPasswordOnclick, generateRandomUsernameOnclick} from './onclick/addPasswordOnclick.js';
 import {createUrlItem} from './urlHandler.js';
 
 export function addOnclickPasswordView(page) {
@@ -23,21 +23,25 @@ export function addOnclickPasswordView(page) {
 
   page.querySelector('#add-url').onclick = addUrlOnclick(page);
   page.querySelector('#abort-button').onclick = editAbortOnclick(page);
-  page.querySelector('#commit-button').onclick = onclickEditSave(page);
+  page.querySelector('#save-button').onclick = onclickEditSave(page);
   page.querySelector('#delete-button').onclick = onclickDeletePassword(page);
+
+  page.querySelector('#commit-button').onclick = commitButtonOnclick(page);
 }
 
 export function updatePasswordView(page) {
   page.querySelector('#edit-button').style.display = '';
-  page.querySelector('#generate-random-username').style.display = 'none';
-  page.querySelector('#generate-random-password').style.display = 'none';
+  page.querySelector('#delete-button').style.display = '';
+
   page.querySelector('#abort-button').style.display = 'none';
-  page.querySelector('#commit-button').style.display = 'none';
+  page.querySelector('#save-button').style.display = 'none';
 
   page.querySelector('#add-url').style.display = 'none';
   page.querySelector('#login-name').children[0].readOnly = true;
   page.querySelector('#login-password').children[0].readOnly = true;
   page.querySelector('#password-copy').style.display = '';
+
+  page.querySelector('#generate-wrapper').style.display = 'none';
 
   page.querySelector('ons-toolbar .center').innerHTML = page.data.websiteName;
 
@@ -48,4 +52,16 @@ export function updatePasswordView(page) {
 
   page.querySelector('#login-name').value = getLoginName(page.data.websiteName);
   page.querySelector('#login-password').value = getPassword(page.data.websiteName);
+}
+
+export function initViewPassword(page){
+  page.querySelector('#edit-buttons').style.display = '';
+  updatePasswordView(page);
+}
+
+export function initNewPasswordView(page) {
+  page.querySelector('#website-name-wrapper').style.display = '';
+  page.querySelector('#add-url').style.display = '';
+  page.querySelector('#generate-wrapper').style.display = '';
+  page.querySelector('#new-button').style.display = '';
 }
