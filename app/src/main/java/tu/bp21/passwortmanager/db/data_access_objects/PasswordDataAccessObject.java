@@ -17,11 +17,11 @@ public interface PasswordDataAccessObject {
   @Delete
   int deletePassword(Password passwordEntity);
 
-  @Query("SELECT * FROM Password WHERE username = :user")
-  List<Password> getPasswordList(String user);
+  @Query("SELECT * FROM Password WHERE username = :username")
+  List<Password> getPasswordList(String username);
 
-  @Query("SELECT * FROM Password WHERE username = :user AND websiteName = :website")
-  Password getPassword(String user, String website);
+  @Query("SELECT * FROM Password WHERE username = :username AND websiteName = :websiteName")
+  Password getPassword(String username, String websiteName);
 
   @Update
   int updatePassword(Password passwordEntity);

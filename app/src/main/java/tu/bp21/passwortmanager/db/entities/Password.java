@@ -6,12 +6,12 @@ import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 
 @Entity(
-    primaryKeys = {"user", "websiteName"},
+    primaryKeys = {"username", "websiteName"},
     foreignKeys = {
       @ForeignKey(
           entity = User.class,
           parentColumns = "username",
-          childColumns = "user",
+          childColumns = "username",
           onDelete = ForeignKey.CASCADE,
           onUpdate = ForeignKey.CASCADE)
     })

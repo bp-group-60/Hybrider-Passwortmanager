@@ -17,6 +17,6 @@ public interface WebsiteDataAccessObject {
   @Delete
   int deleteWebsite(Website websiteEntity);
 
-  @Query("SELECT * FROM Website WHERE username = :user AND websiteName = :website")
-  List<Website> getWebsiteList(String user, String website);
+  @Query("SELECT * FROM Website WHERE username = :username AND websiteName = :websiteName")
+  List<Website> getWebsiteList(String username, String websiteName);
 }

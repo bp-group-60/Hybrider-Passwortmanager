@@ -5,12 +5,12 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 
 @Entity(
-    primaryKeys = {"user", "website", "url"},
+    primaryKeys = {"username", "websiteName", "url"},
     foreignKeys = {
       @ForeignKey(
           entity = Password.class,
-          parentColumns = {"user", "websiteName"},
-          childColumns = {"user", "website"},
+          parentColumns = {"username", "websiteName"},
+          childColumns = {"username", "websiteName"},
           onDelete = ForeignKey.CASCADE,
           onUpdate = ForeignKey.CASCADE)
     })
