@@ -11,7 +11,6 @@ import org.junit.jupiter.params.provider.CsvFileSource;
 import static tu.bp21.passwortmanager.StringFunction.*;
 
 import tu.bp21.passwortmanager.cryptography.Crypto;
-import tu.bp21.passwortmanager.js_interfaces.interfaces.InterfaceCrypto;
 
 class InterfaceCryptoTest {
   static {
@@ -36,7 +35,8 @@ class InterfaceCryptoTest {
       plainUserPassword = convertNullToEmptyString(plainUserPassword);
       salt = convertNullToEmptyString(salt);
       byte[] byteSalt = BaseEncoding.base16().decode(salt);
-      String expected = BaseEncoding.base16().encode(Crypto.computeHash(plainUserPassword, byteSalt));
+      String expected =
+          BaseEncoding.base16().encode(Crypto.computeHash(plainUserPassword, byteSalt));
       String actual = interfaceCrypto.hashPassword(plainUserPassword, salt);
       assertEquals(expected, actual);
     }
