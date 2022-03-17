@@ -1,4 +1,4 @@
-package tu.bp21.passwortmanager;
+package tu.bp21.passwortmanager.ui;
 
 import androidx.test.espresso.web.webdriver.DriverAtoms;
 import androidx.test.espresso.web.webdriver.Locator;
@@ -8,6 +8,7 @@ import static androidx.test.espresso.web.webdriver.DriverAtoms.clearElement;
 import static androidx.test.espresso.web.webdriver.DriverAtoms.findElement;
 import static androidx.test.espresso.web.webdriver.DriverAtoms.getText;
 import static androidx.test.espresso.web.webdriver.DriverAtoms.webClick;
+//import static androidx.test.espresso.web.webdriver.DriverAtoms.
 import static org.hamcrest.CoreMatchers.containsString;
 
 import org.junit.jupiter.api.AfterEach;
@@ -20,42 +21,34 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import de.mannodermaus.junit5.ActivityScenarioExtension;
+import tu.bp21.passwortmanager.MainActivity;
 
 @LargeTest
-class MainActivityTest {
+class RegistrierenTest {
 
-  @RegisterExtension
-  final ActivityScenarioExtension<MainActivity> scenarioExtension =
-      ActivityScenarioExtension.launch(MainActivity.class);
+    @RegisterExtension
+    final ActivityScenarioExtension<MainActivity> scenarioExtension =
+            ActivityScenarioExtension.launch(MainActivity.class);
 
-  MainActivity mActivity;
+    MainActivity mActivity;
 
-  @BeforeEach
-  void setUp() throws Exception {
-    scenarioExtension.getScenario().onActivity(activity -> mActivity = activity);
-    onWebView().forceJavascriptEnabled();
-  }
+    @BeforeEach
+    void setUp() throws Exception {
+        scenarioExtension.getScenario().onActivity(activity -> mActivity = activity);
+        onWebView().forceJavascriptEnabled();
+        onWebView().withElement(findElement(Locator.ID, "registrieren"))
+                .perform(webClick());
+        //onWebView().withElement(findElement(Locator.ID,"konto-erstellen"))
+        //        .check(webMatches());
+    }
 
-  @Test
-  void test(){
-    onWebView().withElement(findElement(Locator.ID, "user"))
-            .perform(DriverAtoms.webKeys("abc"));
+    @Test
+    void test(){
 
 
-  }
+    }
 
-  @AfterEach
-  void tearDown() throws Exception {}
+    @AfterEach
+    void tearDown() throws Exception {}
 
-  /*@Test
-  void testonCreate() {
-      View view  =  mActivity.getCurrentFocus();
-      if(view instanceof WebView) assertNotNull((WebView)view);
-      else assertFalse(true);
-  }*/
-
-  /*@Test
-  void testonBackPressed() {
-
-  }*/
 }
