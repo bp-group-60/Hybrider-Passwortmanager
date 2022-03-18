@@ -74,6 +74,9 @@ Room-Database:
 
 The App is devided into 2 sections: the frontend and the backend. The frontend has a login/register site and the password-overview page to see, edit and add passwords. On the backend side, we have a `Java Dataflowmanager` to get the data from the `SQLite Datbase` and encrypt & decrypt the data in the `C-Cryption` section, so the requested informations can be forwarded to the frontend and been shown there.
 
+A dataflow-diagram is shwon below:<br>
+[![](images/diagram.png)](images/diagram.png)
+
 ### Built With
 
 * [OnsenUI](https://nextjs.org/)
@@ -142,4 +145,3 @@ Distributed under the MIT License. See [LICENSE](https://github.com/bp-group-60/
 [issues-url]: https://github.com/bp-group-60/Hybrider-Passwortmanager/issues
 [license-shield]: https://img.shields.io/github/license/bp-group-60/Hybrider-Passwortmanager.svg?style=for-the-badge
 [license-url]: https://github.com/bp-group-60/Hybrider-Passwortmanager/blob/master/LICENSE.txt
-[dataflow-diagram]: images/diagram.png
