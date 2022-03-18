@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     webView.addJavascriptInterface(jsInterfaceWebsite, "Java_InterfaceWebsite");
     webView.addJavascriptInterface(jsInterfaceCrypto, "Java_InterfaceCrypto");
 
-    webView.addJavascriptInterface(jsInterfaceClipboard, "Java_InterfaceTools");
+    webView.addJavascriptInterface(jsInterfaceClipboard, "Java_InterfaceClipboard");
 
     webView.loadUrl("https://appassets.androidplatform.net/assets/src/html/index.html");
 
