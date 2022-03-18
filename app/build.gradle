@@ -7,7 +7,7 @@ apply from: "emscripten.gradle"
 apply from: "webassembly.gradle"
 
 android {
-	compileSdkVersion 31
+	compileSdk 31
 
 	defaultConfig {
 		applicationId "tu.bp21.passwortmanager"
