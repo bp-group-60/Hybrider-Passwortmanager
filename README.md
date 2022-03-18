@@ -99,7 +99,7 @@ or just use the build in vcs tools
 For building this project use gradle's default build configuration.
 
 ### Running
-To get proper functionality at least SDK 24 (Android 7) and a WebView version that supports ES6 is required.
+To get proper functionality at least SDK 24 (Android 7) and a WebView version that supports ES6 and webassembly is required.
 
 <!-- USAGE EXAMPLES -->
 ## Usage -- deprecated, transfer in wiki detailed explanation

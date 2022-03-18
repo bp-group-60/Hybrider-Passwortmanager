@@ -66,15 +66,16 @@ public class MainActivity extends AppCompatActivity {
   public void onBackPressed() {
     if (webView.canGoBack()) {
       webView.evaluateJavascript(
-          " try {\n" +
-                  "  document.querySelector('#onsen-navigator').popPage()" +
-                  "    .catch( error => {" +
-                  "     sessionStorage.clear();" +
-                  "     history.back();" +
-                  "});" +
-                  "  } catch (e) {" +
-                  "    history.back();" +
-                  "  }", value -> {});
+          " try {\n"
+              + "  document.querySelector('#onsen-navigator').popPage()"
+              + "    .catch( error => {"
+              + "     sessionStorage.clear();"
+              + "     history.back();"
+              + "});"
+              + "  } catch (e) {"
+              + "    history.back();"
+              + "  }",
+          value -> {});
     } else {
       super.onBackPressed();
     }
