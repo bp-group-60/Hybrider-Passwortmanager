@@ -86,7 +86,6 @@ public class AppHTMLTest {
 
       defaultMasterPassword = generateRandomString(masterPasswordMinLength, stringMaxLength);
 
-
       defaultWebsiteName = generateRandomString(stringMaxLength);
       defaultLoginName = generateRandomString(stringMaxLength);
       defaultLoginPassword = generateRandomString(stringMaxLength);

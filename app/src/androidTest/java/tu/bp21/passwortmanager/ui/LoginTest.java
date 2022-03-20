@@ -46,12 +46,15 @@ public class LoginTest {
               .allowMainThreadQueries()
               .build();
 
-      randomUsername = generateRandomString(3,20);
+      randomUsername = generateRandomString(3, 20);
       randomEmail =
-          generateRandomString(20) + "@" + generateRandomString(5) + "." + generateRandomString(2,5);
+          generateRandomString(20)
+              + "@"
+              + generateRandomString(5)
+              + "."
+              + generateRandomString(2, 5);
 
-      randomPassword = generateRandomString(8,20);
-
+      randomPassword = generateRandomString(8, 20);
 
       onWebView().forceJavascriptEnabled();
       onWebView()
