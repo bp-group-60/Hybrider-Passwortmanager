@@ -18,7 +18,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-
 import de.mannodermaus.junit5.ActivityScenarioExtension;
 import tu.bp21.passwortmanager.MainActivity;
 
