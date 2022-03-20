@@ -127,7 +127,7 @@ public class AppHTMLTest {
   }
 
   @Test
-  void logoutTest() throws Exception{
+  void logoutTest() throws Exception {
     onWebView().withElement(findElement(Locator.ID, "more-button")).perform(webClick());
     onWebView().withElement(findElement(Locator.ID, "logout")).perform(webClick());
     // check return back to login page

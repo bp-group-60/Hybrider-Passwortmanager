@@ -158,7 +158,8 @@ class InterfaceWebsiteTest {
     byte[] associatedData = (username + websiteName).getBytes();
     assertTrue(expected != null);
     assertEquals(expected.loginName, loginName);
-    assertEquals(Crypto.decrypt(expected.encryptedLoginPassword, associatedData, key), plainUserPassword);
+    assertEquals(
+        Crypto.decrypt(expected.encryptedLoginPassword, associatedData, key), plainUserPassword);
   }
 
   @Nested

@@ -231,8 +231,7 @@ class InterfaceUrlTest {
           websiteExistedInDB,
           randomLoginName,
           randomUserPassword);
-      urlDataAccessObject.addUrl(
-          new Url(usernameExistedInDB, websiteExistedInDB, urlExistedInDB));
+      urlDataAccessObject.addUrl(new Url(usernameExistedInDB, websiteExistedInDB, urlExistedInDB));
       assertFalse(interfaceWebsite.deleteUrl(usernameGiven, websiteGiven, urlGiven));
       checkExpectedDB(usernameExistedInDB, websiteExistedInDB, urlExistedInDB);
     }

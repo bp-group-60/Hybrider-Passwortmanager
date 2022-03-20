@@ -27,7 +27,7 @@ public class InterfaceWebsite {
     }
 
     byte[] encryptedLoginPassword =
-            createEncryptedPassword(username, websiteName, loginPassword, key);
+        createEncryptedPassword(username, websiteName, loginPassword, key);
     Website newWebsiteItem = new Website(username, websiteName, loginName, encryptedLoginPassword);
 
     try {
@@ -43,7 +43,7 @@ public class InterfaceWebsite {
   public boolean updateWebsite(
       String username, String websiteName, String loginName, String plainUserPassword, String key) {
     byte[] encryptedLoginPassword =
-            createEncryptedPassword(username, websiteName, plainUserPassword, key);
+        createEncryptedPassword(username, websiteName, plainUserPassword, key);
     Website newWebsiteItem = new Website(username, websiteName, loginName, encryptedLoginPassword);
 
     try {
@@ -99,7 +99,8 @@ public class InterfaceWebsite {
     byte[] encryptedLoginPassword = queryResult.encryptedLoginPassword;
     byte[] associatedData = (username + websiteName).getBytes();
 
-    return Crypto.decrypt(encryptedLoginPassword, associatedData, BaseEncoding.base16().decode(key));
+    return Crypto.decrypt(
+        encryptedLoginPassword, associatedData, BaseEncoding.base16().decode(key));
   }
 
   private ArrayList<String> getIVList(String username, int ivSize) {
@@ -121,6 +122,5 @@ public class InterfaceWebsite {
     byte[] iv = Crypto.generateUniqueIV(ivList, ivSize);
     byte[] associatedData = (username + websiteName).getBytes();
     return Crypto.encrypt(loginPassword, associatedData, BaseEncoding.base16().decode(key), iv);
-
   }
 }

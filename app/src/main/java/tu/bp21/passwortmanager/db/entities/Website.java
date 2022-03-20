@@ -22,7 +22,10 @@ public class Website {
   public byte[] encryptedLoginPassword;
 
   public Website(
-      @NonNull String username, @NonNull String websiteName, String loginName, byte[] encryptedLoginPassword) {
+      @NonNull String username,
+      @NonNull String websiteName,
+      String loginName,
+      byte[] encryptedLoginPassword) {
     this.username = username;
     this.websiteName = websiteName;
     this.loginName = loginName;

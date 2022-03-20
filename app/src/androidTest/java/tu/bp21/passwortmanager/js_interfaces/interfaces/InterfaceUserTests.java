@@ -100,7 +100,8 @@ class InterfaceUserTests {
     assertTrue(userDataAccessObject.getUser(userToCreate) != null);
     assertEquals(userToCreate, userDataAccessObject.getUser(userToCreate).username);
     assertEquals(randomEmail, userDataAccessObject.getUser(userToCreate).email);
-    assertArrayEquals(encryptedPassword, userDataAccessObject.getUser(userToCreate).hashedUserPassword);
+    assertArrayEquals(
+        encryptedPassword, userDataAccessObject.getUser(userToCreate).hashedUserPassword);
     assertFalse(interfaceUser.createUser(userToCreate, randomEmail, passwordToCreate));
   }
 

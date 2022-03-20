@@ -39,8 +39,7 @@ public class MainActivity extends AppCompatActivity {
     InterfaceUser jsInterfaceUser = new InterfaceUser(database.getUserDataAccessObject());
     InterfaceWebsite jsInterfaceWebsite =
         new InterfaceWebsite(database.getPasswordDataAccessObject());
-    InterfaceUrl jsInterfaceUrl =
-        new InterfaceUrl(database.getWebsiteDataAccessObject());
+    InterfaceUrl jsInterfaceUrl = new InterfaceUrl(database.getWebsiteDataAccessObject());
     InterfaceCrypto jsInterfaceCrypto = new InterfaceCrypto();
 
     InterfaceClipboard jsInterfaceClipboard = new InterfaceClipboard(this);
