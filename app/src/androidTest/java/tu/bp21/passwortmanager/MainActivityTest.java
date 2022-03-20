@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import androidx.test.filters.LargeTest;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -31,11 +32,11 @@ class MainActivityTest {
     onWebView().forceJavascriptEnabled();
   }
 
-  @Test
+  /*@Test
   void test() {
     onWebView().withElement(findElement(Locator.ID, "user")).perform(DriverAtoms.webKeys("abc"));
   }
-
+*/
   @AfterEach
   void tearDown() throws Exception {}
 
