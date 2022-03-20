@@ -26,7 +26,7 @@ class InterfaceCryptoTest {
 
   @Nested
   @DisplayName("Test for hashPassword")
-  class hashPasswordTest {
+  class hashWebsiteTest {
 
     @ParameterizedTest
     @CsvFileSource(resources = "/Crypto/hashPassword.csv", numLinesToSkip = 1)
@@ -37,7 +37,7 @@ class InterfaceCryptoTest {
       byte[] byteSalt = BaseEncoding.base16().decode(salt);
       String expected =
           BaseEncoding.base16().encode(Crypto.computeHash(plainUserPassword, byteSalt));
-      String actual = interfaceCrypto.hashPassword(plainUserPassword, salt);
+      String actual = interfaceCrypto.hashUserPassword(plainUserPassword, salt);
       assertEquals(expected, actual);
     }
   }
@@ -54,7 +54,7 @@ class InterfaceCryptoTest {
       byte[] byteSalt = BaseEncoding.base16().decode(salt);
       String expected =
           BaseEncoding.base16().encode(Crypto.generateKey(passwordToDerive, byteSalt));
-      String actual = interfaceCrypto.generateKey(passwordToDerive, salt);
+      String actual = interfaceCrypto.generateEncryptionKey(passwordToDerive, salt);
       assertEquals(expected, actual);
     }
   }

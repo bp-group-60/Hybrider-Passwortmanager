@@ -3,31 +3,41 @@ package tu.bp21.passwortmanager.db.entities;
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 
 @Entity(
-    primaryKeys = {"username", "websiteName", "url"},
+    primaryKeys = {"username", "websiteName"},
     foreignKeys = {
       @ForeignKey(
-          entity = Password.class,
-          parentColumns = {"username", "websiteName"},
-          childColumns = {"username", "websiteName"},
+          entity = User.class,
+          parentColumns = "username",
+          childColumns = "username",
           onDelete = ForeignKey.CASCADE,
           onUpdate = ForeignKey.CASCADE)
     })
 public class Website {
-  @NonNull public String websiteName;
   @NonNull public String username;
+  @NonNull public String websiteName;
+  public String loginName;
+  public byte[] encryptedLoginPassword;
 
-  @NonNull public String url;
-
-  public Website(@NonNull String username, @NonNull String websiteName, @NonNull String url) {
+  public Website(
+      @NonNull String username, @NonNull String websiteName, String loginName, byte[] encryptedLoginPassword) {
     this.username = username;
     this.websiteName = websiteName;
-    this.url = url;
+    this.loginName = loginName;
+    this.encryptedLoginPassword = encryptedLoginPassword;
   }
 
+  @Ignore
+  public Website(@NonNull String username, @NonNull String websiteName) {
+    this.username = username;
+    this.websiteName = websiteName;
+  }
+
+  // adapted for simple json delivery
   @Override
   public String toString() {
-    return "\"" + url + "\"";
+    return "[\"" + websiteName + "\",\"" + loginName + "\"]";
   }
 }

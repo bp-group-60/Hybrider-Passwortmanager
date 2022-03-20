@@ -138,7 +138,7 @@ public class AppHTMLTest {
   @Nested
   @Order(1)
   @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-  class AddPasswordTest {
+  class AddWebsiteTest {
 
     @BeforeEach
     void startNewPasswordPage() throws Exception {
@@ -226,7 +226,7 @@ public class AppHTMLTest {
 
   @Nested
   @Order(3)
-  class showPasswordButtonTest {
+  class showWebsiteButtonTest {
 
     @Test
     void inAddPasswordPage() throws Exception {
@@ -438,7 +438,7 @@ public class AppHTMLTest {
   @Nested
   @Order(6)
   @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-  class EditPasswordTest {
+  class EditWebsiteTest {
 
     @BeforeEach
     void startEditPasswordPage() throws Exception {
@@ -505,7 +505,7 @@ public class AppHTMLTest {
   @Nested
   @Order(7)
   @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-  class deletePasswordTest {
+  class deleteWebsiteTest {
 
     @BeforeEach
     void startDelete() throws Exception {
@@ -570,7 +570,7 @@ public class AppHTMLTest {
 
     @Nested
     @Order(1)
-    class inAddPasswordPage {
+    class inAddWebsitePage {
 
       @BeforeEach
       void init() throws Exception {
@@ -657,7 +657,7 @@ public class AppHTMLTest {
     @Nested
     @Order(2)
     @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-    class inEditPasswordPage {
+    class inEditWebsitePage {
 
       @BeforeEach
       void init() throws Exception {

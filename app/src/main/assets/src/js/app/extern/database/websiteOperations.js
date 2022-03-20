@@ -1,19 +1,41 @@
-export function getUrlList(username, websiteName) {
-  return JSON.parse(Java_InterfaceWebsite.getUrlList(username, websiteName)).dataArray;
+import {getSessionUsername, getSessionEncryptionKey} from "../../sessionHandler.js";
+
+export function getWebsiteOverviewList() {
+  let username = getSessionUsername();
+
+  // array structure: [[websiteName, loginName], ...]
+  return JSON.parse(Java_InterfaceWebsite.getWebsiteOverviewList(username)).dataArray;
 }
 
-export function saveUrlList(username, websiteName, list) {
-  list.forEach(elm => saveUrl(username, websiteName, elm));
+export function getLoginName(websiteName) {
+  let username = getSessionUsername();
+
+  return Java_InterfaceWebsite.getLoginName(username, websiteName);
 }
 
-export function saveUrl(username, websiteName, url) {
-  return Java_InterfaceWebsite.saveUrl(username, websiteName, url);
+export function getLoginPassword(websiteName) {
+  let username = getSessionUsername();
+  let encryptionKey = getSessionEncryptionKey();
+
+  return Java_InterfaceWebsite.getLoginPassword(username, websiteName, encryptionKey);
 }
 
-export function deleteUrlList(username, websiteName, list) {
-  list.forEach(elm => deleteUrl(username, websiteName, elm));
+export function createWebsite(websiteName, loginName, loginPassword) {
+  let username = getSessionUsername();
+  let encryptionKey = getSessionEncryptionKey();
+
+  return Java_InterfaceWebsite.createWebsite(username, websiteName, loginName, loginPassword, encryptionKey);
 }
 
-export function deleteUrl(username, websiteName, url) {
-  return Java_InterfaceWebsite.deleteUrl(username, websiteName, url);
+export function updateWebsite(websiteName, loginName, loginPassword) {
+  let username = getSessionUsername();
+  let encryptionKey = getSessionEncryptionKey();
+
+  return Java_InterfaceWebsite.updateWebsite(username, websiteName, loginName, loginPassword, encryptionKey);
+}
+
+export function deleteWebsite(websiteName) {
+  let username = getSessionUsername();
+
+  return Java_InterfaceWebsite.deleteWebsite(username, websiteName);
 }

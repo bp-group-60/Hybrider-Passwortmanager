@@ -1,38 +1,38 @@
-import {getPasswordOverviewList} from '../extern/database/passwordOperations.js';
+import {getWebsiteOverviewList} from '../extern/database/websiteOperations.js';
 import {
-  onclickAddButton,
-  onclickDeleteUser,
-  onclickListItem,
-  onclickLogout,
-  onclickMoreButton
+  getAddButtonOnclick,
+  getDeleteUserOnclick,
+  getListItemOnclick,
+  getLogoutOnclick,
+  getMoreButtonOnclick
 } from './onclick/listviewOnclick.js';
 
-export function updateListview(loginName) {
-  document.getElementById('overview').innerHTML = '';
-  createList(loginName);
+export function updateListview(page) {
+  page.querySelector('#overview').innerHTML = '';
+  createList(page);
 }
 
-function createList(loginName) {
-  let list = getPasswordOverviewList(loginName);
+function createList(page) {
+  let list = getWebsiteOverviewList();
 
   for (let i = 0; i < list.length; i++) {
-    addToListview(`${list[i][0]} / ${list[i][1]}`, list[i][0]);
+    addToListview(page, `${list[i][0]} / ${list[i][1]}`, list[i][0]);
   }
 }
 
-function addToListview(loginName, websiteName) {
+function addToListview(page, innerText, websiteName) {
   let listItem = ons.createElement('<ons-list-item modifier="chevron" tappable>');
 
-  listItem.onclick = onclickListItem(websiteName);
-  listItem.innerText = loginName;
+  listItem.onclick = getListItemOnclick(websiteName);
+  listItem.innerText = innerText;
 
-  document.getElementById('overview').append(listItem);
+  page.querySelector('#overview').append(listItem);
 }
 
 export function addOnclickListview(page) {
-  page.querySelector('#add-button').onclick = onclickAddButton(page);
+  page.querySelector('#add-button').onclick = getAddButtonOnclick();
 
-  page.querySelector('#more-button').onclick = onclickMoreButton(page);
-  page.querySelector('#delete-user').onclick = onclickDeleteUser(page);
-  page.querySelector('#logout').onclick = onclickLogout(page);
+  page.querySelector('#more-button').onclick = getMoreButtonOnclick(page);
+  page.querySelector('#delete-user').onclick = getDeleteUserOnclick();
+  page.querySelector('#logout').onclick = getLogoutOnclick();
 }

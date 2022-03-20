@@ -19,12 +19,12 @@ import de.mannodermaus.junit5.ActivityScenarioExtension;
 import tu.bp21.passwortmanager.cryptography.Crypto;
 import tu.bp21.passwortmanager.MainActivity;
 import tu.bp21.passwortmanager.db.database.ApplicationDatabase;
-import tu.bp21.passwortmanager.db.entities.Password;
-import tu.bp21.passwortmanager.db.entities.User;
 import tu.bp21.passwortmanager.db.entities.Website;
-import tu.bp21.passwortmanager.db.data_access_objects.PasswordDataAccessObject;
-import tu.bp21.passwortmanager.db.data_access_objects.UserDataAccessObject;
+import tu.bp21.passwortmanager.db.entities.Url;
+import tu.bp21.passwortmanager.db.entities.User;
 import tu.bp21.passwortmanager.db.data_access_objects.WebsiteDataAccessObject;
+import tu.bp21.passwortmanager.db.data_access_objects.UserDataAccessObject;
+import tu.bp21.passwortmanager.db.data_access_objects.UrlDataAccessObject;
 
 class InterfaceUserTests {
   static MainActivity mainActivity;
@@ -95,12 +95,12 @@ class InterfaceUserTests {
   @CsvFileSource(resources = "/User/testUser.csv", numLinesToSkip = 1)
   void testCreateUser(String userToCreate, String passwordToCreate) {
     assertTrue(interfaceUser.createUser(userToCreate, randomEmail, passwordToCreate));
-    byte[] salt = Arrays.copyOf(userDataAccessObject.getUser(userToCreate).password, 16);
+    byte[] salt = Arrays.copyOf(userDataAccessObject.getUser(userToCreate).hashedUserPassword, 16);
     byte[] encryptedPassword = Crypto.computeHash(passwordToCreate, salt);
     assertTrue(userDataAccessObject.getUser(userToCreate) != null);
     assertEquals(userToCreate, userDataAccessObject.getUser(userToCreate).username);
     assertEquals(randomEmail, userDataAccessObject.getUser(userToCreate).email);
-    assertArrayEquals(encryptedPassword, userDataAccessObject.getUser(userToCreate).password);
+    assertArrayEquals(encryptedPassword, userDataAccessObject.getUser(userToCreate).hashedUserPassword);
     assertFalse(interfaceUser.createUser(userToCreate, randomEmail, passwordToCreate));
   }
 
@@ -118,22 +118,22 @@ class InterfaceUserTests {
           plainUserPassword = generateRandomString(maxLength),
           url = generateRandomString(maxLength),
           websiteName2 = websiteName1 + ".de";
-      PasswordDataAccessObject passwordDataAccessObject = database.getPasswordDataAccessObject();
-      WebsiteDataAccessObject websiteDataAccessObject = database.getWebsiteDataAccessObject();
+      WebsiteDataAccessObject websiteDataAccessObject = database.getPasswordDataAccessObject();
+      UrlDataAccessObject urlDataAccessObject = database.getWebsiteDataAccessObject();
       userDataAccessObject.addUser(new User(username, randomEmail, masterPassword.getBytes()));
-      passwordDataAccessObject.addPassword(
-          new Password(username, websiteName1, loginName, plainUserPassword.getBytes()));
-      passwordDataAccessObject.addPassword(
-          new Password(username, websiteName2, loginName, plainUserPassword.getBytes()));
-      websiteDataAccessObject.addWebsite(new Website(username, websiteName1, url));
+      websiteDataAccessObject.addWebsite(
+          new Website(username, websiteName1, loginName, plainUserPassword.getBytes()));
+      websiteDataAccessObject.addWebsite(
+          new Website(username, websiteName2, loginName, plainUserPassword.getBytes()));
+      urlDataAccessObject.addUrl(new Url(username, websiteName1, url));
 
       assertTrue(
           interfaceUser.deleteUser(
               username, BaseEncoding.base16().encode(masterPassword.getBytes())));
       assertNull(userDataAccessObject.getUser(username));
-      assertNull(passwordDataAccessObject.getPassword(username, websiteName1));
-      assertNull(passwordDataAccessObject.getPassword(username, websiteName2));
-      assertTrue(websiteDataAccessObject.getWebsiteList(username, websiteName1).isEmpty());
+      assertNull(websiteDataAccessObject.getWebsite(username, websiteName1));
+      assertNull(websiteDataAccessObject.getWebsite(username, websiteName2));
+      assertTrue(urlDataAccessObject.getUrlList(username, websiteName1).isEmpty());
     }
 
     @ParameterizedTest
@@ -152,7 +152,7 @@ class InterfaceUserTests {
               differentUsername, BaseEncoding.base16().encode(differentPassword.getBytes())));
       assertNotNull(userDataAccessObject.getUser(username));
       assertArrayEquals(
-          plainUserPassword.getBytes(), userDataAccessObject.getUser(username).password);
+          plainUserPassword.getBytes(), userDataAccessObject.getUser(username).hashedUserPassword);
     }
   }
 }

@@ -7,10 +7,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
 import tu.bp21.passwortmanager.js_interfaces.interfaces.InterfaceCrypto;
-import tu.bp21.passwortmanager.js_interfaces.interfaces.InterfacePassword;
+import tu.bp21.passwortmanager.js_interfaces.interfaces.InterfaceWebsite;
 import tu.bp21.passwortmanager.js_interfaces.interfaces.InterfaceClipboard;
 import tu.bp21.passwortmanager.js_interfaces.interfaces.InterfaceUser;
-import tu.bp21.passwortmanager.js_interfaces.interfaces.InterfaceWebsite;
+import tu.bp21.passwortmanager.js_interfaces.interfaces.InterfaceUrl;
 import tu.bp21.passwortmanager.db.database.ApplicationDatabase;
 import tu.bp21.passwortmanager.web_view_client.AssetWebViewClient;
 
@@ -37,10 +37,10 @@ public class MainActivity extends AppCompatActivity {
             .build();
 
     InterfaceUser jsInterfaceUser = new InterfaceUser(database.getUserDataAccessObject());
-    InterfacePassword jsInterfacePassword =
-        new InterfacePassword(database.getPasswordDataAccessObject());
     InterfaceWebsite jsInterfaceWebsite =
-        new InterfaceWebsite(database.getWebsiteDataAccessObject());
+        new InterfaceWebsite(database.getPasswordDataAccessObject());
+    InterfaceUrl jsInterfaceUrl =
+        new InterfaceUrl(database.getWebsiteDataAccessObject());
     InterfaceCrypto jsInterfaceCrypto = new InterfaceCrypto();
 
     InterfaceClipboard jsInterfaceClipboard = new InterfaceClipboard(this);
@@ -51,10 +51,9 @@ public class MainActivity extends AppCompatActivity {
     webView.getSettings().setJavaScriptEnabled(true);
 
     webView.addJavascriptInterface(jsInterfaceUser, "Java_InterfaceUser");
-    webView.addJavascriptInterface(jsInterfacePassword, "Java_InterfacePassword");
     webView.addJavascriptInterface(jsInterfaceWebsite, "Java_InterfaceWebsite");
+    webView.addJavascriptInterface(jsInterfaceUrl, "Java_InterfaceUrl");
     webView.addJavascriptInterface(jsInterfaceCrypto, "Java_InterfaceCrypto");
-
     webView.addJavascriptInterface(jsInterfaceClipboard, "Java_InterfaceClipboard");
 
     webView.loadUrl("https://appassets.androidplatform.net/assets/src/html/index.html");

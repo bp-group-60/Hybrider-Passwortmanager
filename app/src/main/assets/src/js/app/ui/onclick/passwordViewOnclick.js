@@ -1,12 +1,12 @@
-import {createPassword, deletePassword, updatePassword,} from '../../extern/database/passwordOperations.js';
-import {getSessionUser} from '../../sessionHandler.js';
-import {deleteUrlList, saveUrlList,} from '../../extern/database/websiteOperations.js';
+import {createWebsite, deleteWebsite, updateWebsite,} from '../../extern/database/websiteOperations.js';
+import {getSessionUsername} from '../../sessionHandler.js';
+import {deleteUrlList, saveUrlList,} from '../../extern/database/urlOperations.js';
 import {getAddedUrls, getRemovedUrls} from '../urlHandler.js';
 import {updatePasswordView} from '../passwordViewHandler.js';
 import {copyToClipboardWithTimeout} from "../../extern/clipboard.js";
-import {generateRandomString, IdentityFunction} from "../../extern/webassembly/stringOparation.js";
+import {generateRandomString, identityFunction} from "../../extern/webassembly/stringOparation.js";
 
-export function editButtonOnclick(page) {
+export function getEditButtonOnclick(page) {
   return () => {
     page.querySelector('#delete-button').style.display = 'none';
 
@@ -28,27 +28,22 @@ export function editButtonOnclick(page) {
   };
 }
 
-export function editAbortOnclick(page) {
+export function getEditAbortOnclick(page) {
   return () => {
     updatePasswordView(page);
   };
 }
 
-export function onclickEditSave(page) {
+export function getEditSaveOnclick(page) {
   return () => {
     let websiteName = page.data.websiteName;
     let loginName = document.getElementById('login-name').value;
     let loginPassword = document.getElementById('login-password').value;
-    let successful = updatePassword(
-      getSessionUser(),
-      websiteName,
-      loginName,
-      loginPassword
-    );
+    let successful = updateWebsite(websiteName, loginName, loginPassword);
 
     if (successful) {
-      saveUrlList(getSessionUser(), websiteName, getAddedUrls(page));
-      deleteUrlList(getSessionUser(), websiteName, getRemovedUrls(page));
+      saveUrlList(websiteName, getAddedUrls(page));
+      deleteUrlList(websiteName, getRemovedUrls(page));
       ons.notification.toast('Änderungen gespeichert!', {timeout: 3000});
 
       updatePasswordView(page);
@@ -58,14 +53,13 @@ export function onclickEditSave(page) {
   };
 }
 
-export function onclickDeletePassword(page) {
+export function getDeletePasswordOnclick(page) {
   return () => {
     ons.notification
       .confirm('Passwort wirklich löschen?')
       .then(function (input) {
         if (input === 1) {
-          let websiteName = page.data.websiteName;
-          deletePassword(getSessionUser(), websiteName);
+          deleteWebsite(page.data.websiteName);
           document.querySelector('#onsen-navigator').popPage();
           ons.notification.toast('Passwort wurde gelöscht!', {timeout: 3000});
         }
@@ -73,14 +67,14 @@ export function onclickDeletePassword(page) {
   };
 }
 
-export function copyPasswordOnclick(page) {
+export function getCopyPasswordOnclick(page) {
   return () => {
     copyToClipboardWithTimeout(page.querySelector('#login-password').value, 20000);
     ons.notification.toast('Passwort wurde kopiert', {timeout: 3000});
   };
 }
 
-export function showPasswordOnclick(page) {
+export function getShowPasswordOnclick(page) {
   return () => {
     if (page.querySelector('#password-checkbox').checked) {
       page.querySelector('#login-password').children[0].type = 'text';
@@ -90,15 +84,15 @@ export function showPasswordOnclick(page) {
   };
 }
 
-export function commitButtonOnclick(page) {
+export function getCommitButtonOnclick(page) {
   return () => {
     let websiteName = document.getElementById('website-name').value;
     let loginName = document.getElementById('login-name').value;
     let loginPassword = document.getElementById('login-password').value;
-    let successful = createPassword(getSessionUser(), websiteName, loginName, loginPassword);
+    let successful = createWebsite(websiteName, loginName, loginPassword);
 
     if (successful) {
-      saveUrlList(getSessionUser(), websiteName, getAddedUrls(page));
+      saveUrlList(websiteName, getAddedUrls(page));
       document.querySelector('#onsen-navigator').popPage();
       ons.notification.toast('Passwort hinzugefügt!', {timeout: 3000});
     } else {
@@ -107,15 +101,15 @@ export function commitButtonOnclick(page) {
   };
 }
 
-export function generateRandomPasswordOnclick(page, length) {
+export function getGenerateRandomPasswordOnclick(page, length) {
   return () => {
     page.querySelector("#login-password").value = generateRandomString(length);
   }
 }
 
-export function generateRandomUsernameOnclick(page, length) {
+export function getGenerateRandomUsernameOnclick(page, length) {
   return () => {
     let randomString = generateRandomString(length)
-    page.querySelector("#login-name").value = randomString + IdentityFunction(randomString);
+    page.querySelector("#login-name").value = randomString + identityFunction(randomString);
   }
 }

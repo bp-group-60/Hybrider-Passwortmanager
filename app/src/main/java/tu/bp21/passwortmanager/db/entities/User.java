@@ -10,12 +10,12 @@ public class User {
 
   @PrimaryKey @NonNull public String username;
   public String email;
-  public byte[] password;
+  public byte[] hashedUserPassword;
 
-  public User(@NonNull String username, String email, byte[] password) {
+  public User(@NonNull String username, String email, byte[] hashedUserPassword) {
     this.username = username;
     this.email = email;
-    this.password = password;
+    this.hashedUserPassword = hashedUserPassword;
   }
 
   @Ignore
