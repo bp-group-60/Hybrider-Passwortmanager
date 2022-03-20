@@ -30,7 +30,7 @@ import tu.bp21.passwortmanager.db.entities.Url;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName(value = "Tests for InterfacePassword")
-class InterfaceUrlTest {
+class InterfaceWebsiteTest {
   static ApplicationDatabase database;
   static MainActivity mainActivity;
 

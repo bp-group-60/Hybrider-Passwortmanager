@@ -127,7 +127,7 @@ public class AppHTMLTest {
   }
 
   @Test
-  void logoutTest() {
+  void logoutTest() throws Exception{
     onWebView().withElement(findElement(Locator.ID, "more-button")).perform(webClick());
     onWebView().withElement(findElement(Locator.ID, "logout")).perform(webClick());
     // check return back to login page
@@ -141,7 +141,7 @@ public class AppHTMLTest {
   class AddWebsiteTest {
 
     @BeforeEach
-    void startNewPasswordPage() throws Exception {
+    void startNewWebsitePage() throws Exception {
       // go to add password page
       onWebView().withElement(findElement(Locator.ID, "add-button")).perform(webClick());
       // wait for page to load
@@ -152,7 +152,7 @@ public class AppHTMLTest {
 
     @Test
     @Order(1)
-    void addPasswordSuccess() throws Exception {
+    void addWebsiteSuccess() throws Exception {
       onWebView()
           .withElement(findElement(Locator.CSS_SELECTOR, "input[placeholder=Webseite]"))
           .perform(webKeys(defaultWebsiteName));
@@ -177,7 +177,7 @@ public class AppHTMLTest {
       onWebView()
           .check(webContent(containingTextInBody(defaultWebsiteName + " / " + defaultLoginName)));
 
-      // go to the saved password to check loginName and loginPassword
+      // go to the saved website to check loginName and loginPassword
       onWebView()
           .withElement(findElement(Locator.XPATH, "//*[@id=\"overview\"]/ons-list-item[1]/div"))
           .perform(webClick());
@@ -186,7 +186,7 @@ public class AppHTMLTest {
     }
 
     @Test
-    void addPasswordEmptyWebsite() {
+    void addEmptyWebsite() {
       onWebView()
           .withElement(findElement(Locator.CSS_SELECTOR, "input[placeholder=Loginname]"))
           .perform(webKeys(defaultLoginName));
@@ -198,13 +198,13 @@ public class AppHTMLTest {
       // toast should be displayed
       onWebView().check(webContent(hasElementWithXpath("/html/body/ons-toast/div/div")));
       onWebView().check(webContent(containingTextInBody("Fehler beim speichern!")));
-      // stay on add password page
+      // stay on add website page
       onWebView().check(webContent(containingTextInBody("Neues Passwort")));
     }
 
     @Test
     @Order(2)
-    void addPasswordExistedWebsite() {
+    void addExistedWebsite() {
       onWebView()
           .withElement(findElement(Locator.CSS_SELECTOR, "input[placeholder=Webseite]"))
           .perform(webKeys(defaultWebsiteName));
@@ -219,18 +219,18 @@ public class AppHTMLTest {
       // toast should be displayed
       onWebView().check(webContent(hasElementWithXpath("/html/body/ons-toast/div/div")));
       onWebView().check(webContent(containingTextInBody("Fehler beim speichern!")));
-      // stay on add password page
+      // stay on add website page
       onWebView().check(webContent(containingTextInBody("Neues Passwort")));
     }
   }
 
   @Nested
   @Order(3)
-  class showWebsiteButtonTest {
+  class showPasswordButtonTest {
 
     @Test
-    void inAddPasswordPage() throws Exception {
-      // go to add password page
+    void inAddWebsitePage() throws Exception {
+      // go to add website page
       onWebView().withElement(findElement(Locator.ID, "add-button")).perform(webClick());
       // wait for page to load
       Thread.sleep(loadDelay);
@@ -240,8 +240,8 @@ public class AppHTMLTest {
     }
 
     @Test
-    void inPasswordDetailPage() throws Exception {
-      // go to password detail page
+    void inWebsiteDetailPage() throws Exception {
+      // go to website detail page
       onWebView()
           .withElement(findElement(Locator.XPATH, "//*[@id=\"overview\"]/ons-list-item[1]/div"))
           .perform(webClick());
@@ -253,8 +253,8 @@ public class AppHTMLTest {
     }
 
     @Test
-    void inPasswordEditPage() throws Exception {
-      // go to password edit page
+    void inWebsiteEditPage() throws Exception {
+      // go to website edit page
       onWebView()
           .withElement(findElement(Locator.XPATH, "//*[@id=\"overview\"]/ons-list-item[1]/div"))
           .perform(webClick());
@@ -308,7 +308,7 @@ public class AppHTMLTest {
 
     @Test
     void copySuccess() throws Exception {
-      // go to password detail page
+      // go to website detail page
       onWebView()
           .withElement(findElement(Locator.XPATH, "//*[@id=\"overview\"]/ons-list-item[1]/div"))
           .perform(webClick());
@@ -342,8 +342,8 @@ public class AppHTMLTest {
   @Order(4)
   class generateButtonTest {
     @Test
-    void inAddPasswordPage() throws Exception {
-      // go to add password page
+    void inAddWebsitePage() throws Exception {
+      // go to add website page
       onWebView().withElement(findElement(Locator.ID, "add-button")).perform(webClick());
       // wait for page to load
       Thread.sleep(loadDelay);
@@ -353,8 +353,8 @@ public class AppHTMLTest {
     }
 
     @Test
-    void inPasswordEditPage() throws Exception {
-      // go to password edit page
+    void inWebsiteEditPage() throws Exception {
+      // go to website edit page
       onWebView()
           .withElement(findElement(Locator.XPATH, "//*[@id=\"overview\"]/ons-list-item[1]/div"))
           .perform(webClick());
@@ -408,7 +408,7 @@ public class AppHTMLTest {
   class backButtonTest {
 
     @BeforeEach
-    void startPasswordDetailPage() throws Exception {
+    void startWebsiteDetailPage() throws Exception {
       // go to the saved password
       onWebView()
           .withElement(findElement(Locator.XPATH, "//*[@id=\"overview\"]/ons-list-item[1]/div"))
@@ -417,7 +417,7 @@ public class AppHTMLTest {
     }
 
     @Test
-    void inPasswordDetailPage() throws Exception {
+    void inWebsiteDetailPage() throws Exception {
       onWebView().withElement(findElement(Locator.XPATH, "//ons-back-button")).perform(webClick());
       Thread.sleep(loadDelay);
       // check return back to overview
@@ -425,7 +425,7 @@ public class AppHTMLTest {
     }
 
     @Test
-    void inPasswordEditPage() throws Exception {
+    void inWebsiteEditPage() throws Exception {
       onWebView().withElement(findElement(Locator.ID, "edit-button")).perform(webClick());
       Thread.sleep(loadDelay);
       onWebView().withElement(findElement(Locator.XPATH, "//ons-back-button")).perform(webClick());
@@ -441,8 +441,8 @@ public class AppHTMLTest {
   class EditWebsiteTest {
 
     @BeforeEach
-    void startEditPasswordPage() throws Exception {
-      // go to the saved password to edit
+    void startEditWebsitePage() throws Exception {
+      // go to the saved website to edit
       onWebView()
           .withElement(findElement(Locator.XPATH, "//*[@id=\"overview\"]/ons-list-item[1]/div"))
           .perform(webClick());
@@ -469,14 +469,14 @@ public class AppHTMLTest {
 
       Thread.sleep(loadDelay);
 
-      // check return back to password detail page and check old loginName and loginPassword
+      // check return back to website detail page and check old loginName and loginPassword
       onWebView().check(webContent(containingTextInBody(defaultWebsiteName)));
       checkLoginNamePasswordTextField(defaultLoginName, defaultLoginPassword);
     }
 
     @Test
     @Order(2)
-    void changeSuccess() throws Exception {
+    void editWebsiteSuccess() throws Exception {
       String newLoginName = generateRandomString(stringMaxLength);
       String newPassword = generateRandomString(stringMaxLength);
 
@@ -496,7 +496,7 @@ public class AppHTMLTest {
 
       Thread.sleep(loadDelay);
 
-      // check return back to password detail page and check new loginName and loginPassword
+      // check return back to website detail page and check new loginName and loginPassword
       onWebView().check(webContent(containingTextInBody(defaultWebsiteName)));
       checkLoginNamePasswordTextField(newLoginName, newPassword);
     }
@@ -532,7 +532,7 @@ public class AppHTMLTest {
                   Locator.XPATH,
                   "/html/body/ons-alert-dialog/div[2]/div/div[3]/ons-alert-dialog-button[1]"))
           .perform(webClick());
-      // stayed in password detail page
+      // stayed in website detail page
       onWebView().check(webContent(hasElementWithId("edit-button")));
       onWebView().check(webContent(containingTextInBody(defaultWebsiteName)));
     }
@@ -749,7 +749,7 @@ public class AppHTMLTest {
                   Locator.XPATH,
                   "/html/body/ons-alert-dialog/div[2]/div/div[3]/ons-alert-dialog-button[1]"))
           .perform(webClick());
-      // stayed in password overview page
+      // stayed in overview page
       onWebView()
           .check(webContent(containingTextInBody(defaultWebsiteName + " / " + defaultLoginName)));
       onWebView().check(webContent(hasElementWithId("add-button")));
