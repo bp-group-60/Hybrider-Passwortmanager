@@ -4,7 +4,6 @@ import androidx.room.Room;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.web.webdriver.Locator;
 import static androidx.test.espresso.web.sugar.Web.onWebView;
-import static androidx.test.espresso.web.webdriver.DriverAtoms.clearElement;
 import static androidx.test.espresso.web.webdriver.DriverAtoms.findElement;
 import static androidx.test.espresso.web.webdriver.DriverAtoms.webClick;
 import static androidx.test.espresso.web.webdriver.DriverAtoms.webKeys;
@@ -103,27 +102,37 @@ class RegisterTest {
   }
 
   @Nested
-  class emailInvalidTest{
+  class emailInvalidTest {
     @Test
-    void emailNoDomain() throws Exception{
+    void emailNoDomain() throws Exception {
       String email =
-              generateRandomString(stringMaxLength) + "@" + generateRandomString(stringMaxLength);
+          generateRandomString(stringMaxLength) + "@" + generateRandomString(stringMaxLength);
       fillDataForm(randomUsername, email, randomUserPassword, randomUserPassword);
       checkEmailFormatError();
     }
 
     @Test
-    void emailWithShortDomain() throws Exception{
+    void emailWithShortDomain() throws Exception {
       String email =
-              generateRandomString(stringMaxLength) + "@" + generateRandomString(stringMaxLength) + "." + generateRandomString(domainMinLength - 1);;
+          generateRandomString(stringMaxLength)
+              + "@"
+              + generateRandomString(stringMaxLength)
+              + "."
+              + generateRandomString(domainMinLength - 1);
+      ;
       fillDataForm(randomUsername, email, randomUserPassword, randomUserPassword);
       checkEmailFormatError();
     }
 
     @Test
-    void emailWithLongDomain() throws Exception{
+    void emailWithLongDomain() throws Exception {
       String email =
-              generateRandomString(stringMaxLength) + "@" + generateRandomString(stringMaxLength) + "." + generateRandomString(domainMaxLength+1, domainMaxLength+1);;
+          generateRandomString(stringMaxLength)
+              + "@"
+              + generateRandomString(stringMaxLength)
+              + "."
+              + generateRandomString(domainMaxLength + 1, domainMaxLength + 1);
+      ;
       fillDataForm(randomUsername, email, randomUserPassword, randomUserPassword);
       checkEmailFormatError();
     }

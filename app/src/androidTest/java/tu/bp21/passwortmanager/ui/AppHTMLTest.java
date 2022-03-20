@@ -37,7 +37,6 @@ import static tu.bp21.passwortmanager.ui.DomMatchersExtended.hasNoElementWithXpa
 
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.os.Build;
 import android.webkit.WebView;
 
 @TestClassOrder(ClassOrderer.OrderAnnotation.class)
