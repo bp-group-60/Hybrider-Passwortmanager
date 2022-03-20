@@ -24,7 +24,7 @@ class CryptoTest {
   }
 
   static Random random;
-  static int ivSize, keySize, hashSize;
+  static int ivSize, keySize, hashSize, saltSize, stringMaxLength, scryptParamN, scryptParamR, scryptParamP;
 
   @BeforeAll
   static void setUp() {
@@ -32,16 +32,22 @@ class CryptoTest {
     ivSize = 12;
     keySize = 32;
     hashSize = 64;
+    saltSize = 16;
+    stringMaxLength = 40;
+    scryptParamN = 18;
+    scryptParamR = 8;
+    scryptParamP = 1;
   }
 
   @Test
   void generateSecureByteArrayTest() {
-    int size = new Random().nextInt(64) + 1;
+    int size = new Random().nextInt(100) + 1;
     byte[] array = Crypto.generateSecureByteArray(size);
     assertEquals(size, array.length);
     for (byte b : array) {
       assertNotNull(b);
     }
+    //test 0
     array = Crypto.generateSecureByteArray(0);
     assertEquals(0, array.length);
   }
@@ -55,7 +61,7 @@ class CryptoTest {
     void encryptDefault() throws Exception {
       byte[] associatedData = new byte[random.nextInt(100) + 1];
       random.nextBytes(associatedData);
-      String plaintext = generateRandomString(40);
+      String plaintext = generateRandomString(stringMaxLength);
       checkEncryptExpected(associatedData, plaintext);
     }
 
@@ -63,7 +69,7 @@ class CryptoTest {
     @DisplayName("Case: empty or null associatedData")
     void encryptEmptyOrNullAssociatedData() throws Exception {
       byte[] associatedData = new byte[0];
-      String plaintext = generateRandomString(40);
+      String plaintext = generateRandomString(stringMaxLength);
       checkEncryptExpected(associatedData, plaintext);
       checkEncryptExpected(null, plaintext);
     }
@@ -97,7 +103,7 @@ class CryptoTest {
       byte[] associatedData = new byte[random.nextInt(100) + 1];
       byte[] key = new byte[illegalSize];
       byte[] iv = new byte[ivSize];
-      String plaintext = generateRandomString(40);
+      String plaintext = generateRandomString(stringMaxLength);
       random.nextBytes(associatedData);
       random.nextBytes(key);
       random.nextBytes(iv);
@@ -115,7 +121,7 @@ class CryptoTest {
       byte[] associatedData = new byte[random.nextInt(100) + 1];
       byte[] key = new byte[keySize];
       byte[] iv = new byte[illegalSize];
-      String plaintext = generateRandomString(40);
+      String plaintext = generateRandomString(stringMaxLength);
       random.nextBytes(associatedData);
       random.nextBytes(key);
       random.nextBytes(iv);
@@ -149,14 +155,14 @@ class CryptoTest {
     void decryptDefault() throws Exception {
       byte[] associatedData = new byte[random.nextInt(100) + 1];
       random.nextBytes(associatedData);
-      String expected = generateRandomString(40);
+      String expected = generateRandomString(stringMaxLength);
       checkDecryptSuccess(associatedData, expected);
     }
 
     @Test
     @DisplayName("Case: Empty or Null associatedData")
     void decryptEmptyOrNullAssociatedData() throws Exception {
-      String expected = generateRandomString(40);
+      String expected = generateRandomString(stringMaxLength);
       byte[] associatedData = new byte[0];
       checkDecryptSuccess(associatedData, expected);
 
@@ -183,7 +189,7 @@ class CryptoTest {
       byte[] actualKey = new byte[keySize];
       random.nextBytes(associatedData);
       random.nextBytes(actualKey);
-      String expected = generateRandomString(40);
+      String expected = generateRandomString(stringMaxLength);
       SecretKey key = generateSecretKey();
       byte[] expectedKey = key.getEncoded();
 
@@ -204,7 +210,7 @@ class CryptoTest {
       random.nextBytes(associatedData2);
       while (Arrays.areEqual(associatedData1, associatedData2)) random.nextBytes(associatedData2);
 
-      String expected = generateRandomString(40);
+      String expected = generateRandomString(stringMaxLength);
       SecretKey key = generateSecretKey();
       byte[] hexKey = key.getEncoded();
 
@@ -219,7 +225,7 @@ class CryptoTest {
     void decryptModifiedCipher() throws Exception {
       byte[] associatedData = new byte[random.nextInt(100) + 1];
       random.nextBytes(associatedData);
-      String expected = generateRandomString(40);
+      String expected = generateRandomString(stringMaxLength);
       SecretKey key = generateSecretKey();
       byte[] hexKey = key.getEncoded();
 
@@ -239,11 +245,12 @@ class CryptoTest {
      * correct
      */
     void checkDecryptSuccess(byte[] associatedData, String expected) throws Exception {
-      byte[] aadtoEncrypt = associatedData;
-      if (associatedData == null) aadtoEncrypt = new byte[0];
+      //aad = additional associated Data for GCM mode
+      byte[] aadToEncrypt = associatedData;
+      if (associatedData == null) aadToEncrypt = new byte[0];
       SecretKey key = generateSecretKey();
       byte[] hexKey = key.getEncoded();
-      byte[] cipher = encryptWithGCM(expected, aadtoEncrypt, key);
+      byte[] cipher = encryptWithGCM(expected, aadToEncrypt, key);
       String actual = Crypto.decrypt(cipher, associatedData, hexKey);
       assertEquals(expected, actual);
     }
@@ -255,8 +262,8 @@ class CryptoTest {
     @Test
     @DisplayName("Case: Default")
     void computeHashDefault() {
-      byte[] salt = Crypto.generateSecureByteArray(random.nextInt(64) + 1);
-      String password = generateRandomString(40);
+      byte[] salt = Crypto.generateSecureByteArray(random.nextInt(saltSize*4) + 1);
+      String password = generateRandomString(stringMaxLength);
       byte[] expected = computeExpectedHash(password, salt, hashSize);
       byte[] actual = Crypto.computeHash(password, salt);
 
@@ -268,7 +275,7 @@ class CryptoTest {
     @DisplayName("Case: no salt")
     void computeHashNoSalt() {
       byte[] salt = new byte[0];
-      String password = generateRandomString(40);
+      String password = generateRandomString(stringMaxLength);
       byte[] expected = computeExpectedHash(password, salt, hashSize);
       byte[] actual = Crypto.computeHash(password, salt);
 
@@ -283,7 +290,7 @@ class CryptoTest {
     @Test
     @DisplayName("Case: empty or null plaintext")
     void computeHashEmpty() {
-      byte[] salt = Crypto.generateSecureByteArray(random.nextInt(64) + 1);
+      byte[] salt = Crypto.generateSecureByteArray(random.nextInt(saltSize*4) + 1);
       String password = "";
       byte[] expected = computeExpectedHash(password, salt, hashSize);
       byte[] actual = Crypto.computeHash(password, salt);
@@ -297,7 +304,7 @@ class CryptoTest {
     /** compute scrypt hash with bouncy castle library */
     byte[] computeExpectedHash(String plaintext, byte[] salt, int outputLength) {
       byte[] expected =
-          SCrypt.generate(plaintext.getBytes(), salt, (int) Math.pow(2, 18), 8, 1, outputLength);
+          SCrypt.generate(plaintext.getBytes(), salt, (int) Math.pow(2, scryptParamN), scryptParamR, scryptParamP, outputLength);
       expected = Arrays.concatenate(salt, expected);
       return expected;
     }
@@ -377,8 +384,8 @@ class CryptoTest {
     @Test
     @DisplayName("Case: Default")
     void generateKeyDefault() {
-      String passwordToDerive = generateRandomString(40);
-      byte[] salt = Crypto.generateSecureByteArray(random.nextInt(65));
+      String passwordToDerive = generateRandomString(stringMaxLength);
+      byte[] salt = Crypto.generateSecureByteArray(random.nextInt(saltSize*4 + 1));
       byte[] key = Crypto.generateKey(passwordToDerive, salt);
       assertEquals(keySize, key.length);
     }
@@ -387,7 +394,7 @@ class CryptoTest {
     @DisplayName("Case: empty or null passwordToDerive")
     void generateKeyEmptyOrNullPassword() {
       String emptyPassword = "";
-      byte[] salt = Crypto.generateSecureByteArray(random.nextInt(65));
+      byte[] salt = Crypto.generateSecureByteArray(random.nextInt(saltSize*4 +1));
       byte[] key = Crypto.generateKey(emptyPassword, salt);
       assertEquals(keySize, key.length);
 
@@ -397,7 +404,7 @@ class CryptoTest {
     @Test
     @DisplayName("Case: empty or null salt")
     void generateKeyTestEmptyOrNullSalt() {
-      String passwordToDerive = generateRandomString(40);
+      String passwordToDerive = generateRandomString(stringMaxLength);
       byte[] emptySalt = new byte[0];
       byte[] key = Crypto.generateKey(passwordToDerive, emptySalt);
       assertEquals(keySize, key.length);
@@ -410,7 +417,7 @@ class CryptoTest {
   /** generate a key for encrypt and decrypt */
   SecretKey generateSecretKey() throws Exception {
     KeyGenerator keygen = KeyGenerator.getInstance("AES");
-    keygen.init(256);
+    keygen.init(keySize*8);
     return keygen.generateKey();
   }
 

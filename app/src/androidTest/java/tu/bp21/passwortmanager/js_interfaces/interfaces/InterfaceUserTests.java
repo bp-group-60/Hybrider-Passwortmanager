@@ -37,15 +37,15 @@ class InterfaceUserTests {
   InterfaceUser interfaceUser;
   UserDataAccessObject userDataAccessObject;
   String randomEmail;
-  int maxLength;
+  static final int stringMaxLength = 20;
 
   @AfterAll
-  static void tearDown() throws Exception {
+  static void tearDown(){
     mainActivity.deleteDatabase("testDatabase");
   }
 
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp(){
     if (mainActivity == null) {
       ActivityScenario<MainActivity> scenario = scenarioExtension.getScenario();
       scenario.onActivity(activity -> mainActivity = activity);
@@ -55,53 +55,52 @@ class InterfaceUserTests {
               .allowMainThreadQueries()
               .build();
     }
-    maxLength = 20;
     userDataAccessObject = database.getUserDataAccessObject();
 
     interfaceUser = new InterfaceUser(userDataAccessObject);
-    randomEmail = generateRandomString(maxLength) + "@email.de";
+    randomEmail = generateRandomString(stringMaxLength) + "@email.de";
   }
 
   @AfterEach
-  void clearDatabase() throws Exception {
+  void clearDatabase(){
     // Clear Dummy-Data
     database.clearAllTables();
   }
 
   @ParameterizedTest
-  @CsvFileSource(resources = "/User/testUser.csv", numLinesToSkip = 1)
-  void testExistUser(String userToAdd, String passwordToAdd, String userNotExist) throws Exception {
-    userDataAccessObject.addUser(new User(userToAdd, randomEmail, passwordToAdd.getBytes()));
+  @CsvFileSource(resources = "/InterfaceUserTest/testUser.csv", numLinesToSkip = 1)
+  void testExistUser(String userToAdd, String userPasswordToAdd, String userNotExist){
+    userDataAccessObject.addUser(new User(userToAdd, randomEmail, userPasswordToAdd.getBytes()));
     assertFalse(interfaceUser.existUser(userNotExist));
     assertTrue(interfaceUser.existUser(userToAdd));
   }
 
   @ParameterizedTest
-  @CsvFileSource(resources = "/User/testCheckUser.csv", numLinesToSkip = 1)
+  @CsvFileSource(resources = "/InterfaceUserTest/testCheckUser.csv", numLinesToSkip = 1)
   void testCheckUser(
       String displayCase,
       String userToAdd,
-      String passwordToAdd,
+      String userPasswordToAdd,
       String userToCheck,
-      String passwordToCheck) {
-    byte[] rightPassword = passwordToAdd.getBytes();
-    byte[] wrongPassword = passwordToCheck.getBytes();
+      String userPasswordToCheck) {
+    byte[] rightPassword = userPasswordToAdd.getBytes();
+    byte[] wrongPassword = userPasswordToCheck.getBytes();
     userDataAccessObject.addUser(new User(userToAdd, randomEmail, rightPassword));
     assertFalse(interfaceUser.checkUser(userToCheck, BaseEncoding.base16().encode(wrongPassword)));
     assertTrue(interfaceUser.checkUser(userToAdd, BaseEncoding.base16().encode(rightPassword)));
   }
 
   @ParameterizedTest
-  @CsvFileSource(resources = "/User/testUser.csv", numLinesToSkip = 1)
-  void testCreateUser(String userToCreate, String passwordToCreate) {
-    assertTrue(interfaceUser.createUser(userToCreate, randomEmail, passwordToCreate));
+  @CsvFileSource(resources = "/InterfaceUserTest/testUser.csv", numLinesToSkip = 1)
+  void testCreateUser(String userToCreate, String userPasswordToCreate) {
+    assertTrue(interfaceUser.createUser(userToCreate, randomEmail, userPasswordToCreate));
     byte[] salt = Arrays.copyOf(userDataAccessObject.getUser(userToCreate).hashedUserPassword, 16);
-    byte[] encryptedPassword = Crypto.computeHash(passwordToCreate, salt);
+    byte[] encryptedPassword = Crypto.computeHash(userPasswordToCreate, salt);
     assertTrue(userDataAccessObject.getUser(userToCreate) != null);
     assertEquals(userToCreate, userDataAccessObject.getUser(userToCreate).username);
     assertEquals(randomEmail, userDataAccessObject.getUser(userToCreate).email);
     assertArrayEquals(encryptedPassword, userDataAccessObject.getUser(userToCreate).hashedUserPassword);
-    assertFalse(interfaceUser.createUser(userToCreate, randomEmail, passwordToCreate));
+    assertFalse(interfaceUser.createUser(userToCreate, randomEmail, userPasswordToCreate));
   }
 
   @Nested
@@ -111,25 +110,25 @@ class InterfaceUserTests {
     @Test
     @DisplayName("Case: Success")
     void deleteUserSuccess() {
-      String username = generateRandomString(maxLength),
-          masterPassword = generateRandomString(maxLength),
-          loginName = generateRandomString(maxLength),
-          websiteName1 = generateRandomString(maxLength) + ".com",
-          plainUserPassword = generateRandomString(maxLength),
-          url = generateRandomString(maxLength),
-          websiteName2 = websiteName1 + ".de";
+      String username = generateRandomString(stringMaxLength),
+          userPassword = generateRandomString(stringMaxLength),
+          loginName = generateRandomString(stringMaxLength),
+          websiteName1 = generateRandomString(stringMaxLength),
+          plainLoginPassword = generateRandomString(stringMaxLength),
+          webAddress = generateRandomString(stringMaxLength) + ".com",
+          websiteName2 = generateRandomString(stringMaxLength);
       WebsiteDataAccessObject websiteDataAccessObject = database.getPasswordDataAccessObject();
       UrlDataAccessObject urlDataAccessObject = database.getWebsiteDataAccessObject();
-      userDataAccessObject.addUser(new User(username, randomEmail, masterPassword.getBytes()));
+      userDataAccessObject.addUser(new User(username, randomEmail, userPassword.getBytes()));
       websiteDataAccessObject.addWebsite(
-          new Website(username, websiteName1, loginName, plainUserPassword.getBytes()));
+          new Website(username, websiteName1, loginName, plainLoginPassword.getBytes()));
       websiteDataAccessObject.addWebsite(
-          new Website(username, websiteName2, loginName, plainUserPassword.getBytes()));
-      urlDataAccessObject.addUrl(new Url(username, websiteName1, url));
+          new Website(username, websiteName2, loginName, plainLoginPassword.getBytes()));
+      urlDataAccessObject.addUrl(new Url(username, websiteName1, webAddress));
 
       assertTrue(
           interfaceUser.deleteUser(
-              username, BaseEncoding.base16().encode(masterPassword.getBytes())));
+              username, BaseEncoding.base16().encode(userPassword.getBytes())));
       assertNull(userDataAccessObject.getUser(username));
       assertNull(websiteDataAccessObject.getWebsite(username, websiteName1));
       assertNull(websiteDataAccessObject.getWebsite(username, websiteName2));
@@ -137,7 +136,7 @@ class InterfaceUserTests {
     }
 
     @ParameterizedTest
-    @CsvFileSource(resources = "/User/testCheckUser.csv", numLinesToSkip = 1)
+    @CsvFileSource(resources = "/InterfaceUserTest/testCheckUser.csv", numLinesToSkip = 1)
     @DisplayName("Case: Failure")
     void deleteUserFailure(
         String displayCase,

@@ -28,7 +28,7 @@ class InterfaceClipboardTest {
   ClipboardManager clipboard;
 
   InterfaceClipboard interfaceClipboard;
-  int maxLength;
+  static final int stringMaxLength = 100;
 
   @RegisterExtension
   final ActivityScenarioExtension<MainActivity> scenarioExtension =
@@ -42,7 +42,6 @@ class InterfaceClipboardTest {
     }
     clipboard = (ClipboardManager) mainActivity.getSystemService(Context.CLIPBOARD_SERVICE);
     interfaceClipboard = new InterfaceClipboard(mainActivity);
-    maxLength = 100;
   }
 
   @AfterEach
@@ -53,7 +52,7 @@ class InterfaceClipboardTest {
   class copyToClipboardWithTimeoutTest {
 
     @ParameterizedTest
-    @CsvFileSource(resources = "/Tools/copyToClipboardWithTimeoutTest.csv", numLinesToSkip = 1)
+    @CsvFileSource(resources = "/InterfaceClipboardTest/copyToClipboardWithTimeoutTest.csv", numLinesToSkip = 1)
     @DisplayName("Case: ")
     void copyToClipboardWithTimeoutSuccess(String displayCase, String text, long timeout)
         throws Exception {
@@ -85,9 +84,9 @@ class InterfaceClipboardTest {
 
   @Test
   void clearClipboardTest() throws Exception {
-    String textToCopy = generateRandomString(maxLength);
-    String lable = generateRandomString(maxLength);
-    clipboard.setPrimaryClip(ClipData.newPlainText(lable, textToCopy));
+    String textToCopy = generateRandomString(stringMaxLength);
+    String label = generateRandomString(stringMaxLength);
+    clipboard.setPrimaryClip(ClipData.newPlainText(label, textToCopy));
     interfaceClipboard.clearClipboard();
     Thread.sleep(10);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {

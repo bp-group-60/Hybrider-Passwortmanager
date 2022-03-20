@@ -44,12 +44,14 @@ class InterfaceWebsiteTest {
   String randomUser;
   String randomEmail;
   String randomLoginName;
-  String randomMasterPassword;
-  String randomWebsiteName;
   String randomUserPassword;
+  String randomWebsiteName;
+  String randomLoginPassword;
   byte[] key;
   String keyAsHex;
-  int maxLength;
+  static final int stringMaxLength = 100;
+  static final int saltSize = 16;
+  static final int ivSize = 12;
 
   @AfterAll
   static void tearDown() throws Exception {
@@ -67,18 +69,17 @@ class InterfaceWebsiteTest {
               .allowMainThreadQueries()
               .build();
     }
-    maxLength = 100;
     userDataAccessObject = database.getUserDataAccessObject();
     websiteDataAccessObject = database.getPasswordDataAccessObject();
 
     interfaceWebsite = new InterfaceWebsite(websiteDataAccessObject);
 
-    randomUser = generateRandomString(maxLength);
-    randomEmail = generateRandomString(maxLength) + "@email.de";
-    randomLoginName = generateRandomString(maxLength);
-    randomMasterPassword = generateRandomString(maxLength);
-    randomWebsiteName = generateRandomString(maxLength) + ".de";
-    randomUserPassword = generateRandomString(maxLength);
+    randomUser = generateRandomString(stringMaxLength);
+    randomEmail = generateRandomString(stringMaxLength) + "@email.de";
+    randomLoginName = generateRandomString(stringMaxLength);
+    randomUserPassword = generateRandomString(stringMaxLength);
+    randomWebsiteName = generateRandomString(stringMaxLength);
+    randomLoginPassword = generateRandomString(stringMaxLength);
   }
 
   @AfterEach
@@ -90,13 +91,13 @@ class InterfaceWebsiteTest {
   @Test
   void getPasswordListTest() {
     String expectedUser = randomUser;
-    String differentUser = generateRandomString(maxLength);
-    while (differentUser.equals(expectedUser)) differentUser = generateRandomString(maxLength);
+    String differentUser = generateRandomString(stringMaxLength);
+    while (differentUser.equals(expectedUser)) differentUser = generateRandomString(stringMaxLength);
 
     userDataAccessObject.addUser(
-        new User(expectedUser, randomEmail, randomMasterPassword.getBytes()));
+        new User(expectedUser, randomEmail, randomUserPassword.getBytes()));
     ArrayList<Website> list = new ArrayList<>();
-    addRandomPassword(expectedUser, list);
+    addRandomWebsite(expectedUser, list);
     assertEquals(
         "{\"dataArray\":" + list + "}", interfaceWebsite.getWebsiteOverviewList(expectedUser));
     assertNotEquals(
@@ -105,16 +106,16 @@ class InterfaceWebsiteTest {
   }
 
   /**
-   * this method adds a random amount (less than 30) of entity Password into the DB under the given
+   * this method adds a random amount (less than 30) of entity Website into the DB under the given
    * username the added entries are also saved into the ArrayList
    */
-  void addRandomPassword(String username, ArrayList<Website> list) {
+  void addRandomWebsite(String username, ArrayList<Website> list) {
     String websiteName, plainUserPassword, loginName;
     int amount = new Random().nextInt(30) + 1;
     for (int i = 0; i < amount; i++) {
-      websiteName = generateRandomString(maxLength) + ".com";
-      plainUserPassword = generateRandomString(maxLength);
-      loginName = generateRandomString(maxLength);
+      websiteName = generateRandomString(stringMaxLength) + ".com";
+      plainUserPassword = generateRandomString(stringMaxLength);
+      loginName = generateRandomString(stringMaxLength);
       Website websiteEntitytoAdd =
           new Website(username, websiteName, loginName, plainUserPassword.getBytes());
       list.add(websiteEntitytoAdd);
@@ -124,109 +125,109 @@ class InterfaceWebsiteTest {
   }
 
   /**
-   * this method adds an User entity and Password entity into the DB, also generate the key for
+   * this method adds an User entity and Website entity into the DB, also generate the key for
    * crypto functions
    */
   void initDB(
       String username,
       String email,
-      String masterPassword,
+      String userPassword,
       String websiteName,
       String loginName,
-      String plainUserPassword) {
-    byte[] salt = Crypto.generateSecureByteArray(16);
+      String plainLoginPassword) {
+    byte[] salt = Crypto.generateSecureByteArray(saltSize);
     byte[] associatedData = (username + websiteName).getBytes();
-    key = Crypto.generateKey(masterPassword, salt);
+    key = Crypto.generateKey(userPassword, salt);
     keyAsHex = BaseEncoding.base16().encode(key);
-    userDataAccessObject.addUser(new User(username, email, masterPassword.getBytes()));
+    userDataAccessObject.addUser(new User(username, email, userPassword.getBytes()));
     websiteDataAccessObject.addWebsite(
         new Website(
             username,
             websiteName,
             loginName,
             Crypto.encrypt(
-                plainUserPassword, associatedData, key, Crypto.generateUniqueIV(null, 12))));
+                plainLoginPassword, associatedData, key, Crypto.generateUniqueIV(null, ivSize))));
   }
 
   /**
-   * this method checks if the given loginName and plainUserPassword matches the loginName and
-   * plainUserPassword of the given Entity specified by username and websiteName
+   * this method checks if the given loginName and plainLoginPassword matches the loginName and
+   * plainLoginPassword of the given Entity specified by username and websiteName
    */
   void checkExpectedDB(
-      String username, String websiteName, String loginName, String plainUserPassword, byte[] key) {
+      String username, String websiteName, String loginName, String plainLoginPassword, byte[] key) {
     Website expected = websiteDataAccessObject.getWebsite(username, websiteName);
     byte[] associatedData = (username + websiteName).getBytes();
     assertTrue(expected != null);
     assertEquals(expected.loginName, loginName);
-    assertEquals(Crypto.decrypt(expected.encryptedLoginPassword, associatedData, key), plainUserPassword);
+    assertEquals(Crypto.decrypt(expected.encryptedLoginPassword, associatedData, key), plainLoginPassword);
   }
 
   @Nested
-  @DisplayName("Test for createPassword")
+  @DisplayName("Test for createWebsite")
   class createWebsiteTest {
 
     @ParameterizedTest
-    @CsvFileSource(resources = "/Password/createPasswordSuccess.csv", numLinesToSkip = 1)
+    @CsvFileSource(resources = "/InterfaceWebsiteTest/createWebsiteSuccess.csv", numLinesToSkip = 1)
     @DisplayName("Case: Success")
-    void createPasswordSuccess(String loginName, String plainUserPassword) {
+    void createWebsiteSuccess(String loginName, String plainLoginPassword) {
       if (loginName != null) loginName = randomLoginName;
-      if (plainUserPassword != null) plainUserPassword = randomUserPassword;
+      if (plainLoginPassword != null) plainLoginPassword = randomLoginPassword;
       loginName = convertNullToEmptyString(loginName);
-      plainUserPassword = convertNullToEmptyString(plainUserPassword);
+      plainLoginPassword = convertNullToEmptyString(plainLoginPassword);
       userDataAccessObject.addUser(
-          new User(randomUser, randomEmail, randomMasterPassword.getBytes()));
-      byte[] salt = Crypto.generateSecureByteArray(16);
-      key = Crypto.generateKey(randomMasterPassword, salt);
+          new User(randomUser, randomEmail, randomUserPassword.getBytes()));
+      byte[] salt = Crypto.generateSecureByteArray(saltSize);
+      key = Crypto.generateKey(randomUserPassword, salt);
       boolean worked =
           interfaceWebsite.createWebsite(
               randomUser,
               randomWebsiteName,
               loginName,
-              plainUserPassword,
+              plainLoginPassword,
               BaseEncoding.base16().encode(key));
       assertTrue(worked);
-      checkExpectedDB(randomUser, randomWebsiteName, loginName, plainUserPassword, key);
+      checkExpectedDB(randomUser, randomWebsiteName, loginName, plainLoginPassword, key);
     }
 
     @ParameterizedTest
-    @CsvFileSource(resources = "/Password/createPasswordExisted.csv", numLinesToSkip = 1)
+    @CsvFileSource(resources = "/InterfaceWebsiteTest/createWebsiteExisted.csv", numLinesToSkip = 1)
     @DisplayName("Case: Existed")
-    void createPasswordExisted(
+    void createWebsiteExisted(
         String displayCase,
         String loginName1,
-        String plainUserPassword1,
+        String plainLoginPassword1,
         String loginName2,
-        String plainUserPassword2) {
+        String plainLoginPassword2) {
       initDB(
           randomUser,
           randomEmail,
-          randomMasterPassword,
+              randomUserPassword,
           randomWebsiteName,
           loginName1,
-          plainUserPassword1);
+          plainLoginPassword1);
       boolean worked =
           interfaceWebsite.createWebsite(
-              randomUser, randomWebsiteName, loginName2, plainUserPassword2, keyAsHex);
+              randomUser, randomWebsiteName, loginName2, plainLoginPassword2, keyAsHex);
       assertFalse(worked);
-      checkExpectedDB(randomUser, randomWebsiteName, loginName1, plainUserPassword1, key);
+      checkExpectedDB(randomUser, randomWebsiteName, loginName1, plainLoginPassword1, key);
     }
 
     @ParameterizedTest
-    @CsvFileSource(resources = "/Password/createPasswordFailure.csv", numLinesToSkip = 1)
+    @CsvFileSource(resources = "/InterfaceWebsiteTest/createWebsiteFailure.csv", numLinesToSkip = 1)
     @DisplayName("Case: Failure")
-    void createPasswordFailure(
+    void createWebsiteFailure(
         String displayCase, String userExistedInDB, String userToCreate, String websiteToCreate) {
       websiteToCreate = convertNullToEmptyString(websiteToCreate);
       userDataAccessObject.addUser(
-          new User(userExistedInDB, randomEmail, randomMasterPassword.getBytes()));
-      byte[] salt = Crypto.generateSecureByteArray(16);
-      key = Crypto.generateKey(randomMasterPassword, salt);
+          new User(userExistedInDB, randomEmail, randomUserPassword.getBytes()));
+      byte[] salt = Crypto.generateSecureByteArray(saltSize);
+      key = Crypto.generateKey(randomUserPassword, salt);
       boolean worked =
           interfaceWebsite.createWebsite(
               userToCreate,
               websiteToCreate,
               randomLoginName,
-              randomUserPassword,
+                  randomLoginPassword,
               BaseEncoding.base16().encode(key));
       assertFalse(worked);
       assertNull(websiteDataAccessObject.getWebsite(userToCreate, websiteToCreate));
@@ -234,78 +235,78 @@ class InterfaceWebsiteTest {
   }
 
   @Nested
-  @DisplayName("Tests for updatePassword")
+  @DisplayName("Tests for updateWebsite")
   class updateWebsiteTest {
 
     @ParameterizedTest
-    @CsvFileSource(resources = "/Password/updatePasswordSuccess.csv", numLinesToSkip = 1)
+    @CsvFileSource(resources = "/InterfaceWebsiteTest/updateWebsiteSuccess.csv", numLinesToSkip = 1)
     @DisplayName("Case: Success")
-    void updatePasswordSuccess(
+    void updateWebsiteSuccess(
         String displayCase,
         String username,
         String loginName,
-        String plainUserPassword,
+        String plainLoginPassword,
         String newLoginName,
-        String newPlainUserPassword) {
+        String newPlainLoginPassword) {
       initDB(
           username,
           randomEmail,
-          randomMasterPassword,
+              randomUserPassword,
           randomWebsiteName,
           loginName,
-          plainUserPassword);
+          plainLoginPassword);
 
       assertTrue(
           interfaceWebsite.updateWebsite(
-              username, randomWebsiteName, newLoginName, newPlainUserPassword, keyAsHex));
+              username, randomWebsiteName, newLoginName, newPlainLoginPassword, keyAsHex));
 
-      checkExpectedDB(username, randomWebsiteName, newLoginName, newPlainUserPassword, key);
+      checkExpectedDB(username, randomWebsiteName, newLoginName, newPlainLoginPassword, key);
     }
 
     @ParameterizedTest
-    @CsvFileSource(resources = "/Password/updatePasswordFailure.csv", numLinesToSkip = 1)
+    @CsvFileSource(resources = "/InterfaceWebsiteTest/updateWebsiteFailure.csv", numLinesToSkip = 1)
     @DisplayName("Case: Failure")
     void updatePasswordFailure(
         String displayCase,
         String username1,
         String websiteName1,
         String loginName1,
-        String plainUserPassword1,
+        String plainLoginPassword1,
         String username2,
         String websiteName2,
         String loginName2,
-        String plainUserPassword2) {
+        String plainLoginPassword2) {
       initDB(
           username1,
           randomEmail,
-          randomMasterPassword,
+              randomUserPassword,
           websiteName1,
           loginName1,
-          plainUserPassword1);
+          plainLoginPassword1);
 
       assertFalse(
           interfaceWebsite.updateWebsite(
-              username2, websiteName2, loginName2, plainUserPassword2, keyAsHex));
+              username2, websiteName2, loginName2, plainLoginPassword2, keyAsHex));
 
-      checkExpectedDB(username1, websiteName1, loginName1, plainUserPassword1, key);
+      checkExpectedDB(username1, websiteName1, loginName1, plainLoginPassword1, key);
     }
   }
 
   @Nested
-  @DisplayName("Tests for deletePassword")
+  @DisplayName("Tests for deleteWebsite")
   class deleteWebsiteTest {
 
     @Test
     @DisplayName("Case: Success")
-    void deletePasswordSuccess() {
+    void deleteWebsiteSuccess() {
       initDB(
           randomUser,
           randomEmail,
-          randomMasterPassword,
+              randomUserPassword,
           randomWebsiteName,
           randomLoginName,
-          randomUserPassword);
-      String randomUrl = generateRandomString(maxLength);
+              randomLoginPassword);
+      String randomUrl = generateRandomString(stringMaxLength);
       UrlDataAccessObject urlDataAccessObject = database.getWebsiteDataAccessObject();
       urlDataAccessObject.addUrl(new Url(randomUser, randomWebsiteName, randomUrl));
 
@@ -315,9 +316,9 @@ class InterfaceWebsiteTest {
     }
 
     @ParameterizedTest
-    @CsvFileSource(resources = "/Password/deletePasswordFailure.csv", numLinesToSkip = 1)
+    @CsvFileSource(resources = "/InterfaceWebsiteTest/deleteWebsiteFailure.csv", numLinesToSkip = 1)
     @DisplayName("Case: Failure")
-    void deletePasswordFailure(
+    void deleteWebsiteFailure(
         String displayCase,
         String username1,
         String websiteName1,
@@ -326,14 +327,14 @@ class InterfaceWebsiteTest {
       initDB(
           username1,
           randomEmail,
-          randomMasterPassword,
+              randomUserPassword,
           websiteName1,
           randomLoginName,
-          randomUserPassword);
+              randomLoginPassword);
 
       assertFalse(interfaceWebsite.deleteWebsite(username2, websiteName2));
 
-      checkExpectedDB(username1, websiteName1, randomLoginName, randomUserPassword, key);
+      checkExpectedDB(username1, websiteName1, randomLoginName, randomLoginPassword, key);
     }
   }
 
@@ -348,16 +349,16 @@ class InterfaceWebsiteTest {
       initDB(
           randomUser,
           randomEmail,
-          randomMasterPassword,
+              randomUserPassword,
           randomWebsiteName,
           expectedLoginName,
-          randomUserPassword);
+              randomLoginPassword);
       String actualLoginName = interfaceWebsite.getLoginName(randomUser, randomWebsiteName);
       assertEquals(expectedLoginName, actualLoginName);
     }
 
     @ParameterizedTest
-    @CsvFileSource(resources = "/Password/getLoginNameFailure.csv", numLinesToSkip = 1)
+    @CsvFileSource(resources = "/InterfaceWebsiteTest/getLoginNameFailure.csv", numLinesToSkip = 1)
     @DisplayName("Case: Failure")
     void getLoginNameFailure(
         String displayCase,
@@ -369,27 +370,27 @@ class InterfaceWebsiteTest {
       initDB(
           username,
           randomEmail,
-          randomMasterPassword,
+              randomUserPassword,
           websiteName,
           randomLoginName,
-          randomUserPassword);
+              randomLoginPassword);
       String actualLoginName = interfaceWebsite.getLoginName(actualUserName, actualWebsiteName);
       assertEquals(expectedLoginName, actualLoginName);
     }
   }
 
   @Nested
-  @DisplayName("Tests for getPassword")
+  @DisplayName("Tests for getWebsite")
   class getWebsiteTest {
 
     @Test
     @DisplayName("Case: Standard")
-    void getPasswordStandard() {
-      String expectedPassword = randomUserPassword;
+    void getWebsiteStandard() {
+      String expectedPassword = randomLoginPassword;
       initDB(
           randomUser,
           randomEmail,
-          randomMasterPassword,
+              randomUserPassword,
           randomWebsiteName,
           randomLoginName,
           expectedPassword);
@@ -399,7 +400,7 @@ class InterfaceWebsiteTest {
     }
 
     @ParameterizedTest
-    @CsvFileSource(resources = "/Password/getPasswordFailure.csv", numLinesToSkip = 1)
+    @CsvFileSource(resources = "/InterfaceWebsiteTest/getWebsiteFailure.csv", numLinesToSkip = 1)
     @DisplayName("Case: Failure")
     void getPasswordFailure(
         String displayCase,
@@ -411,10 +412,10 @@ class InterfaceWebsiteTest {
       initDB(
           username,
           randomEmail,
-          randomMasterPassword,
+              randomUserPassword,
           websiteName,
           randomLoginName,
-          randomUserPassword);
+              randomLoginPassword);
       String actualPassword =
           interfaceWebsite.getLoginPassword(actualUserName, actualWebsiteName, keyAsHex);
       assertEquals(expectedPassword, actualPassword);

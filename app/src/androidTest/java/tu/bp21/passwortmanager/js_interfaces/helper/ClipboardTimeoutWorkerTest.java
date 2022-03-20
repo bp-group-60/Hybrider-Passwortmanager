@@ -18,6 +18,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
+import java.util.Properties;
+
 import de.mannodermaus.junit5.ActivityScenarioExtension;
 import tu.bp21.passwortmanager.MainActivity;
 
@@ -50,8 +52,8 @@ class ClipboardTimeoutWorkerTest {
     long timeInMilliseconds = 100;
     int expectedItemCount = 1;
     String textToCopy = generateRandomString(maxLength);
-    String lable = generateRandomString(maxLength);
-    clipboard.setPrimaryClip(ClipData.newPlainText(lable, textToCopy));
+    String label = generateRandomString(maxLength);
+    clipboard.setPrimaryClip(ClipData.newPlainText(label, textToCopy));
     OneTimeWorkRequest oneTimeWorkRequest = OneTimeWorkRequest.from(ClipboardTimeoutWorker.class);
     workManager.beginWith(oneTimeWorkRequest).enqueue();
     Thread.sleep(timeInMilliseconds);

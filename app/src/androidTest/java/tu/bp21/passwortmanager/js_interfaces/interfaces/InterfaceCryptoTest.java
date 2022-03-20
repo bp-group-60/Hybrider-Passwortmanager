@@ -26,10 +26,10 @@ class InterfaceCryptoTest {
 
   @Nested
   @DisplayName("Test for hashPassword")
-  class hashWebsiteTest {
+  class hashPasswordTests{
 
     @ParameterizedTest
-    @CsvFileSource(resources = "/Crypto/hashPassword.csv", numLinesToSkip = 1)
+    @CsvFileSource(resources = "/InterfaceCryptoTest/hashPassword.csv", numLinesToSkip = 1)
     @DisplayName("Case:")
     void hashPasswordTest(String displayCase, String plainUserPassword, String salt) {
       plainUserPassword = convertNullToEmptyString(plainUserPassword);
@@ -46,7 +46,7 @@ class InterfaceCryptoTest {
   @DisplayName("Test for generateKey")
   class generateKeyTest {
     @ParameterizedTest
-    @CsvFileSource(resources = "/Crypto/generateKey.csv", numLinesToSkip = 1)
+    @CsvFileSource(resources = "/InterfaceCryptoTest/generateKey.csv", numLinesToSkip = 1)
     @DisplayName("Case:")
     void generateKeyTest(String displayCase, String passwordToDerive, String salt) {
       passwordToDerive = convertNullToEmptyString(passwordToDerive);

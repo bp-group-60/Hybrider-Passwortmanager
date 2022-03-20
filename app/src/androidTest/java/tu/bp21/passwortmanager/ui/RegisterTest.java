@@ -26,7 +26,7 @@ import tu.bp21.passwortmanager.db.database.ApplicationDatabase;
 import static tu.bp21.passwortmanager.StringFunction.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class RegistrierenTest {
+class RegisterTest {
 
   @RegisterExtension
   final ActivityScenarioExtension<MainActivity> scenarioExtension =

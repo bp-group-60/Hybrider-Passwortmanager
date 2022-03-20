@@ -40,11 +40,11 @@ class InterfaceUrlTest {
   String randomUser;
   String randomEmail;
   String randomLoginName;
-  String randomMasterPassword;
-  String randomWebsiteName;
   String randomUserPassword;
-  String randomUrl;
-  int maxLength;
+  String randomWebsiteName;
+  String randomLoginPassword;
+  String randomWebAddress;
+  static final int stringMaxLength = 20;
 
   @AfterAll
   static void tearDown() throws Exception {
@@ -62,20 +62,19 @@ class InterfaceUrlTest {
               .allowMainThreadQueries()
               .build();
     }
-    maxLength = 20;
     userDataAccessObject = database.getUserDataAccessObject();
     websiteDataAccessObject = database.getPasswordDataAccessObject();
     urlDataAccessObject = database.getWebsiteDataAccessObject();
 
     interfaceWebsite = new InterfaceUrl(urlDataAccessObject);
 
-    randomUser = generateRandomString(maxLength);
-    randomEmail = generateRandomString(maxLength) + "@email.de";
-    randomLoginName = generateRandomString(maxLength);
-    randomMasterPassword = generateRandomString(maxLength);
-    randomWebsiteName = generateRandomString(maxLength) + ".de";
-    randomUserPassword = generateRandomString(maxLength);
-    randomUrl = generateRandomString(5) + "." + generateRandomString(maxLength) + ".com";
+    randomUser = generateRandomString(stringMaxLength);
+    randomEmail = generateRandomString(stringMaxLength) + "@email.de";
+    randomLoginName = generateRandomString(stringMaxLength);
+    randomUserPassword = generateRandomString(stringMaxLength);
+    randomWebsiteName = generateRandomString(stringMaxLength);
+    randomLoginPassword = generateRandomString(stringMaxLength);
+    randomWebAddress = generateRandomString(stringMaxLength) + "." + generateRandomString(stringMaxLength) + ".com";
   }
 
   @AfterEach
@@ -84,36 +83,34 @@ class InterfaceUrlTest {
     database.clearAllTables();
   }
 
-  /** this method adds an User entity and Password entity into the DB */
+  /** this method adds an User entity and Website entity into the DB */
   void initDB(
       String username,
       String email,
-      String masterPassword,
+      String userPassword,
       String websiteName,
       String loginName,
-      String plainUserPassword) {
-    userDataAccessObject.addUser(new User(username, email, masterPassword.getBytes()));
+      String plainLoginPassword) {
+    userDataAccessObject.addUser(new User(username, email, userPassword.getBytes()));
     websiteDataAccessObject.addWebsite(
-        new Website(username, websiteName, loginName, plainUserPassword.getBytes()));
+        new Website(username, websiteName, loginName, plainLoginPassword.getBytes()));
   }
 
   /**
    * this method checks if the given Url matches the Url of the given Website Entity specified by
    * username and websiteName
    */
-  void checkExpectedDB(String username, String websiteName, String url) {
-    Url expected = getWebsite(username, websiteName, url);
+  void checkExpectedDB(String username, String websiteName, String webAddress) {
+    Url expected = getWebsite(username, websiteName, webAddress);
 
     assertTrue(expected != null);
     assertEquals(expected.username, username);
     assertEquals(expected.websiteName, websiteName);
-    assertEquals(expected.webAddress, url);
+    assertEquals(expected.webAddress, webAddress);
   }
 
   /**
-   * this method finds the saved Website entity given the username, websiteName and Url
-   *
-   * @return
+   * this method finds the saved Url entity given the username, websiteName and Url
    */
   Url getWebsite(String username, String websiteName, String url) {
     for (Url web : urlDataAccessObject.getUrlList(username, websiteName)) {
@@ -123,14 +120,14 @@ class InterfaceUrlTest {
   }
 
   /**
-   * this method adds a random amount (less than 20) of entity Website into the DB under the given
+   * this method adds a random amount (less than 20) of entity Url into the DB under the given
    * username and websiteName the added entries are also saved into the ArrayList
    */
   void addRandomWebsiteUrl(String username, String websiteName, ArrayList<Url> list) {
     String url;
     int amount = new Random().nextInt(20) + 1;
     for (int i = 0; i < amount; i++) {
-      url = generateRandomString(maxLength) + ".com";
+      url = generateRandomString(stringMaxLength) + ".com";
       Url toAdd = new Url(username, websiteName, url);
       list.add(toAdd);
       urlDataAccessObject.addUrl(toAdd);
@@ -148,12 +145,12 @@ class InterfaceUrlTest {
       initDB(
           randomUser,
           randomEmail,
-          randomMasterPassword,
+              randomUserPassword,
           randomWebsiteName,
           randomLoginName,
-          randomUserPassword);
-      assertTrue(interfaceWebsite.saveUrl(randomUser, randomWebsiteName, randomUrl));
-      checkExpectedDB(randomUser, randomWebsiteName, randomUrl);
+              randomLoginPassword);
+      assertTrue(interfaceWebsite.saveUrl(randomUser, randomWebsiteName, randomWebAddress));
+      checkExpectedDB(randomUser, randomWebsiteName, randomWebAddress);
     }
 
     @Test
@@ -162,17 +159,17 @@ class InterfaceUrlTest {
       initDB(
           randomUser,
           randomEmail,
-          randomMasterPassword,
+              randomUserPassword,
           randomWebsiteName,
           randomLoginName,
-          randomUserPassword);
-      urlDataAccessObject.addUrl(new Url(randomUser, randomWebsiteName, randomUrl));
-      assertFalse(interfaceWebsite.saveUrl(randomUser, randomWebsiteName, randomUrl));
-      checkExpectedDB(randomUser, randomWebsiteName, randomUrl);
+              randomLoginPassword);
+      urlDataAccessObject.addUrl(new Url(randomUser, randomWebsiteName, randomWebAddress));
+      assertFalse(interfaceWebsite.saveUrl(randomUser, randomWebsiteName, randomWebAddress));
+      checkExpectedDB(randomUser, randomWebsiteName, randomWebAddress);
     }
 
     @ParameterizedTest
-    @CsvFileSource(resources = "/Website/saveUrlFailure.csv", numLinesToSkip = 1)
+    @CsvFileSource(resources = "/InterfaceUrlTest/saveUrlFailure.csv", numLinesToSkip = 1)
     @DisplayName("Case: Failure")
     void saveUrlFailure(
         String displayCase,
@@ -185,10 +182,10 @@ class InterfaceUrlTest {
       initDB(
           userExistedInDB,
           randomEmail,
-          randomMasterPassword,
+              randomUserPassword,
           websiteExistedInDB,
           randomLoginName,
-          randomUserPassword);
+              randomLoginPassword);
       assertFalse(interfaceWebsite.saveUrl(userGiven, websiteGiven, urlGiven));
       assertNull(getWebsite(userGiven, websiteGiven, urlGiven));
     }
@@ -204,17 +201,17 @@ class InterfaceUrlTest {
       initDB(
           randomUser,
           randomEmail,
-          randomMasterPassword,
+              randomUserPassword,
           randomWebsiteName,
           randomLoginName,
-          randomUserPassword);
-      urlDataAccessObject.addUrl(new Url(randomUser, randomWebsiteName, randomUrl));
-      assertTrue(interfaceWebsite.deleteUrl(randomUser, randomWebsiteName, randomUrl));
-      assertNull(getWebsite(randomUser, randomWebsiteName, randomUrl));
+              randomLoginPassword);
+      urlDataAccessObject.addUrl(new Url(randomUser, randomWebsiteName, randomWebAddress));
+      assertTrue(interfaceWebsite.deleteUrl(randomUser, randomWebsiteName, randomWebAddress));
+      assertNull(getWebsite(randomUser, randomWebsiteName, randomWebAddress));
     }
 
     @ParameterizedTest
-    @CsvFileSource(resources = "/Website/deleteUrlFailure.csv", numLinesToSkip = 1)
+    @CsvFileSource(resources = "/InterfaceUrlTest/deleteUrlFailure.csv", numLinesToSkip = 1)
     @DisplayName("Case: Failure")
     void deleteUrlFailure(
         String displayCase,
@@ -227,10 +224,10 @@ class InterfaceUrlTest {
       initDB(
           usernameExistedInDB,
           randomEmail,
-          randomMasterPassword,
+              randomUserPassword,
           websiteExistedInDB,
           randomLoginName,
-          randomUserPassword);
+              randomLoginPassword);
       urlDataAccessObject.addUrl(
           new Url(usernameExistedInDB, websiteExistedInDB, urlExistedInDB));
       assertFalse(interfaceWebsite.deleteUrl(usernameGiven, websiteGiven, urlGiven));
@@ -249,10 +246,10 @@ class InterfaceUrlTest {
       initDB(
           randomUser,
           randomEmail,
-          randomMasterPassword,
+              randomUserPassword,
           randomWebsiteName,
           randomLoginName,
-          randomUserPassword);
+              randomLoginPassword);
       addRandomWebsiteUrl(randomUser, randomWebsiteName, list);
       assertEquals(
           "{\"dataArray\":" + list + "}",
@@ -260,7 +257,7 @@ class InterfaceUrlTest {
     }
 
     @ParameterizedTest
-    @CsvFileSource(resources = "/Website/getUrlListFailure.csv", numLinesToSkip = 1)
+    @CsvFileSource(resources = "/InterfaceUrlTest/getUrlListFailure.csv", numLinesToSkip = 1)
     @DisplayName("Case: Failure")
     void getUrlListFailure(
         String displayCase,
@@ -272,10 +269,10 @@ class InterfaceUrlTest {
       initDB(
           usernameExistedInDB,
           randomEmail,
-          randomMasterPassword,
+              randomUserPassword,
           websiteExistedInDB,
           randomLoginName,
-          randomUserPassword);
+              randomLoginPassword);
       addRandomWebsiteUrl(usernameExistedInDB, websiteExistedInDB, list);
       assertNotEquals(
           "{\"dataArray\":" + list + "}", interfaceWebsite.getUrlList(usernameGiven, websiteGiven));
