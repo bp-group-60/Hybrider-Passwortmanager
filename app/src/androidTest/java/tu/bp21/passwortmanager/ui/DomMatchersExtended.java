@@ -17,39 +17,39 @@ import javax.xml.xpath.XPathFactory;
 
 public class DomMatchersExtended {
 
-    public static Matcher<Document> hasNoElementWithXpath(final String xpath) {
-        return new HasElementWithXPathMatcher(xpath);
+  public static Matcher<Document> hasNoElementWithXpath(final String xpath) {
+    return new HasElementWithXPathMatcher(xpath);
+  }
+
+  private static NodeList extractNodeListForXPath(String xpath, Document document) {
+    try {
+      XPath xPath = XPathFactory.newInstance().newXPath();
+      XPathExpression expr = xPath.compile(xpath);
+      return (NodeList) expr.evaluate(document, XPathConstants.NODESET);
+    } catch (XPathExpressionException e) {
+      return null;
+    }
+  }
+
+  static final class HasElementWithXPathMatcher extends TypeSafeMatcher<Document> {
+
+    @RemoteMsgField(order = 0)
+    private final String xpath;
+
+    @RemoteMsgConstructor
+    HasElementWithXPathMatcher(final String xpath) {
+      this.xpath = xpath;
     }
 
-    private static NodeList extractNodeListForXPath(String xpath, Document document) {
-        try {
-            XPath xPath = XPathFactory.newInstance().newXPath();
-            XPathExpression expr = xPath.compile(xpath);
-            return (NodeList) expr.evaluate(document, XPathConstants.NODESET);
-        } catch (XPathExpressionException e) {
-            return null;
-        }
+    @Override
+    public void describeTo(Description description) {
+      description.appendText("has element with xpath: " + xpath);
     }
 
-    static final class HasElementWithXPathMatcher extends TypeSafeMatcher<Document> {
-
-        @RemoteMsgField(order = 0)
-        private final String xpath;
-
-        @RemoteMsgConstructor
-        HasElementWithXPathMatcher(final String xpath) {
-            this.xpath = xpath;
-        }
-
-        @Override
-        public void describeTo(Description description) {
-            description.appendText("has element with xpath: " + xpath);
-        }
-
-        @Override
-        public boolean matchesSafely(Document document) {
-            NodeList nodeList = extractNodeListForXPath(xpath, document);
-            return nodeList == null || nodeList.getLength() == 0;
-        }
+    @Override
+    public boolean matchesSafely(Document document) {
+      NodeList nodeList = extractNodeListForXPath(xpath, document);
+      return nodeList == null || nodeList.getLength() == 0;
     }
+  }
 }

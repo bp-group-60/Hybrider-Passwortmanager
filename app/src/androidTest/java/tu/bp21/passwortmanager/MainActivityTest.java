@@ -1,9 +1,6 @@
 package tu.bp21.passwortmanager;
 
-import androidx.test.espresso.web.webdriver.DriverAtoms;
-import androidx.test.espresso.web.webdriver.Locator;
 import static androidx.test.espresso.web.sugar.Web.onWebView;
-import static androidx.test.espresso.web.webdriver.DriverAtoms.findElement;
 
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;
@@ -11,8 +8,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import androidx.test.filters.LargeTest;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import de.mannodermaus.junit5.ActivityScenarioExtension;
@@ -33,10 +28,10 @@ class MainActivityTest {
   }
 
   /*@Test
-  void test() {
-    onWebView().withElement(findElement(Locator.ID, "user")).perform(DriverAtoms.webKeys("abc"));
-  }
-*/
+    void test() {
+      onWebView().withElement(findElement(Locator.ID, "user")).perform(DriverAtoms.webKeys("abc"));
+    }
+  */
   @AfterEach
   void tearDown() throws Exception {}
 
