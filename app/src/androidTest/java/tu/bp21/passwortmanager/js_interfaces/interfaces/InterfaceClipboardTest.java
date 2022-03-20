@@ -52,7 +52,9 @@ class InterfaceClipboardTest {
   class copyToClipboardWithTimeoutTest {
 
     @ParameterizedTest
-    @CsvFileSource(resources = "/InterfaceClipboardTest/copyToClipboardWithTimeoutTest.csv", numLinesToSkip = 1)
+    @CsvFileSource(
+        resources = "/InterfaceClipboardTest/copyToClipboardWithTimeoutTest.csv",
+        numLinesToSkip = 1)
     @DisplayName("Case: ")
     void copyToClipboardWithTimeoutSuccess(String displayCase, String text, long timeout)
         throws Exception {

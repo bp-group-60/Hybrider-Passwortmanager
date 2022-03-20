@@ -92,7 +92,8 @@ class InterfaceWebsiteTest {
   void getPasswordListTest() {
     String expectedUser = randomUser;
     String differentUser = generateRandomString(stringMaxLength);
-    while (differentUser.equals(expectedUser)) differentUser = generateRandomString(stringMaxLength);
+    while (differentUser.equals(expectedUser))
+      differentUser = generateRandomString(stringMaxLength);
 
     userDataAccessObject.addUser(
         new User(expectedUser, randomEmail, randomUserPassword.getBytes()));
@@ -154,12 +155,17 @@ class InterfaceWebsiteTest {
    * plainLoginPassword of the given Entity specified by username and websiteName
    */
   void checkExpectedDB(
-      String username, String websiteName, String loginName, String plainLoginPassword, byte[] key) {
+      String username,
+      String websiteName,
+      String loginName,
+      String plainLoginPassword,
+      byte[] key) {
     Website expected = websiteDataAccessObject.getWebsite(username, websiteName);
     byte[] associatedData = (username + websiteName).getBytes();
     assertTrue(expected != null);
     assertEquals(expected.loginName, loginName);
-    assertEquals(Crypto.decrypt(expected.encryptedLoginPassword, associatedData, key), plainLoginPassword);
+    assertEquals(
+        Crypto.decrypt(expected.encryptedLoginPassword, associatedData, key), plainLoginPassword);
   }
 
   @Nested
@@ -201,7 +207,7 @@ class InterfaceWebsiteTest {
       initDB(
           randomUser,
           randomEmail,
-              randomUserPassword,
+          randomUserPassword,
           randomWebsiteName,
           loginName1,
           plainLoginPassword1);
@@ -227,7 +233,7 @@ class InterfaceWebsiteTest {
               userToCreate,
               websiteToCreate,
               randomLoginName,
-                  randomLoginPassword,
+              randomLoginPassword,
               BaseEncoding.base16().encode(key));
       assertFalse(worked);
       assertNull(websiteDataAccessObject.getWebsite(userToCreate, websiteToCreate));
@@ -251,7 +257,7 @@ class InterfaceWebsiteTest {
       initDB(
           username,
           randomEmail,
-              randomUserPassword,
+          randomUserPassword,
           randomWebsiteName,
           loginName,
           plainLoginPassword);
@@ -279,7 +285,7 @@ class InterfaceWebsiteTest {
       initDB(
           username1,
           randomEmail,
-              randomUserPassword,
+          randomUserPassword,
           websiteName1,
           loginName1,
           plainLoginPassword1);
@@ -302,10 +308,10 @@ class InterfaceWebsiteTest {
       initDB(
           randomUser,
           randomEmail,
-              randomUserPassword,
+          randomUserPassword,
           randomWebsiteName,
           randomLoginName,
-              randomLoginPassword);
+          randomLoginPassword);
       String randomUrl = generateRandomString(stringMaxLength);
       UrlDataAccessObject urlDataAccessObject = database.getWebsiteDataAccessObject();
       urlDataAccessObject.addUrl(new Url(randomUser, randomWebsiteName, randomUrl));
@@ -327,10 +333,10 @@ class InterfaceWebsiteTest {
       initDB(
           username1,
           randomEmail,
-              randomUserPassword,
+          randomUserPassword,
           websiteName1,
           randomLoginName,
-              randomLoginPassword);
+          randomLoginPassword);
 
       assertFalse(interfaceWebsite.deleteWebsite(username2, websiteName2));
 
@@ -349,10 +355,10 @@ class InterfaceWebsiteTest {
       initDB(
           randomUser,
           randomEmail,
-              randomUserPassword,
+          randomUserPassword,
           randomWebsiteName,
           expectedLoginName,
-              randomLoginPassword);
+          randomLoginPassword);
       String actualLoginName = interfaceWebsite.getLoginName(randomUser, randomWebsiteName);
       assertEquals(expectedLoginName, actualLoginName);
     }
@@ -370,10 +376,10 @@ class InterfaceWebsiteTest {
       initDB(
           username,
           randomEmail,
-              randomUserPassword,
+          randomUserPassword,
           websiteName,
           randomLoginName,
-              randomLoginPassword);
+          randomLoginPassword);
       String actualLoginName = interfaceWebsite.getLoginName(actualUserName, actualWebsiteName);
       assertEquals(expectedLoginName, actualLoginName);
     }
@@ -390,7 +396,7 @@ class InterfaceWebsiteTest {
       initDB(
           randomUser,
           randomEmail,
-              randomUserPassword,
+          randomUserPassword,
           randomWebsiteName,
           randomLoginName,
           expectedPassword);
@@ -412,10 +418,10 @@ class InterfaceWebsiteTest {
       initDB(
           username,
           randomEmail,
-              randomUserPassword,
+          randomUserPassword,
           websiteName,
           randomLoginName,
-              randomLoginPassword);
+          randomLoginPassword);
       String actualPassword =
           interfaceWebsite.getLoginPassword(actualUserName, actualWebsiteName, keyAsHex);
       assertEquals(expectedPassword, actualPassword);

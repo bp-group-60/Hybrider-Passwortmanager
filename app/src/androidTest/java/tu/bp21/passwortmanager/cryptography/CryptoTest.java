@@ -24,7 +24,14 @@ class CryptoTest {
   }
 
   static Random random;
-  static int ivSize, keySize, hashSize, saltSize, stringMaxLength, scryptParamN, scryptParamR, scryptParamP;
+  static int ivSize,
+      keySize,
+      hashSize,
+      saltSize,
+      stringMaxLength,
+      scryptParamN,
+      scryptParamR,
+      scryptParamP;
 
   @BeforeAll
   static void setUp() {
@@ -47,7 +54,7 @@ class CryptoTest {
     for (byte b : array) {
       assertNotNull(b);
     }
-    //test 0
+    // test 0
     array = Crypto.generateSecureByteArray(0);
     assertEquals(0, array.length);
   }
@@ -245,7 +252,7 @@ class CryptoTest {
      * correct
      */
     void checkDecryptSuccess(byte[] associatedData, String expected) throws Exception {
-      //aad = additional associated Data for GCM mode
+      // aad = additional associated Data for GCM mode
       byte[] aadToEncrypt = associatedData;
       if (associatedData == null) aadToEncrypt = new byte[0];
       SecretKey key = generateSecretKey();
@@ -262,7 +269,7 @@ class CryptoTest {
     @Test
     @DisplayName("Case: Default")
     void computeHashDefault() {
-      byte[] salt = Crypto.generateSecureByteArray(random.nextInt(saltSize*4) + 1);
+      byte[] salt = Crypto.generateSecureByteArray(random.nextInt(saltSize * 4) + 1);
       String password = generateRandomString(stringMaxLength);
       byte[] expected = computeExpectedHash(password, salt, hashSize);
       byte[] actual = Crypto.computeHash(password, salt);
@@ -290,7 +297,7 @@ class CryptoTest {
     @Test
     @DisplayName("Case: empty or null plaintext")
     void computeHashEmpty() {
-      byte[] salt = Crypto.generateSecureByteArray(random.nextInt(saltSize*4) + 1);
+      byte[] salt = Crypto.generateSecureByteArray(random.nextInt(saltSize * 4) + 1);
       String password = "";
       byte[] expected = computeExpectedHash(password, salt, hashSize);
       byte[] actual = Crypto.computeHash(password, salt);
@@ -304,7 +311,13 @@ class CryptoTest {
     /** compute scrypt hash with bouncy castle library */
     byte[] computeExpectedHash(String plaintext, byte[] salt, int outputLength) {
       byte[] expected =
-          SCrypt.generate(plaintext.getBytes(), salt, (int) Math.pow(2, scryptParamN), scryptParamR, scryptParamP, outputLength);
+          SCrypt.generate(
+              plaintext.getBytes(),
+              salt,
+              (int) Math.pow(2, scryptParamN),
+              scryptParamR,
+              scryptParamP,
+              outputLength);
       expected = Arrays.concatenate(salt, expected);
       return expected;
     }
@@ -385,7 +398,7 @@ class CryptoTest {
     @DisplayName("Case: Default")
     void generateKeyDefault() {
       String passwordToDerive = generateRandomString(stringMaxLength);
-      byte[] salt = Crypto.generateSecureByteArray(random.nextInt(saltSize*4 + 1));
+      byte[] salt = Crypto.generateSecureByteArray(random.nextInt(saltSize * 4 + 1));
       byte[] key = Crypto.generateKey(passwordToDerive, salt);
       assertEquals(keySize, key.length);
     }
@@ -394,7 +407,7 @@ class CryptoTest {
     @DisplayName("Case: empty or null passwordToDerive")
     void generateKeyEmptyOrNullPassword() {
       String emptyPassword = "";
-      byte[] salt = Crypto.generateSecureByteArray(random.nextInt(saltSize*4 +1));
+      byte[] salt = Crypto.generateSecureByteArray(random.nextInt(saltSize * 4 + 1));
       byte[] key = Crypto.generateKey(emptyPassword, salt);
       assertEquals(keySize, key.length);
 
@@ -417,7 +430,7 @@ class CryptoTest {
   /** generate a key for encrypt and decrypt */
   SecretKey generateSecretKey() throws Exception {
     KeyGenerator keygen = KeyGenerator.getInstance("AES");
-    keygen.init(keySize*8);
+    keygen.init(keySize * 8);
     return keygen.generateKey();
   }
 

@@ -26,7 +26,7 @@ class InterfaceCryptoTest {
 
   @Nested
   @DisplayName("Test for hashPassword")
-  class hashPasswordTests{
+  class hashPasswordTests {
 
     @ParameterizedTest
     @CsvFileSource(resources = "/InterfaceCryptoTest/hashPassword.csv", numLinesToSkip = 1)
