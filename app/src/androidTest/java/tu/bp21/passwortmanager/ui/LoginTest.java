@@ -54,7 +54,7 @@ public class LoginTest {
               + "."
               + generateRandomString(2, 5);
 
-      randomUserPassword = generateRandomString(8,20);
+      randomUserPassword = generateRandomString(8, 20);
 
       onWebView().forceJavascriptEnabled();
       onWebView()

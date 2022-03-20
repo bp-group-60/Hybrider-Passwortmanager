@@ -55,13 +55,13 @@ class RegistrierenTest {
           Room.databaseBuilder(mainActivity, ApplicationDatabase.class, "testDatabase")
               .allowMainThreadQueries()
               .build();
-      defaultUsername = generateRandomString(3,20);
+      defaultUsername = generateRandomString(3, 20);
     }
     randomUsername = generateRandomString(3, 20);
     randomEmail =
         generateRandomString(20) + "@" + generateRandomString(5) + "." + generateRandomString(2, 5);
 
-    randomUserPassword = generateRandomString(8,20);
+    randomUserPassword = generateRandomString(8, 20);
 
     onWebView().forceJavascriptEnabled();
     onWebView().withElement(findElement(Locator.LINK_TEXT, "Konto erstellen")).perform(webClick());
@@ -70,95 +70,102 @@ class RegistrierenTest {
 
   @Test
   @Order(1)
-  void registerSuccess() throws Exception{
+  void registerSuccess() throws Exception {
     fillDataForm(defaultUsername, randomEmail, randomUserPassword, randomUserPassword);
     onWebView().withElement(findElement(Locator.ID, "submit-button")).perform(webClick());
-    //should be in login page
+    // should be in login page
     onWebView().check(webContent(containingTextInBody("Anmeldung")));
     onWebView().check(webContent(containingTextInBody("Benutzerkonto erfolgreich erstellt.")));
   }
 
   @Test
   @Order(2)
-  void registerUserExist(){
+  void registerUserExist() {
     fillDataForm(defaultUsername, randomEmail, randomUserPassword, randomUserPassword);
 
     onWebView().withElement(findElement(Locator.ID, "submit-button")).perform(webClick());
 
-    //should stay in register page
+    // should stay in register page
     onWebView().check(webContent(containingTextInBody("Konto erstellen")));
     onWebView().check(webContent(containingTextInBody("Benutzername bereits vergeben")));
   }
 
   @Test
-  void registerUsernameFormatNotValid(){
-    String username = generateRandomString(usernameMinLength-1);
+  void registerUsernameFormatNotValid() {
+    String username = generateRandomString(usernameMinLength - 1);
     fillDataForm(username, randomEmail, randomUserPassword, randomUserPassword);
     onWebView().withElement(findElement(Locator.ID, "submit-button")).perform(webClick());
-    //should stay in register page
+    // should stay in register page
     onWebView().check(webContent(containingTextInBody("Konto erstellen")));
-    onWebView().check(webContent(containingTextInBody("Benutzername muss mindestens 3 Zeichen haben")));
+    onWebView()
+        .check(webContent(containingTextInBody("Benutzername muss mindestens 3 Zeichen haben")));
   }
 
   @Test
-  void registerEmailFormatNotValid() throws Exception{
-    //only string
-    String email = generateRandomString(stringMaxLength) + "@" + generateRandomString(stringMaxLength);
+  void registerEmailFormatNotValid() throws Exception {
+    // only string
+    String email =
+        generateRandomString(stringMaxLength) + "@" + generateRandomString(stringMaxLength);
     fillDataForm(randomUsername, email, randomUserPassword, randomUserPassword);
     checkEmailFormatError();
 
-
-    //with String + @ + String + domain length < domainMinLength
-    email += "." + generateRandomString(domainMinLength-1);
-    onWebView().withElement(findElement(Locator.ID, "signup-email")).perform(clearElement()).perform(webKeys(email));
+    // with String + @ + String + domain length < domainMinLength
+    email += "." + generateRandomString(domainMinLength - 1);
+    onWebView()
+        .withElement(findElement(Locator.ID, "signup-email"))
+        .perform(clearElement())
+        .perform(webKeys(email));
     checkEmailFormatError();
 
-    //with String + @ + String + domain length > domainMaxLength
-    email += "." + generateRandomString(domainMaxLength+1, domainMaxLength+1);
-    onWebView().withElement(findElement(Locator.ID, "signup-email")).perform(clearElement()).perform(webKeys(email));
+    // with String + @ + String + domain length > domainMaxLength
+    email += "." + generateRandomString(domainMaxLength + 1, domainMaxLength + 1);
+    onWebView()
+        .withElement(findElement(Locator.ID, "signup-email"))
+        .perform(clearElement())
+        .perform(webKeys(email));
     checkEmailFormatError();
   }
 
   @Test
-  void registerUserPasswordFormatNotValid(){
-    String userPassword = generateRandomString(userPasswordMinLength -1);
+  void registerUserPasswordFormatNotValid() {
+    String userPassword = generateRandomString(userPasswordMinLength - 1);
     fillDataForm(randomUsername, randomEmail, userPassword, userPassword);
     onWebView().withElement(findElement(Locator.ID, "submit-button")).perform(webClick());
-    //should stay in register page
+    // should stay in register page
     onWebView().check(webContent(containingTextInBody("Konto erstellen")));
-    onWebView().check(webContent(containingTextInBody("Passwort muss mindestens 8 Zeichen enthalten")));
+    onWebView()
+        .check(webContent(containingTextInBody("Passwort muss mindestens 8 Zeichen enthalten")));
   }
 
   @Test
-  void registerUserPasswordConfirmNotMatch(){
-    String userPassword = generateRandomString(userPasswordMinLength -1);
+  void registerUserPasswordConfirmNotMatch() {
+    String userPassword = generateRandomString(userPasswordMinLength - 1);
     fillDataForm(randomUsername, randomEmail, userPassword, randomUserPassword);
     onWebView().withElement(findElement(Locator.ID, "submit-button")).perform(webClick());
-    //should stay in register page
+    // should stay in register page
     onWebView().check(webContent(containingTextInBody("Konto erstellen")));
     onWebView().check(webContent(containingTextInBody("stimmen nicht")));
   }
 
-  void checkEmailFormatError() throws Exception{
+  void checkEmailFormatError() throws Exception {
     onWebView().withElement(findElement(Locator.ID, "submit-button")).perform(webClick());
     Thread.sleep(loadDelay);
-    //should stay in register page
+    // should stay in register page
     onWebView().check(webContent(containingTextInBody("Konto erstellen")));
     onWebView().check(webContent(containingTextInBody("Bitte gib eine g")));
     onWebView().check(webContent(containingTextInBody("ltige E-Mail-Adresse ein.")));
   }
 
-  void fillDataForm(String username, String email, String userPassword, String userPasswordConfirm){
-    onWebView()
-            .withElement(findElement(Locator.ID, "signup-username"))
-            .perform(webKeys(username));
+  void fillDataForm(
+      String username, String email, String userPassword, String userPasswordConfirm) {
+    onWebView().withElement(findElement(Locator.ID, "signup-username")).perform(webKeys(username));
     onWebView().withElement(findElement(Locator.ID, "signup-email")).perform(webKeys(email));
     onWebView()
-            .withElement(findElement(Locator.ID, "signup-password"))
-            .perform(webKeys(userPassword));
+        .withElement(findElement(Locator.ID, "signup-password"))
+        .perform(webKeys(userPassword));
     onWebView()
-            .withElement(findElement(Locator.ID, "signup-password-confirm"))
-            .perform(webKeys(userPasswordConfirm));
+        .withElement(findElement(Locator.ID, "signup-password-confirm"))
+        .perform(webKeys(userPasswordConfirm));
   }
 
   @AfterAll

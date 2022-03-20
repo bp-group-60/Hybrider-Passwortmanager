@@ -35,15 +35,10 @@ import static tu.bp21.passwortmanager.StringFunction.*;
 import static tu.bp21.passwortmanager.WebViewFunction.getWebViewInstance;
 import static tu.bp21.passwortmanager.ui.DomMatchersExtended.hasNoElementWithXpath;
 
-
-import android.app.Activity;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Build;
-import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.WebView;
-
 
 @TestClassOrder(ClassOrderer.OrderAnnotation.class)
 public class AppHTMLTest {
