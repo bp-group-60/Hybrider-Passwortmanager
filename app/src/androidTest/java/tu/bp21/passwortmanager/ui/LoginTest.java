@@ -13,6 +13,7 @@ import static androidx.test.espresso.web.assertion.WebViewAssertions.*;
 import static androidx.test.espresso.web.matcher.DomMatchers.containingTextInBody;
 
 import org.junit.jupiter.api.AfterAll;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,12 +46,15 @@ public class LoginTest {
               .allowMainThreadQueries()
               .build();
 
-      randomUsername = generateRandomString(3,20);
+      randomUsername = generateRandomString(3, 20);
       randomEmail =
-          generateRandomString(20) + "@" + generateRandomString(5) + "." + generateRandomString(2,5);
+          generateRandomString(20)
+              + "@"
+              + generateRandomString(5)
+              + "."
+              + generateRandomString(2, 5);
 
       randomUserPassword = generateRandomString(8,20);
-
 
       onWebView().forceJavascriptEnabled();
       onWebView()
