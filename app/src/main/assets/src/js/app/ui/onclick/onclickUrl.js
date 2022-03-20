@@ -1,4 +1,4 @@
-export function addUrlOnclick(page) {
+export function getAddUrlOnclick(page) {
   return () => {
     let newItem = ons.createElement('<ons-list-item data-unsaved="true" data-removed="false" modifier="nodivider">');
     let urlInput = ons.createElement('<ons-input modifier="underbar" placeholder="Url" float>');

@@ -26,19 +26,17 @@ public class InterfaceUser {
   public boolean checkUser(String username, String hashedUserPassword) {
     User userEntity = userDataAccessObject.getUser(username);
     if (userEntity != null) {
-      byte[] cipher = BaseEncoding.base16().decode(hashedUserPassword.toUpperCase());
-      if (Arrays.equals(userEntity.password, cipher)) {
-        return true;
-      }
+      byte[] givenHash = BaseEncoding.base16().decode(hashedUserPassword.toUpperCase());
+      return Arrays.equals(userEntity.hashedUserPassword, givenHash);
     }
     return false;
   }
 
   @JavascriptInterface
-  public boolean createUser(String username, String email, String plainUserPassword) {
+  public boolean createUser(String username, String email, String userPassword) {
     byte[] salt = Crypto.generateSecureByteArray(16);
-    byte[] hashValue = Crypto.computeHash(plainUserPassword, salt);
-    User newUserEntity = new User(username, email, hashValue);
+    byte[] hashedUserPassword = Crypto.computeHash(userPassword, salt);
+    User newUserEntity = new User(username, email, hashedUserPassword);
 
     try {
       userDataAccessObject.addUser(newUserEntity);
@@ -69,7 +67,7 @@ public class InterfaceUser {
   public String getSalt(String username) {
     User userEntity = userDataAccessObject.getUser(username);
     if (userEntity != null) {
-      byte[] salt = Arrays.copyOf(userEntity.password, 16);
+      byte[] salt = Arrays.copyOf(userEntity.hashedUserPassword, 16);
       return BaseEncoding.base16().encode(salt);
     }
     return "";

@@ -1,7 +1,7 @@
 import {clearInputError, setFormMessage, setInputError} from './loginMessages.js';
 import {checkUser, createUser, existUser, getSalt} from '../app/extern/database/userOperations.js';
-import {hashPassword, generateKey} from '../app/extern/crypto.js';
-import {setSessionKey, setSessionPassword, setSessionUser} from "../app/sessionHandler.js";
+import {hashUserPassword, generateEncryptionKey} from '../app/extern/crypto.js';
+import {setSessionEncryptionKey, setSessionHashedUserPassword, setSessionUsername} from "../app/sessionHandler.js";
 
 function checkUserAvailable(username) {
   if (existUser(username)) {
@@ -12,13 +12,13 @@ function checkUserAvailable(username) {
   return true;
 }
 
-function checkLoginInformation(username, password) {
-  setSessionUser(username)
+function checkLoginInformation(username, userPassword) {
+  setSessionUsername(username)
   let salt = getSalt(username);
-  let hashedPassword = hashPassword(password, salt);
-  setSessionPassword(hashedPassword);
-  if (checkUser(username, hashedPassword)) {
-    setSessionKey(generateKey(password, salt));
+  let hashedUserPassword = hashUserPassword(userPassword, salt);
+  setSessionHashedUserPassword(hashedUserPassword);
+  if (checkUser(username, hashedUserPassword)) {
+    setSessionEncryptionKey(generateEncryptionKey(userPassword, salt));
     window.location.href = './app.html';
   } else {
     const loginForm = document.getElementById('Anmeldung');
@@ -26,8 +26,8 @@ function checkLoginInformation(username, password) {
   }
 }
 
-function registerNewUser(username, email, password) {
-  if (createUser(username, email, password)) {
+function registerNewUser(username, email, userPassword) {
+  if (createUser(username, email, userPassword)) {
     sessionStorage.setItem('regist', true);
     window.location.href = './index.html';
   } else {
@@ -47,10 +47,8 @@ function checkRegisterInformation(){
   validUserPasswordConfirm = checkUserPasswordConfirmInformation();
   validEmail = checkEmailInformation();
 
-  if(validUsername && validUserPassword && validEmail && validUserPasswordConfirm){
-      return true;
-  }
-  return false;
+  return validUsername && validUserPassword && validEmail && validUserPasswordConfirm;
+
 }
 
 function checkUsernameInformation(){
@@ -92,7 +90,7 @@ function checkUserPasswordConfirmInformation(){
   const signupPasswordElement = document.getElementById('signup-password');
   const signupPasswordConfirmElement = document.getElementById('signup-password-confirm');
 
-  if(signupPasswordElement.value == signupPasswordConfirmElement.value) {
+  if(signupPasswordElement.value === signupPasswordConfirmElement.value) {
    return true;
   }
   setInputError(signupPasswordConfirmElement, 'Passwörter stimmen nicht überein');

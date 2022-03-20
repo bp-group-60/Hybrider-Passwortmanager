@@ -1,5 +1,3 @@
-
-
 export function generateRandomString(length){
     let RandomStringModule = Module.cwrap("GenerateRandomString", null, ["number","number"]);
     let byteOffset = 0;
@@ -19,7 +17,7 @@ export function generateRandomString(length){
     return generatedPassword
 }
 
-export function IdentityFunction(inputString){
+export function identityFunction(inputString){
     let IdentityStringFunction = Module.cwrap("IdentityFunction", null, ["number","number","number"]);
     let length = inputString.length;
     let stringAsCharCodeArray = Array.from([...inputString], (x) => x.charCodeAt(0));

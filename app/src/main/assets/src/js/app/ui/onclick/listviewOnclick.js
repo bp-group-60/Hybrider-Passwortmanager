@@ -1,37 +1,37 @@
-import {getSessionPassword, getSessionUser, logout} from '../../sessionHandler.js';
+import {getSessionHashedUserPassword, getSessionUsername, logout} from '../../sessionHandler.js';
 import {deleteUser} from '../../extern/database/userOperations.js';
 
-export function onclickAddButton(page) {
+export function getAddButtonOnclick() {
   return () => {
     document.querySelector('#onsen-navigator').pushPage('onsPages/passwordView.html', {data: {intend: 'new'}});
   };
 }
 
-export function onclickMoreButton(page) {
+export function getMoreButtonOnclick(page) {
   return () => {
     page.querySelector('#popover').show(page.querySelector('#more-button'));
   };
 }
 
-export function onclickDeleteUser(page) {
+export function getDeleteUserOnclick() {
   return () => {
     ons.notification.confirm('Benutzer wirklich löschen?')
       .then(function (input) {
         if (input === 1) {
-          deleteUser(getSessionUser(), getSessionPassword());
+          deleteUser(getSessionUsername(), getSessionHashedUserPassword());
           history.back();
         }
       });
   };
 }
 
-export function onclickLogout(page) {
+export function getLogoutOnclick() {
   return () => {
     logout();
   };
 }
 
-export function onclickListItem(websiteName) {
+export function getListItemOnclick(websiteName) {
   return () => {
     document.querySelector('#onsen-navigator').pushPage('onsPages/passwordView.html', {data: {websiteName: websiteName, intend: 'view'}});
   };

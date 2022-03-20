@@ -1,32 +1,31 @@
-import {addUrlOnclick} from './onclick/onclickUrl.js';
-import {getLoginName, getPassword} from '../extern/database/passwordOperations.js';
-import {getUrlList} from '../extern/database/websiteOperations.js';
-import {getSessionUser} from '../sessionHandler.js';
+import {getAddUrlOnclick} from './onclick/onclickUrl.js';
+import {getLoginName, getLoginPassword} from '../extern/database/websiteOperations.js';
+import {getUrlList} from '../extern/database/urlOperations.js';
 import {
-  commitButtonOnclick,
-  copyPasswordOnclick,
-  editAbortOnclick,
-  editButtonOnclick, generateRandomPasswordOnclick, generateRandomUsernameOnclick,
-  onclickDeletePassword,
-  onclickEditSave,
-  showPasswordOnclick,
+  getCommitButtonOnclick,
+  getCopyPasswordOnclick,
+  getEditAbortOnclick,
+  getEditButtonOnclick, getGenerateRandomPasswordOnclick, getGenerateRandomUsernameOnclick,
+  getDeletePasswordOnclick,
+  getEditSaveOnclick,
+  getShowPasswordOnclick,
 } from './onclick/passwordViewOnclick.js';
 import {createUrlItem} from './urlHandler.js';
 
 export function addOnclickPasswordView(page) {
-  page.querySelector('#password-copy').onclick = copyPasswordOnclick(page);
-  page.querySelector('#password-checkbox').onclick = showPasswordOnclick(page);
+  page.querySelector('#password-copy').onclick = getCopyPasswordOnclick(page);
+  page.querySelector('#password-checkbox').onclick = getShowPasswordOnclick(page);
 
-  page.querySelector('#edit-button').onclick = editButtonOnclick(page);
-  page.querySelector('#generate-random-username').onclick = generateRandomUsernameOnclick(page,8);
-  page.querySelector('#generate-random-password').onclick = generateRandomPasswordOnclick(page,12);
+  page.querySelector('#edit-button').onclick = getEditButtonOnclick(page);
+  page.querySelector('#generate-random-username').onclick = getGenerateRandomUsernameOnclick(page,8);
+  page.querySelector('#generate-random-password').onclick = getGenerateRandomPasswordOnclick(page,12);
 
-  page.querySelector('#add-url').onclick = addUrlOnclick(page);
-  page.querySelector('#abort-button').onclick = editAbortOnclick(page);
-  page.querySelector('#save-button').onclick = onclickEditSave(page);
-  page.querySelector('#delete-button').onclick = onclickDeletePassword(page);
+  page.querySelector('#add-url').onclick = getAddUrlOnclick(page);
+  page.querySelector('#abort-button').onclick = getEditAbortOnclick(page);
+  page.querySelector('#save-button').onclick = getEditSaveOnclick(page);
+  page.querySelector('#delete-button').onclick = getDeletePasswordOnclick(page);
 
-  page.querySelector('#commit-button').onclick = commitButtonOnclick(page);
+  page.querySelector('#commit-button').onclick = getCommitButtonOnclick(page);
 }
 
 export function updatePasswordView(page) {
@@ -46,12 +45,12 @@ export function updatePasswordView(page) {
   page.querySelector('ons-toolbar .center').innerHTML = page.data.websiteName;
 
   page.querySelector('#url-items').innerHTML = '';
-  getUrlList(getSessionUser(), page.data.websiteName).forEach(url => {
+  getUrlList(page.data.websiteName).forEach(url => {
     page.querySelector('#url-items').append(createUrlItem(url));
   })
 
   page.querySelector('#login-name').value = getLoginName(page.data.websiteName);
-  page.querySelector('#login-password').value = getPassword(page.data.websiteName);
+  page.querySelector('#login-password').value = getLoginPassword(page.data.websiteName);
 }
 
 export function initViewPassword(page){

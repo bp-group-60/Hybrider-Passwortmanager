@@ -1,13 +1,11 @@
 import {addOnclickListview, updateListview} from './ui/listviewHandler.js';
 import {addOnclickPasswordView, initViewPassword, initNewPasswordView} from './ui/passwordViewHandler.js';
 
-import {getSessionUser, logout} from './sessionHandler.js';
-
 document.addEventListener('show', function (event) {
   let page = event.target;
 
   if (page.id === 'listview') {
-    updateListview(getSessionUser());
+    updateListview(page);
   }
 });
 
