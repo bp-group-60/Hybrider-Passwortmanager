@@ -124,7 +124,7 @@ public class AppHTMLTest {
         .perform(webKeys(defaultMasterPassword));
     onWebView().withElement(findElement(Locator.ID, "login")).perform(webClick());
     Thread.sleep(loadDelay);
-    onWebView().check(webContent(containingTextInBody("Webseite / Nutzername")));
+    onWebView().check(webContent(containingTextInBody("Webseite / Loginname")));
   }
 
   @Test
@@ -173,7 +173,8 @@ public class AppHTMLTest {
       Thread.sleep(loadDelay);
 
       // return back to overview after adding password
-      onWebView().check(webContent(containingTextInBody("Webseite / Nutzername")));
+      onWebView().check(webContent(containingTextInBody("Webseite / Loginname")));
+      onWebView().check(webContent(hasElementWithId("add-button")));
       // check element exist
       onWebView()
           .check(webContent(containingTextInBody(defaultWebsiteName + " / " + defaultLoginName)));
@@ -422,7 +423,8 @@ public class AppHTMLTest {
       onWebView().withElement(findElement(Locator.XPATH, "//ons-back-button")).perform(webClick());
       Thread.sleep(loadDelay);
       // check return back to overview
-      onWebView().check(webContent(containingTextInBody("Webseite / Nutzername")));
+      onWebView().check(webContent(containingTextInBody("Webseite / Loginname")));
+      onWebView().check(webContent(hasElementWithId("add-button")));
     }
 
     @Test
@@ -432,7 +434,8 @@ public class AppHTMLTest {
       onWebView().withElement(findElement(Locator.XPATH, "//ons-back-button")).perform(webClick());
       Thread.sleep(loadDelay);
       // check return back to overview
-      onWebView().check(webContent(containingTextInBody("Webseite / Nutzername")));
+      onWebView().check(webContent(containingTextInBody("Webseite / Loginname")));
+      onWebView().check(webContent(hasElementWithId("add-button")));
     }
   }
 
@@ -557,7 +560,8 @@ public class AppHTMLTest {
       Thread.sleep(loadDelay);
 
       // return back to overview after deleting password
-      onWebView().check(webContent(containingTextInBody("Webseite / Nutzername")));
+      onWebView().check(webContent(containingTextInBody("Webseite / Loginname")));
+      onWebView().check(webContent(hasElementWithId("add-button")));
       // check element not exist
       onWebView()
           .check(webContent(hasNoElementWithXpath("//*[@id=\"overview\"]/ons-list-item[1]/div")));
@@ -621,7 +625,8 @@ public class AppHTMLTest {
         Thread.sleep(loadDelay);
 
         // return back to overview after adding password
-        onWebView().check(webContent(containingTextInBody("Webseite / Nutzername")));
+        onWebView().check(webContent(containingTextInBody("Webseite / Loginname")));
+        onWebView().check(webContent(hasElementWithId("add-button")));
         // check element exist
         onWebView()
             .check(webContent(containingTextInBody(defaultWebsiteName + " / " + defaultLoginName)));
