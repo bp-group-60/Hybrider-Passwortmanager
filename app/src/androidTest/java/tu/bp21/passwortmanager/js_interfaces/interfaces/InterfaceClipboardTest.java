@@ -90,9 +90,7 @@ class InterfaceClipboardTest {
     clipboard.setPrimaryClip(ClipData.newPlainText(label, textToCopy));
     interfaceClipboard.clearClipboard();
     Thread.sleep(delay);
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-      assertNull(clipboard.getPrimaryClip());
-    } else {
+    if (clipboard.getPrimaryClip() != null) {
       String actualText = clipboard.getPrimaryClip().getItemAt(0).getText().toString();
       assertEquals("", actualText);
       assertEquals(1, clipboard.getPrimaryClip().getItemCount());

@@ -59,8 +59,8 @@ public class AppHTMLTest {
   static final int stringMaxLength = 20;
   static final int domainMinLength = 2;
   static final int domainMaxLength = 5;
-  static final int usernameMinLength = 8;
-  static final int masterPasswordMinLength = 8;
+  static final int usernameMinLength = 3;
+  static final int userPasswordMinLength = 8;
   static final int loadDelay = 500;
 
   @BeforeEach
@@ -81,7 +81,7 @@ public class AppHTMLTest {
               + "."
               + generateRandomString(domainMinLength, domainMaxLength);
 
-      defaultUserPassword = generateRandomString(masterPasswordMinLength, stringMaxLength);
+      defaultUserPassword = generateRandomString(userPasswordMinLength, stringMaxLength);
 
       defaultWebsiteName = generateRandomString(stringMaxLength);
       defaultLoginName = generateRandomString(stringMaxLength);
