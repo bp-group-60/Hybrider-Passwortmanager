@@ -74,6 +74,9 @@ Room-Database:
 
 The App is devided into 2 sections: the frontend and the backend. The frontend has a login/register site and the password-overview page to see, edit and add passwords. On the backend side, we have a `Java Dataflowmanager` to get the data from the `SQLite Datbase` and encrypt & decrypt the data in the `C-Cryption` section, so the requested informations can be forwarded to the frontend and been shown there.
 
+A dataflow-diagram is shwon below:<br>
+[![](App_Schnittstellen-Graph.png)](App_Schnittstellen-Graph.png)
+
 ### Built With
 
 * [OnsenUI](https://nextjs.org/)
@@ -99,7 +102,7 @@ or just use the build in vcs tools
 For building this project use gradle's default build configuration.
 
 ### Running
-To get proper functionality at least SDK 24 (Android 7) and a WebView version that supports ES6 is required.
+To get proper functionality at least SDK 24 (Android 7) and a WebView version that supports ES6 and webassembly is required.
 
 <!-- USAGE EXAMPLES -->
 ## Usage -- deprecated, transfer in wiki detailed explanation
@@ -142,4 +145,3 @@ Distributed under the MIT License. See [LICENSE](https://github.com/bp-group-60/
 [issues-url]: https://github.com/bp-group-60/Hybrider-Passwortmanager/issues
 [license-shield]: https://img.shields.io/github/license/bp-group-60/Hybrider-Passwortmanager.svg?style=for-the-badge
 [license-url]: https://github.com/bp-group-60/Hybrider-Passwortmanager/blob/master/LICENSE.txt
-[dataflow-diagram]: images/diagram.png
