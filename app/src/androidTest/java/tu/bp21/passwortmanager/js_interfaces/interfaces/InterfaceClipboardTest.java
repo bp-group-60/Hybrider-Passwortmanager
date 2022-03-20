@@ -29,6 +29,7 @@ class InterfaceClipboardTest {
 
   InterfaceClipboard interfaceClipboard;
   static final int stringMaxLength = 100;
+  static final int delay = 500;
 
   @RegisterExtension
   final ActivityScenarioExtension<MainActivity> scenarioExtension =
@@ -64,7 +65,7 @@ class InterfaceClipboardTest {
           () -> {
             String expectedText = convertNullToEmptyString(text);
             interfaceClipboard.copyToClipboardWithTimeout(expectedText, timeout);
-            Thread.sleep(100);
+            Thread.sleep(delay);
             String actualText = clipboard.getPrimaryClip().getItemAt(0).getText().toString();
             assertEquals(expectedText, actualText);
           });
@@ -73,9 +74,7 @@ class InterfaceClipboardTest {
           timeout >= 0,
           () -> {
             Thread.sleep(timeout);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-              assertNull(clipboard.getPrimaryClip());
-            } else {
+            if (clipboard.getPrimaryClip() != null) {
               String actualText = clipboard.getPrimaryClip().getItemAt(0).getText().toString();
               assertEquals("", actualText);
               assertEquals(1, clipboard.getPrimaryClip().getItemCount());
@@ -90,7 +89,7 @@ class InterfaceClipboardTest {
     String label = generateRandomString(stringMaxLength);
     clipboard.setPrimaryClip(ClipData.newPlainText(label, textToCopy));
     interfaceClipboard.clearClipboard();
-    Thread.sleep(10);
+    Thread.sleep(delay);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
       assertNull(clipboard.getPrimaryClip());
     } else {

@@ -15,6 +15,7 @@ import org.junit.jupiter.api.AfterAll;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -101,29 +102,40 @@ class RegisterTest {
         .check(webContent(containingTextInBody("Benutzername muss mindestens 3 Zeichen haben")));
   }
 
-  @Test
-  void registerEmailFormatNotValid() throws Exception {
-    // only string
-    String email =
-        generateRandomString(stringMaxLength) + "@" + generateRandomString(stringMaxLength);
-    fillDataForm(randomUsername, email, randomUserPassword, randomUserPassword);
-    checkEmailFormatError();
+  @Nested
+  class emailInvalidTest{
+    @Test
+    void emailNoDomain() throws Exception{
+      String email =
+              generateRandomString(stringMaxLength) + "@" + generateRandomString(stringMaxLength);
+      fillDataForm(randomUsername, email, randomUserPassword, randomUserPassword);
+      checkEmailFormatError();
+    }
 
-    // with String + @ + String + domain length < domainMinLength
-    email += "." + generateRandomString(domainMinLength - 1);
-    onWebView()
-        .withElement(findElement(Locator.ID, "signup-email"))
-        .perform(clearElement())
-        .perform(webKeys(email));
-    checkEmailFormatError();
+    @Test
+    void emailWithShortDomain() throws Exception{
+      String email =
+              generateRandomString(stringMaxLength) + "@" + generateRandomString(stringMaxLength) + "." + generateRandomString(domainMinLength - 1);;
+      fillDataForm(randomUsername, email, randomUserPassword, randomUserPassword);
+      checkEmailFormatError();
+    }
 
-    // with String + @ + String + domain length > domainMaxLength
-    email += "." + generateRandomString(domainMaxLength + 1, domainMaxLength + 1);
-    onWebView()
-        .withElement(findElement(Locator.ID, "signup-email"))
-        .perform(clearElement())
-        .perform(webKeys(email));
-    checkEmailFormatError();
+    @Test
+    void emailWithLongDomain() throws Exception{
+      String email =
+              generateRandomString(stringMaxLength) + "@" + generateRandomString(stringMaxLength) + "." + generateRandomString(domainMaxLength+1, domainMaxLength+1);;
+      fillDataForm(randomUsername, email, randomUserPassword, randomUserPassword);
+      checkEmailFormatError();
+    }
+
+    void checkEmailFormatError() throws Exception {
+      onWebView().withElement(findElement(Locator.ID, "submit-button")).perform(webClick());
+      Thread.sleep(loadDelay);
+      // should stay in register page
+      onWebView().check(webContent(containingTextInBody("Konto erstellen")));
+      onWebView().check(webContent(containingTextInBody("Bitte gib eine g")));
+      onWebView().check(webContent(containingTextInBody("ltige E-Mail-Adresse ein.")));
+    }
   }
 
   @Test
@@ -145,15 +157,6 @@ class RegisterTest {
     // should stay in register page
     onWebView().check(webContent(containingTextInBody("Konto erstellen")));
     onWebView().check(webContent(containingTextInBody("stimmen nicht")));
-  }
-
-  void checkEmailFormatError() throws Exception {
-    onWebView().withElement(findElement(Locator.ID, "submit-button")).perform(webClick());
-    Thread.sleep(loadDelay);
-    // should stay in register page
-    onWebView().check(webContent(containingTextInBody("Konto erstellen")));
-    onWebView().check(webContent(containingTextInBody("Bitte gib eine g")));
-    onWebView().check(webContent(containingTextInBody("ltige E-Mail-Adresse ein.")));
   }
 
   void fillDataForm(

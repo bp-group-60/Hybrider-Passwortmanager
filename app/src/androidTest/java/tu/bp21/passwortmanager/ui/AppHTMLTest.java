@@ -328,11 +328,9 @@ public class AppHTMLTest {
 
       // clipboard clear after 20 seconds
       Thread.sleep(20000);
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-        assertNull(clipboard.getPrimaryClip());
-      } else {
-        copiedPassword = clipboard.getPrimaryClip().getItemAt(0).getText().toString();
-        assertEquals("", copiedPassword);
+      if (clipboard.getPrimaryClip() != null) {
+        String actualText = clipboard.getPrimaryClip().getItemAt(0).getText().toString();
+        assertEquals("", actualText);
         assertEquals(1, clipboard.getPrimaryClip().getItemCount());
       }
     }

@@ -13,7 +13,6 @@ import androidx.test.core.app.ActivityScenario;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -27,6 +26,8 @@ class ClipboardTimeoutWorkerTest {
   ClipboardManager clipboard;
 
   WorkManager workManager;
+  static final int stringMaxLength = 100;
+  static final int delay = 500;
 
   @RegisterExtension
   final ActivityScenarioExtension<MainActivity> scenarioExtension =
@@ -42,23 +43,16 @@ class ClipboardTimeoutWorkerTest {
     workManager = WorkManager.getInstance(mainActivity);
   }
 
-  @AfterEach
-  void tearDown() {}
-
   @Test
   void doWorkTest() throws Exception {
-    int maxLength = 100;
-    long timeInMilliseconds = 100;
     int expectedItemCount = 1;
-    String textToCopy = generateRandomString(maxLength);
-    String label = generateRandomString(maxLength);
+    String textToCopy = generateRandomString(stringMaxLength);
+    String label = generateRandomString(stringMaxLength);
     clipboard.setPrimaryClip(ClipData.newPlainText(label, textToCopy));
     OneTimeWorkRequest oneTimeWorkRequest = OneTimeWorkRequest.from(ClipboardTimeoutWorker.class);
     workManager.beginWith(oneTimeWorkRequest).enqueue();
-    Thread.sleep(timeInMilliseconds);
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-      assertNull(clipboard.getPrimaryClip());
-    } else {
+    Thread.sleep(delay);
+    if (clipboard.getPrimaryClip() != null) {
       String actualText = clipboard.getPrimaryClip().getItemAt(0).getText().toString();
       assertEquals("", actualText);
       assertEquals(expectedItemCount, clipboard.getPrimaryClip().getItemCount());
