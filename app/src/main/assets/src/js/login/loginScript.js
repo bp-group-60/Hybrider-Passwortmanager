@@ -71,8 +71,8 @@ function checkEmailInformation(){
   const signupEmailInputElement = document.getElementById('signup-email');
   let signupEmail = signupEmailInputElement.value;
   if (signupEmail.length > 0) {
-    const re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,5})+$/
-    if (signupEmail.match(re)) {
+    const regularExpression = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,5})+$/
+    if (signupEmail.match(regularExpression)) {
       return true;
     }
   }

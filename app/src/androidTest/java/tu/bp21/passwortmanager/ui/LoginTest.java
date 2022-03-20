@@ -3,6 +3,8 @@ package tu.bp21.passwortmanager.ui;
 import androidx.room.Room;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.web.webdriver.Locator;
+
+import static androidx.test.espresso.web.matcher.DomMatchers.hasElementWithId;
 import static androidx.test.espresso.web.sugar.Web.onWebView;
 import static androidx.test.espresso.web.webdriver.DriverAtoms.findElement;
 import static androidx.test.espresso.web.webdriver.DriverAtoms.webClick;
@@ -44,12 +46,12 @@ public class LoginTest {
               .allowMainThreadQueries()
               .build();
 
-      randomUsername = generateRandomString(20);
+      randomUsername = generateRandomString(3,20);
       randomEmail =
-          generateRandomString(20) + "@" + generateRandomString(5) + "." + generateRandomString(5);
-      do {
-        randomPassword = generateRandomString(20);
-      } while (randomPassword.length() < 8);
+          generateRandomString(20) + "@" + generateRandomString(5) + "." + generateRandomString(2,5);
+
+      randomPassword = generateRandomString(8,20);
+
 
       onWebView().forceJavascriptEnabled();
       onWebView()
@@ -82,7 +84,7 @@ public class LoginTest {
         .withElement(findElement(Locator.ID, "input-userPassword"))
         .perform(webKeys(randomPassword));
     onWebView().withElement(findElement(Locator.ID, "login")).perform(webClick());
-    onWebView().check(webContent(containingTextInBody("Webseite / Nutzername")));
+    onWebView().check(webContent(hasElementWithId("add-button")));
   }
 
   @Test
