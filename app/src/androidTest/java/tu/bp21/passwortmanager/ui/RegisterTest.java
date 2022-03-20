@@ -59,7 +59,11 @@ class RegisterTest {
     }
     randomUsername = generateRandomString(usernameMinLength, stringMaxLength);
     randomEmail =
-        generateRandomString(stringMaxLength) + "@" + generateRandomString(domainMinLength) + "." + generateRandomString(domainMinLength, domainMaxLength);
+        generateRandomString(stringMaxLength)
+            + "@"
+            + generateRandomString(domainMinLength)
+            + "."
+            + generateRandomString(domainMinLength, domainMaxLength);
 
     randomUserPassword = generateRandomString(userPasswordMinLength, stringMaxLength);
 
