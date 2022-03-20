@@ -32,7 +32,9 @@ import de.mannodermaus.junit5.ActivityScenarioExtension;
 import tu.bp21.passwortmanager.MainActivity;
 import tu.bp21.passwortmanager.db.database.ApplicationDatabase;
 import static tu.bp21.passwortmanager.StringFunction.*;
+import static tu.bp21.passwortmanager.WebViewFunction.getWebViewInstance;
 import static tu.bp21.passwortmanager.ui.DomMatchersExtended.hasNoElementWithXpath;
+
 
 import android.app.Activity;
 import android.content.ClipboardManager;
@@ -41,6 +43,7 @@ import android.os.Build;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+
 
 @TestClassOrder(ClassOrderer.OrderAnnotation.class)
 public class AppHTMLTest {
@@ -53,12 +56,12 @@ public class AppHTMLTest {
   static ApplicationDatabase database;
   static String defaultUsername;
   static String defaultEmail;
-  static String defaultMasterPassword;
+  static String defaultUserPassword;
   static String defaultWebsiteName;
   static String defaultLoginName;
   static String defaultLoginPassword;
-  static String defaultURL1;
-  static String defaultURL2;
+  static String defaultWebAddress1;
+  static String defaultWebAddress2;
   static final int stringMaxLength = 20;
   static final int domainMinLength = 2;
   static final int domainMaxLength = 5;
@@ -84,14 +87,14 @@ public class AppHTMLTest {
               + "."
               + generateRandomString(domainMinLength, domainMaxLength);
 
-      defaultMasterPassword = generateRandomString(masterPasswordMinLength, stringMaxLength);
+      defaultUserPassword = generateRandomString(masterPasswordMinLength, stringMaxLength);
 
 
       defaultWebsiteName = generateRandomString(stringMaxLength);
       defaultLoginName = generateRandomString(stringMaxLength);
       defaultLoginPassword = generateRandomString(stringMaxLength);
-      defaultURL1 = generateRandomString(stringMaxLength) + ".com";
-      defaultURL2 = generateRandomString(stringMaxLength) + ".de";
+      defaultWebAddress1 = generateRandomString(stringMaxLength) + ".com";
+      defaultWebAddress2 = generateRandomString(stringMaxLength) + ".de";
 
       onWebView().forceJavascriptEnabled();
 
@@ -107,10 +110,10 @@ public class AppHTMLTest {
           .perform(webKeys(defaultEmail));
       onWebView()
           .withElement(findElement(Locator.ID, "signup-password"))
-          .perform(webKeys(defaultMasterPassword));
+          .perform(webKeys(defaultUserPassword));
       onWebView()
           .withElement(findElement(Locator.ID, "signup-password-confirm"))
-          .perform(webKeys(defaultMasterPassword));
+          .perform(webKeys(defaultUserPassword));
       onWebView().withElement(findElement(Locator.ID, "submit-button")).perform(webClick());
       onWebView().check(webContent(containingTextInBody("Anmeldung")));
       onWebView().check(webContent(containingTextInBody("Benutzerkonto erfolgreich erstellt.")));
@@ -123,7 +126,7 @@ public class AppHTMLTest {
         .perform(webKeys(defaultUsername));
     onWebView()
         .withElement(findElement(Locator.ID, "input-userPassword"))
-        .perform(webKeys(defaultMasterPassword));
+        .perform(webKeys(defaultUserPassword));
     onWebView().withElement(findElement(Locator.ID, "login")).perform(webClick());
     Thread.sleep(loadDelay);
     onWebView().check(webContent(hasElementWithId("add-button")));
@@ -600,7 +603,7 @@ public class AppHTMLTest {
                 findElement(
                     Locator.XPATH,
                     "//*[@id=\"url-items\"]/ons-list-item[1]/div[1]/ons-input/input"))
-            .perform(webKeys(defaultURL1));
+            .perform(webKeys(defaultWebAddress1));
         // add second url
         onWebView().withElement(findElement(Locator.ID, "add-url")).perform(webClick());
         onWebView()
@@ -608,7 +611,7 @@ public class AppHTMLTest {
                 findElement(
                     Locator.XPATH,
                     "//*[@id=\"url-items\"]/ons-list-item[2]/div[1]/ons-input/input"))
-            .perform(webKeys(defaultURL2));
+            .perform(webKeys(defaultWebAddress2));
       }
 
       @Test
@@ -634,8 +637,8 @@ public class AppHTMLTest {
             .perform(webClick());
         Thread.sleep(loadDelay);
         checkLoginNamePasswordTextField(defaultLoginName, defaultLoginPassword);
-        onWebView().check(webContent(containingTextInBody(defaultURL1)));
-        onWebView().check(webContent(containingTextInBody(defaultURL2)));
+        onWebView().check(webContent(containingTextInBody(defaultWebAddress1)));
+        onWebView().check(webContent(containingTextInBody(defaultWebAddress2)));
         onWebView()
             .check(webContent(hasElementWithXpath("//*[@id=\"url-items\"]/ons-list-item/div[1]")));
         onWebView()
@@ -710,7 +713,7 @@ public class AppHTMLTest {
                 findElement(
                     Locator.XPATH,
                     "//*[@id=\"url-items\"]/ons-list-item[2]/div[1]/ons-input/input"))
-            .perform(webKeys(defaultURL2));
+            .perform(webKeys(defaultWebAddress2));
         onWebView().withElement(findElement(Locator.ID, "save-button")).perform(webClick());
         Thread.sleep(loadDelay);
 
@@ -720,7 +723,7 @@ public class AppHTMLTest {
 
         // check return back to password detail page and check url
         onWebView().check(webContent(hasElementWithId("edit-button")));
-        onWebView().check(webContent(containingTextInBody(defaultURL2)));
+        onWebView().check(webContent(containingTextInBody(defaultWebAddress2)));
         onWebView()
             .check(webContent(hasElementWithXpath("//*[@id=\"url-items\"]/ons-list-item/div[2]")));
       }
@@ -779,7 +782,7 @@ public class AppHTMLTest {
           .perform(webKeys(defaultUsername));
       onWebView()
           .withElement(findElement(Locator.ID, "input-userPassword"))
-          .perform(webKeys(defaultMasterPassword));
+          .perform(webKeys(defaultUserPassword));
       onWebView().withElement(findElement(Locator.ID, "login")).perform(webClick());
       onWebView()
           .check(webContent(containingTextInBody("ltiger Benutzername oder falsches Passwort")));
@@ -809,16 +812,6 @@ public class AppHTMLTest {
 
   String parseJSONtoString(String s) {
     return s.substring(1, s.length() - 1).replace("\\\\", "\\").replace("\\\"", "\"");
-  }
-
-  WebView getWebViewInstance(Activity activity) {
-    // find the webview in the layout
-    ViewGroup contentView = activity.findViewById(android.R.id.content);
-    for (int i = 0; i < contentView.getChildCount(); i++) {
-      View view = contentView.getChildAt(i);
-      if (view instanceof WebView) return (WebView) view;
-    }
-    return null;
   }
 
   @AfterAll

@@ -13,7 +13,6 @@ import static androidx.test.espresso.web.assertion.WebViewAssertions.*;
 import static androidx.test.espresso.web.matcher.DomMatchers.containingTextInBody;
 
 import org.junit.jupiter.api.AfterAll;
-import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,7 +32,7 @@ public class LoginTest {
   static ApplicationDatabase database;
   static String randomUsername;
   static String randomEmail;
-  static String randomPassword;
+  static String randomUserPassword;
 
   @BeforeEach
   void setUp() throws Exception {
@@ -50,7 +49,7 @@ public class LoginTest {
       randomEmail =
           generateRandomString(20) + "@" + generateRandomString(5) + "." + generateRandomString(2,5);
 
-      randomPassword = generateRandomString(8,20);
+      randomUserPassword = generateRandomString(8,20);
 
 
       onWebView().forceJavascriptEnabled();
@@ -65,10 +64,10 @@ public class LoginTest {
           .perform(webKeys(randomEmail));
       onWebView()
           .withElement(findElement(Locator.ID, "signup-password"))
-          .perform(webKeys(randomPassword));
+          .perform(webKeys(randomUserPassword));
       onWebView()
           .withElement(findElement(Locator.ID, "signup-password-confirm"))
-          .perform(webKeys(randomPassword));
+          .perform(webKeys(randomUserPassword));
       onWebView().withElement(findElement(Locator.ID, "submit-button")).perform(webClick());
       onWebView().check(webContent(containingTextInBody("Anmeldung")));
       onWebView().check(webContent(containingTextInBody("Benutzerkonto erfolgreich erstellt.")));
@@ -82,7 +81,7 @@ public class LoginTest {
         .perform(webKeys(randomUsername));
     onWebView()
         .withElement(findElement(Locator.ID, "input-userPassword"))
-        .perform(webKeys(randomPassword));
+        .perform(webKeys(randomUserPassword));
     onWebView().withElement(findElement(Locator.ID, "login")).perform(webClick());
     onWebView().check(webContent(hasElementWithId("add-button")));
   }
@@ -92,7 +91,7 @@ public class LoginTest {
     String differentPassword;
     do {
       differentPassword = generateRandomString(20);
-    } while (differentPassword == randomPassword);
+    } while (differentPassword == randomUserPassword);
     onWebView()
         .withElement(findElement(Locator.ID, "input-username"))
         .perform(webKeys(randomUsername));

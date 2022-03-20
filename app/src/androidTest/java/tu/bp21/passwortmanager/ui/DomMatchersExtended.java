@@ -15,10 +15,13 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+/**
+ * Extends functionality of DomMatchers
+ */
 public class DomMatchersExtended {
 
   public static Matcher<Document> hasNoElementWithXpath(final String xpath) {
-    return new HasElementWithXPathMatcher(xpath);
+    return new HasNoElementWithXPathMatcher(xpath);
   }
 
   private static NodeList extractNodeListForXPath(String xpath, Document document) {
@@ -31,13 +34,13 @@ public class DomMatchersExtended {
     }
   }
 
-  static final class HasElementWithXPathMatcher extends TypeSafeMatcher<Document> {
+  static final class HasNoElementWithXPathMatcher extends TypeSafeMatcher<Document> {
 
     @RemoteMsgField(order = 0)
     private final String xpath;
 
     @RemoteMsgConstructor
-    HasElementWithXPathMatcher(final String xpath) {
+    HasNoElementWithXPathMatcher(final String xpath) {
       this.xpath = xpath;
     }
 
