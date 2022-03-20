@@ -55,13 +55,13 @@ class RegisterTest {
           Room.databaseBuilder(mainActivity, ApplicationDatabase.class, "testDatabase")
               .allowMainThreadQueries()
               .build();
-      defaultUsername = generateRandomString(3, 20);
+      defaultUsername = generateRandomString(usernameMinLength, stringMaxLength);
     }
-    randomUsername = generateRandomString(3, 20);
+    randomUsername = generateRandomString(usernameMinLength, stringMaxLength);
     randomEmail =
-        generateRandomString(20) + "@" + generateRandomString(5) + "." + generateRandomString(2, 5);
+        generateRandomString(stringMaxLength) + "@" + generateRandomString(domainMinLength) + "." + generateRandomString(domainMinLength, domainMaxLength);
 
-    randomUserPassword = generateRandomString(8, 20);
+    randomUserPassword = generateRandomString(userPasswordMinLength, stringMaxLength);
 
     onWebView().forceJavascriptEnabled();
     onWebView().withElement(findElement(Locator.LINK_TEXT, "Konto erstellen")).perform(webClick());

@@ -34,6 +34,11 @@ public class LoginTest {
   static String randomUsername;
   static String randomEmail;
   static String randomUserPassword;
+  static final int stringMaxLength = 20;
+  static final int domainMinLength = 2;
+  static final int domainMaxLength = 5;
+  static final int usernameMinLength = 3;
+  static final int userPasswordMinLength = 8;
 
   @BeforeEach
   void setUp() throws Exception {
@@ -46,15 +51,15 @@ public class LoginTest {
               .allowMainThreadQueries()
               .build();
 
-      randomUsername = generateRandomString(3, 20);
+      randomUsername = generateRandomString(usernameMinLength, stringMaxLength);
       randomEmail =
-          generateRandomString(20)
+          generateRandomString(stringMaxLength)
               + "@"
-              + generateRandomString(5)
+              + generateRandomString(domainMaxLength)
               + "."
-              + generateRandomString(2, 5);
+              + generateRandomString(domainMinLength, domainMaxLength);
 
-      randomUserPassword = generateRandomString(8, 20);
+      randomUserPassword = generateRandomString(userPasswordMinLength, stringMaxLength);
 
       onWebView().forceJavascriptEnabled();
       onWebView()
@@ -94,7 +99,7 @@ public class LoginTest {
   void loginFailureTest() {
     String differentPassword;
     do {
-      differentPassword = generateRandomString(20);
+      differentPassword = generateRandomString(stringMaxLength);
     } while (differentPassword == randomUserPassword);
     onWebView()
         .withElement(findElement(Locator.ID, "input-username"))
