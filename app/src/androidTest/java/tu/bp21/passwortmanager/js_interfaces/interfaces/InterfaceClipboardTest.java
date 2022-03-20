@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assumptions.*;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.os.Build;
 
 import androidx.test.core.app.ActivityScenario;
 
