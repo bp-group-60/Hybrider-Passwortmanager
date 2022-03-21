@@ -802,7 +802,7 @@ class AppHTMLTest {
   }
 
   @AfterAll
-  static void tearDown(){
+  static void tearDown() {
     mainActivity.deleteDatabase("testDatabase");
   }
 }

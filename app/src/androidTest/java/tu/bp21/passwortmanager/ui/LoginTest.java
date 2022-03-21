@@ -37,7 +37,7 @@ class LoginTest {
 
 
   @BeforeEach
-  void setUp(){
+  void setUp() {
     if (mainActivity == null) {
       ActivityScenario<MainActivity> scenario = scenarioExtension.getScenario();
       scenario.onActivity(activity -> mainActivity = activity);
@@ -80,7 +80,7 @@ class LoginTest {
   }
 
   @Test
-  void loginSuccessTest(){
+  void loginSuccessTest() {
     onWebView()
         .withElement(findElement(Locator.ID, "input-username"))
         .perform(webKeys(randomUsername));
@@ -109,7 +109,7 @@ class LoginTest {
   }
 
   @AfterAll
-  static void tearDown(){
+  static void tearDown() {
     mainActivity.deleteDatabase("testDatabase");
   }
 }

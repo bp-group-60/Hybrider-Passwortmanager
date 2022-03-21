@@ -30,7 +30,7 @@ class MainActivityTest {
   static final String databaseName = "database";
 
   @BeforeEach
-  void setUp(){
+  void setUp() {
     if (mainActivity == null) {
       scenarioExtension.getScenario().onActivity(activity -> mainActivity = activity);
     }
@@ -39,7 +39,7 @@ class MainActivityTest {
   }
 
   @AfterEach
-  void tearDown(){}
+  void tearDown() {}
 
   @Test
   void onCreateTest() {

@@ -42,7 +42,7 @@ class RegisterTest {
   String randomUserPassword;
 
   @BeforeEach
-  void setUp(){
+  void setUp() {
     if (mainActivity == null) {
       ActivityScenario<MainActivity> scenario = scenarioExtension.getScenario();
       scenario.onActivity(activity -> mainActivity = activity);
@@ -70,7 +70,7 @@ class RegisterTest {
 
   @Test
   @Order(1)
-  void registerSuccess(){
+  void registerSuccess() {
     fillDataForm(defaultUsername, randomEmail, randomUserPassword, randomUserPassword);
     onWebView().withElement(findElement(Locator.ID, "submit-button")).perform(webClick());
     // should be in login page
@@ -103,13 +103,15 @@ class RegisterTest {
 
   @Nested
   class EmailInvalidTest {
-    //shorter string to avoid long load on the automata to check regular expression at js side
+    // shorter string to avoid long load on the automata to check regular expression at js side
     int shortStringMaxLength = 8;
 
     @Test
     void emailNoDomain() throws Exception {
       String email =
-          generateRandomString(shortStringMaxLength) + "@" + generateRandomString(shortStringMaxLength);
+          generateRandomString(shortStringMaxLength)
+              + "@"
+              + generateRandomString(shortStringMaxLength);
       onWebView().withElement(findElement(Locator.ID, "signup-email")).perform(webKeys(email));
       checkEmailFormatError();
     }
@@ -183,7 +185,7 @@ class RegisterTest {
   }
 
   @AfterAll
-  static void tearDown(){
+  static void tearDown() {
     mainActivity.deleteDatabase("testDatabase");
   }
 }
