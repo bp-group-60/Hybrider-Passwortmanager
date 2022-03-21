@@ -107,9 +107,9 @@ export function getGenerateRandomPasswordOnclick(page, length) {
     let currentPasswordInputValue = page.querySelector("#login-password").value;
 
     if(currentPasswordInputValue === ""){
-     page.querySelector("#login-password").value = randomString;
+      page.querySelector("#login-password").value = randomString;
     } else{
-     page.querySelector("#login-password").value = identityFunction(currentPasswordInputValue) + randomString;
+      page.querySelector("#login-password").value = identityFunction(currentPasswordInputValue) + randomString;
     }
 
   }
@@ -117,7 +117,12 @@ export function getGenerateRandomPasswordOnclick(page, length) {
 
 export function getGenerateRandomUsernameOnclick(page, length) {
   return () => {
-    let randomString = generateRandomString(length)
-    page.querySelector("#login-name").value = randomString;
+    let randomString = generateRandomString(length);
+    let currentUsernameInputValue = page.querySelector("#login-name").value;
+    if(currentUsernameInputValue === ""){
+      page.querySelector("#login-name").value = randomString;
+    } else{
+      page.querySelector("#login-name").value = identityFunction(currentUsernameInputValue) + randomString;
+    }
   }
 }
