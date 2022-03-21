@@ -108,7 +108,7 @@ To get proper functionality at least SDK 24 (Android 7) and a WebView version th
 
 
 
-_For more and detailed explaination of each part of every section, please visit the [Wiki](https://github.com/bp-group-60/Hybrider-Passwortmanager/wiki)_
+### _For more and detailed explaination of each part of every section, please visit the [Wiki](https://github.com/bp-group-60/Hybrider-Passwortmanager/wiki)_
 
 <!-- FEATURES -->
 ## Features
