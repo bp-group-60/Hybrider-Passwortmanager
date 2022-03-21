@@ -41,9 +41,9 @@ public class InterfaceWebsite {
 
   @JavascriptInterface
   public boolean updateWebsite(
-      String username, String websiteName, String loginName, String plainUserPassword, String key) {
+      String username, String websiteName, String loginName, String loginPassword, String key) {
     byte[] encryptedLoginPassword =
-        createEncryptedPassword(username, websiteName, plainUserPassword, key);
+        createEncryptedPassword(username, websiteName, loginPassword, key);
     Website newWebsiteItem = new Website(username, websiteName, loginName, encryptedLoginPassword);
 
     try {
