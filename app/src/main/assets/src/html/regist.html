@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <title>Registrieren</title>
+  <link rel="stylesheet" href="../css/loginStyle.css">
+  <script type="module" src="../js/login/loginScript.js"></script>
+</head>
+<body>
+<div class="container">
+  <form class="form-root" id="konto-erstellen">
+    <h1 class="form-title">Konto erstellen</h1>
+    <div class="form-message form-message-error"></div>
+    <div class="form-input-group">
+      Benutzername:
+      <input type="text"
+             class="form-input"
+             id="signup-username"
+             autofocus
+             placeholder=""
+      />
+      <div class="form-input-message-error"></div>
+    </div>
+    <div class="form-input-group">
+      E-mail:
+      <input type="email"
+             class="form-input"
+             id="signup-email"
+             autofocus
+             placeholder=""
+      />
+      <div class="form-input-message-error"></div>
+    </div>
+    <div class="form-input-group">
+      Master-Passwort:
+      <input type="password"
+             class="form-input"
+             id="signup-password"
+             autofocus
+             placeholder=""
+      />
+      <div class="form-input-message-error"></div>
+    </div>
+    <div class="form-input-group">
+      Master-Passwort bestätigen:
+      <input type="password"
+             class="form-input"
+             id="signup-password-confirm"
+             autofocus
+             placeholder=""
+      />
+      <div class="form-input-message-error"></div>
+    </div>
+    <button class="form-button" type="submit" id="submit-button">Konto erstellen</button>
+    <p class="form-text">
+      Hast du bereits ein Konto?
+      <a class="form-link" href="index.html" id="link-anmeldung">Melde dich an!</a>
+    </p>
+  </form>
+</div>
+</body>
+</html>

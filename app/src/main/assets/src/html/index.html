@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <title>Login</title>
+  <link rel="stylesheet" href="../css/loginStyle.css">
+  <script type="module" src="../js/login/loginScript.js"></script>
+</head>
+<body>
+<div class="container">
+  <form class="form-root" id="Anmeldung">
+    <h1 class="form-title">Anmeldung</h1>
+    <div class="form-message form-message-error"></div>
+    <a>Benutzername:</a>
+    <div class="form-input-group">
+      <input type="text"
+             class="form-input"
+             autofocus
+             placeholder=""
+             id="input-username"
+      />
+      <div class="form-input-message-error"></div>
+    </div>
+    <div class="form-input-group">
+      <a>Master-Passwort:</a>
+      <input type="password"
+             class="form-input"
+             autofocus
+             placeholder=""
+             id="input-userPassword"
+      />
+      <div class="form-input-message-error"></div>
+    </div>
+    <button class="form-button" type="submit" id="login">Weiter</button>
+    <p class="form-text">
+      <a href="#" class="form-link">Passwort vergessen?</a>
+    </p>
+    <p class="form-text">
+      Neu bei uns?
+      <a href="regist.html"> Konto erstellen </a>
+    </p>
+  </form>
+</div>
+</body>
+</html>

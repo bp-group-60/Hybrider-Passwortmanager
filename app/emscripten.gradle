@@ -1,0 +1,39 @@
+task init_emcc() {
+    def emsdkDir = new File("$projectDir/build/emsdk")
+    if (!emsdkDir.exists()) {
+        exec {
+            workingDir "$projectDir/build/"
+            commandLine 'git'
+            args 'clone', 'https://github.com/emscripten-core/emsdk.git'
+        }
+
+        if (System.properties['os.name'].toLowerCase().contains('windows')) {
+            exec {
+                workingDir "$projectDir/build/emsdk"
+                commandLine 'cmd', '/c','emsdk.bat'
+                args 'install', 'tot'
+            }
+            exec {
+                workingDir "$projectDir/build/emsdk"
+                commandLine 'cmd', '/c', 'emsdk.bat'
+                args 'activate', 'tot'
+            }
+        } else {
+            exec {
+                workingDir "$projectDir/build/emsdk"
+                commandLine './emsdk'
+                args 'install', 'tot'
+            }
+            exec {
+                workingDir "$projectDir/build/emsdk"
+                commandLine './emsdk'
+                args 'activate', 'tot'
+            }
+        }
+    }
+}
+
+configure(init_emcc) {
+    group = 'emscripten'
+    description = 'downloads and initializes emscripten if not in build path'
+}

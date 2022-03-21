@@ -1,54 +1,81 @@
 package tu.bp21.passwortmanager;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
-import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
+import tu.bp21.passwortmanager.js_interfaces.interfaces.InterfaceCrypto;
+import tu.bp21.passwortmanager.js_interfaces.interfaces.InterfaceWebsite;
+import tu.bp21.passwortmanager.js_interfaces.interfaces.InterfaceClipboard;
+import tu.bp21.passwortmanager.js_interfaces.interfaces.InterfaceUser;
+import tu.bp21.passwortmanager.js_interfaces.interfaces.InterfaceUrl;
+import tu.bp21.passwortmanager.db.database.ApplicationDatabase;
+import tu.bp21.passwortmanager.web_view_client.AssetWebViewClient;
+
+/** Main entry point for app. */
 public class MainActivity extends AppCompatActivity {
-	private WebView webView;
+  private WebView webView;
 
-	@Override
-	@SuppressLint("SetJavaScriptEnabled")
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+  static {
+    System.loadLibrary("Crypto");
+  }
 
-		try{
-			this.getSupportActionBar().hide();
-		} catch (NullPointerException e) {}
+  @Override
+  @SuppressLint("SetJavaScriptEnabled")
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
 
-		//if your build is in debug mode, enable webviews inspection
-		if (0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE)) {
-			WebView.setWebContentsDebuggingEnabled(true);
-		}
+    if (getSupportActionBar() != null) {
+      getSupportActionBar().hide();
+    }
 
-		webView = (WebView) findViewById(R.id.webview);
-		webView.setWebViewClient(new WebViewClient());
+    ApplicationDatabase database =
+        Room.databaseBuilder(this, ApplicationDatabase.class, "database")
+            .allowMainThreadQueries()
+            .build();
 
-		webView.loadUrl("file:///android_asset/index.html");
+    InterfaceUser jsInterfaceUser = new InterfaceUser(database.getUserDataAccessObject());
+    InterfaceWebsite jsInterfaceWebsite =
+        new InterfaceWebsite(database.getPasswordDataAccessObject());
+    InterfaceUrl jsInterfaceUrl = new InterfaceUrl(database.getWebsiteDataAccessObject());
+    InterfaceCrypto jsInterfaceCrypto = new InterfaceCrypto();
 
-		WebSettings webSettings = webView.getSettings();
-		webSettings.setJavaScriptEnabled(true);
-		webSettings.setAllowFileAccess(true);
+    InterfaceClipboard jsInterfaceClipboard = new InterfaceClipboard(this);
 
-		/*final WebViewAssetLoader assetLoader = new WebViewAssetLoader.Builder()
-				.addPathHandler("/assets/", new WebViewAssetLoader.AssetsPathHandler(this))
-				.addPathHandler("/res/", new WebViewAssetLoader.ResourcesPathHandler(this))
-				.build();
-		webView.setWebViewClient(new LocalContentWebViewClient(assetLoader));*/
-	}
+    webView = new WebView(this);
+    webView.setWebViewClient(new AssetWebViewClient(this));
 
-	@Override
-	public void onBackPressed() {
-		if(webView.canGoBack()){
-			webView.goBack();
-		} else {
-			super.onBackPressed();
-		}
-	}
+    webView.getSettings().setJavaScriptEnabled(true);
+
+    webView.addJavascriptInterface(jsInterfaceUser, "Java_InterfaceUser");
+    webView.addJavascriptInterface(jsInterfaceWebsite, "Java_InterfaceWebsite");
+    webView.addJavascriptInterface(jsInterfaceUrl, "Java_InterfaceUrl");
+    webView.addJavascriptInterface(jsInterfaceCrypto, "Java_InterfaceCrypto");
+    webView.addJavascriptInterface(jsInterfaceClipboard, "Java_InterfaceClipboard");
+
+    webView.loadUrl("https://appassets.androidplatform.net/assets/src/html/index.html");
+
+    setContentView(webView);
+  }
+
+  @Override
+  public void onBackPressed() {
+    if (webView.canGoBack()) {
+      webView.evaluateJavascript(
+          " try {\n"
+              + "  document.querySelector('#onsen-navigator').popPage()"
+              + "    .catch( error => {"
+              + "     sessionStorage.clear();"
+              + "     history.back();"
+              + "});"
+              + "  } catch (e) {"
+              + "    history.back();"
+              + "  }",
+          value -> {});
+    } else {
+      super.onBackPressed();
+    }
+  }
 }

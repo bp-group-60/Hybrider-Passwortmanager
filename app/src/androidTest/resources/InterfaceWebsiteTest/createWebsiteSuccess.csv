@@ -1,0 +1,4 @@
+case,loginName,password
+Standard,notEmpty,notEmpty,       case: both loginName and password not empty
+empty loginName,,notEmpty,        case: empty loginName
+empty password,notEmpty,,         case: empty password

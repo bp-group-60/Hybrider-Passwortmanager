@@ -1,0 +1,3 @@
+case,usernameExistedInDB,websiteExistedInDB,usernameGiven,websiteGiven
+website doesn't match,user01,website01.de,user01,wrongwebsite,              case: website stimmt nicht
+username doesn't match,user01,website01.de,wronguser,website01.de,          case: username stimmt nicht
