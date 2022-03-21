@@ -82,13 +82,15 @@ For editing and building the project [Android Studio](https://developer.android.
 Additionally for compiling any c-compiler with make-command and the git command is nessesary.
 
 ### Installation
+Use the _Get from Version Control..._ option in the Open Project Window in Android Studio
+
+or
+
 1. Clone the repo
 	 ```sh
 	 git clone https://github.com/bp-group-60/Hybrider-Passwortmanager.git
 	 ```
-2. Import in IDE (Android Studio)
-
-	or just use the _Get from Version Control..._ option in the Open Project Window
+2. Import in IDE (Android Studio recommended)
 
 ### Building
 For building this project use gradle's default build configuration.
