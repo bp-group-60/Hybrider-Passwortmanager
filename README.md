@@ -34,31 +34,6 @@
 </div>
 
 
-
-<!-- TABLE OF CONTENTS -->
-<details>
-	<summary>Table of Contents</summary>
-	<ol>
-		<li>
-			<a href="#about-the-project">About The Project</a>
-			<ul>
-				<li><a href="#built-with">Built With</a></li>
-			</ul>
-		</li>
-		<li>
-			<a href="#getting-started">Getting Started</a>
-			<ul>
-				<li><a href="#prerequisites">Prerequisites</a></li>
-				<li><a href="#installation">Installation</a></li>
-			</ul>
-		</li>
-		<li><a href="#usage">Usage</a></li>
-		<li><a href="#features">Features</a></li>
-		<li><a href="#license">License</a></li>
-		<li><a href="#acknowledgments">Acknowledgments</a></li>
-	</ol>
-</details>
-
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
@@ -66,15 +41,13 @@ Hybrider-Passwortmanager is intended to show a modern representation of an Andro
 This is just an academic example and is created for data flow analysis with newly developed tools.
 To illustrate the possible security-critical scenarios, a possible modern representation of a password manager was chosen.
 
-A dataflow-diagram is shwon below:<br>
-[![](App_Schnittstellen-Graph.png)](https://raw.githubusercontent.com/bp-group-60/Hybrider-Passwortmanager/dev/App_Schnittstellen-Graph.png)
 
 ### Built With
 
-* [OnsenUI](https://onsen.io/)
+* [OnsenUI](https://onsen.io/) (Version 2.11.2)
 * [emscripten](https://emscripten.org/docs/)
-* [prebuilt openSSL-Library](https://github.com/PurpleI2P/OpenSSL-for-Android-Prebuilt)
-* [Room Database](https://developer.android.com/reference/android/arch/persistence/room/RoomDatabase)
+* [prebuilt openSSL-Library](https://github.com/PurpleI2P/OpenSSL-for-Android-Prebuilt) (Version 1.1.1k)
+* [Room Database](https://developer.android.com/training/data-storage/room) 
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -94,7 +67,7 @@ or
 
 ### Building
 For building this project use gradle's default build configuration.
-Gradle will compile with JDK-11 and Android Sdk, which comes with Android Studio
+Gradle will compile with JDK-11 and Android Sdk, which comes with Android Studio.
 The make-command is used in the build files and is therefore prerequired.
 Also git have to bee installed too, since the compiler for webAssembly is fetched over the air.
 
