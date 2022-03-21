@@ -355,12 +355,13 @@ class AppHTMLTest {
       Thread.sleep(loadDelay);
 
       onWebView().check(webContent(hasElementWithId("save-button")));
-      //clear the fields
+      // clear the fields
       onWebView()
-              .withElement(findElement(Locator.CSS_SELECTOR, "input[placeholder=Loginname]"))
-              .perform(clearElement());
+          .withElement(findElement(Locator.CSS_SELECTOR, "input[placeholder=Loginname]"))
+          .perform(clearElement());
       onWebView()
-              .withElement(findElement(Locator.CSS_SELECTOR, "input[placeholder=Passwort]")).perform(clearElement());
+          .withElement(findElement(Locator.CSS_SELECTOR, "input[placeholder=Passwort]"))
+          .perform(clearElement());
       testGenerateButton();
     }
 
@@ -397,31 +398,31 @@ class AppHTMLTest {
                 });
           });
 
-      //check identity function
+      // check identity function
       onWebView()
-              .withElement(findElement(Locator.CSS_SELECTOR, "input[placeholder=Passwort]")).perform(clearElement())
-              .perform(webKeys(defaultLoginPassword));
+          .withElement(findElement(Locator.CSS_SELECTOR, "input[placeholder=Passwort]"))
+          .perform(clearElement())
+          .perform(webKeys(defaultLoginPassword));
       onWebView()
-              .withElement(findElement(Locator.ID, "generate-random-password"))
-              .perform(webClick());
+          .withElement(findElement(Locator.ID, "generate-random-password"))
+          .perform(webClick());
       Thread.sleep(loadDelay);
       // check the generated strings
       scenario.onActivity(
-              activity -> {
-                WebView webview = getWebViewInstance(activity);
+          activity -> {
+            WebView webview = getWebViewInstance(activity);
 
-                webview.evaluateJavascript(
-                        "document.querySelector('#login-password').value",
-                        s -> {
-                          int stringLength = 12 + defaultLoginPassword.length();
-                          String actual = parseJSONtoString(s);
-                          String sub = actual.substring(0, defaultLoginPassword.length());
-                          assertEquals(defaultLoginPassword, sub);
-                          assertEquals(stringLength, actual.length());
-                          assertNotEquals(defaultLoginPassword, actual);
-                        });
-              });
-
+            webview.evaluateJavascript(
+                "document.querySelector('#login-password').value",
+                s -> {
+                  int stringLength = 12 + defaultLoginPassword.length();
+                  String actual = parseJSONtoString(s);
+                  String sub = actual.substring(0, defaultLoginPassword.length());
+                  assertEquals(defaultLoginPassword, sub);
+                  assertEquals(stringLength, actual.length());
+                  assertNotEquals(defaultLoginPassword, actual);
+                });
+          });
     }
   }
 
