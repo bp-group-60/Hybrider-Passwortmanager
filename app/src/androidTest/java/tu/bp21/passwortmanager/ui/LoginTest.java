@@ -35,7 +35,6 @@ class LoginTest {
   static String randomEmail;
   static String randomUserPassword;
 
-
   @BeforeEach
   void setUp() {
     if (mainActivity == null) {

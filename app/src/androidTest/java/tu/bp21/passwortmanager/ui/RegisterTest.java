@@ -26,7 +26,6 @@ import tu.bp21.passwortmanager.db.database.ApplicationDatabase;
 import static tu.bp21.passwortmanager.StringFunction.*;
 import static tu.bp21.passwortmanager.ui.UITestConstaints.*;
 
-
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class RegisterTest {
 

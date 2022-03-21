@@ -9,19 +9,34 @@ import java.util.ArrayList;
 import static tu.bp21.passwortmanager.Constants.*;
 
 public class Crypto {
-  private static native byte[] crypt(byte[] input, byte[] aad, byte[] iv, byte[] key, int tag_length, int iv_length);
+  private static native byte[] crypt(
+      byte[] input, byte[] aad, byte[] iv, byte[] key, int tag_length, int iv_length);
 
   private static native byte[] generateKeyNative(
-          byte[] input, int input_length, byte[] salt, int salt_length, int output_length, int iterations);
+      byte[] input,
+      int input_length,
+      byte[] salt,
+      int salt_length,
+      int output_length,
+      int iterations);
 
   public static native byte[] generateSecureByteArray(int size);
 
-  private static native byte[] hash(byte[] input, int input_length, byte[] salt, int salt_length, int param_N, int param_r, int param_p, int output_length);
+  private static native byte[] hash(
+      byte[] input,
+      int input_length,
+      byte[] salt,
+      int salt_length,
+      int param_N,
+      int param_r,
+      int param_p,
+      int output_length);
 
   public static byte[] generateKey(@NonNull String passwordToDerive, byte[] salt) {
     byte[] input = passwordToDerive.getBytes();
     if (salt == null) salt = new byte[0];
-    return generateKeyNative(input, input.length, salt, salt.length, KEY_OUTPUT_LENGTH, PBKDF2_ITERATIONS);
+    return generateKeyNative(
+        input, input.length, salt, salt.length, KEY_OUTPUT_LENGTH, PBKDF2_ITERATIONS);
   }
 
   public static byte[] encrypt(
@@ -42,7 +57,16 @@ public class Crypto {
   public static byte[] computeHash(@NonNull String password, byte[] salt) {
     if (salt == null) salt = new byte[0];
     byte[] input = password.getBytes();
-    byte[] output = hash(input, input.length, salt, salt.length, SCRYPT_PARAM_N, SCRYPT_PARAM_R, SCRYPT_PARAM_P, HASH_OUTPUT_LENGTH);
+    byte[] output =
+        hash(
+            input,
+            input.length,
+            salt,
+            salt.length,
+            SCRYPT_PARAM_N,
+            SCRYPT_PARAM_R,
+            SCRYPT_PARAM_P,
+            HASH_OUTPUT_LENGTH);
     if (output == null) throw new RuntimeException("Hash failed. Not enough RAM");
     return output;
   }

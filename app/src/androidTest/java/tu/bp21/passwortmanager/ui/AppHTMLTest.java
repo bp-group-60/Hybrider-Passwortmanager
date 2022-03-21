@@ -40,7 +40,6 @@ import android.content.Context;
 import android.webkit.WebView;
 import static tu.bp21.passwortmanager.ui.UITestConstaints.*;
 
-
 @TestClassOrder(ClassOrderer.OrderAnnotation.class)
 class AppHTMLTest {
   @RegisterExtension
