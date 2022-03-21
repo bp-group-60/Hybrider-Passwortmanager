@@ -44,10 +44,10 @@ To illustrate the possible security-critical scenarios, a possible modern repres
 
 ### Built With
 
-* [OnsenUI](https://onsen.io/)
+* [OnsenUI](https://onsen.io/) (Version 2.11.2)
 * [emscripten](https://emscripten.org/docs/)
-* [prebuilt openSSL-Library](https://github.com/PurpleI2P/OpenSSL-for-Android-Prebuilt)
-* [Room Database](https://developer.android.com/training/data-storage/room)
+* [prebuilt openSSL-Library](https://github.com/PurpleI2P/OpenSSL-for-Android-Prebuilt) (Version 1.1.1k)
+* [Room Database](https://developer.android.com/training/data-storage/room) 
 
 <!-- GETTING STARTED -->
 ## Getting Started
