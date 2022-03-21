@@ -81,8 +81,7 @@ A dataflow-diagram is shwon below:<br>
 
 ### Built With
 
-* [OnsenUI](https://nextjs.org/)
-* [Python](https://www.python.org/)
+* [OnsenUI](https://onsen.io/)
 * [emscripten](https://emscripten.org/docs/)
 * [prebuilt openSSL-Library](https://github.com/PurpleI2P/OpenSSL-for-Android-Prebuilt)
 * [Room Database](https://developer.android.com/reference/android/arch/persistence/room/RoomDatabase)
@@ -96,9 +95,9 @@ For editing and building the project [Android Studio](https://developer.android.
 	 ```sh
 	 git clone https://github.com/bp-group-60/Hybrider-Passwortmanager.git
 	 ```
-2. Import in IDE (Android Studio or MS Visual Studio Code tested)
+2. Import in IDE (Android Studio)
 
-or just use the build in vcs tools
+or just use the build in MS Visual Studio Code tools
 
 ### Building
 For building this project use gradle's default build configuration.
