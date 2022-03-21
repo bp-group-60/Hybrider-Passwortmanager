@@ -86,7 +86,7 @@ A dataflow-diagram is shwon below:<br>
 <!-- GETTING STARTED -->
 ## Getting Started
 For editing and building the project [Android Studio](https://developer.android.com/studio) comes with almost all reqirements and is therefore recommended.
-Java-11 is prerequired for Android Studio. Additionally for compiling any c-compiler with make-command is nessesary.
+Additionally for compiling any c-compiler with make-command is nessesary.
 
 ### Installation
 1. Clone the repo
@@ -99,7 +99,9 @@ Java-11 is prerequired for Android Studio. Additionally for compiling any c-comp
 
 ### Building
 For building this project use gradle's default build configuration.
-
+Gradle will compile with JDK-11 and Android Sdk, which comes with Android Studio
+The make-command is used in the build files and is therefore prerequired.
+Also git have to bee installed too, since the compiler for webAssembly is fetched over the air.
 
 ### Running
 To get proper functionality at least SDK 24 (Android 7) and a WebView version that supports ES6 and webassembly is required.
