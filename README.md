@@ -1,11 +1,4 @@
 # Hybrider Passwortmanager
-
-<!-- Shift to Wiki -->
-Introduction:
-
-OpenSSL Library:		cpp/include + cpp/libs
-
-
 <div id="top"></div>
 
 <!-- PROJECT SHIELDS -->
