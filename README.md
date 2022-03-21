@@ -4,9 +4,6 @@
 Introduction:
 
 OpenSSL Library:		cpp/include + cpp/libs
-OnsenUI:				assests/onsenui
-Webassembly:			assets/src/webAssembly
-Room-Database:			
 
 
 <div id="top"></div>
@@ -89,7 +86,7 @@ A dataflow-diagram is shwon below:<br>
 <!-- GETTING STARTED -->
 ## Getting Started
 For editing and building the project [Android Studio](https://developer.android.com/studio) comes with almost all reqirements and is therefore recommended.
-Additional for compiling any c-compiler with make-command is nessesary.
+Java-11 is prerequired for Android Studio. Additionally for compiling any c-compiler with make-command is nessesary.
 
 ### Installation
 1. Clone the repo
@@ -98,7 +95,7 @@ Additional for compiling any c-compiler with make-command is nessesary.
 	 ```
 2. Import in IDE (Android Studio)
 
-or just use the build in MS Visual Studio Code tools
+or just use the _Get from Version Control..._ in the Open Project Window
 
 ### Building
 For building this project use gradle's default build configuration.
