@@ -26,7 +26,7 @@ class InterfaceCryptoTest {
 
   @Nested
   @DisplayName("Test for hashPassword")
-  class hashPasswordTests {
+  class HashPasswordTests {
 
     @ParameterizedTest
     @CsvFileSource(resources = "/InterfaceCryptoTest/hashPassword.csv", numLinesToSkip = 1)
@@ -44,7 +44,7 @@ class InterfaceCryptoTest {
 
   @Nested
   @DisplayName("Test for generateKey")
-  class generateKeyTest {
+  class GenerateKeyTest {
     @ParameterizedTest
     @CsvFileSource(resources = "/InterfaceCryptoTest/generateKey.csv", numLinesToSkip = 1)
     @DisplayName("Case:")

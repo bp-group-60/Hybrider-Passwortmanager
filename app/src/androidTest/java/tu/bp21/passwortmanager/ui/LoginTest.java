@@ -13,7 +13,6 @@ import static androidx.test.espresso.web.assertion.WebViewAssertions.*;
 import static androidx.test.espresso.web.matcher.DomMatchers.containingTextInBody;
 
 import org.junit.jupiter.api.AfterAll;
-import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +23,7 @@ import tu.bp21.passwortmanager.MainActivity;
 import tu.bp21.passwortmanager.db.database.ApplicationDatabase;
 import static tu.bp21.passwortmanager.StringFunction.*;
 
-public class LoginTest {
+class LoginTest {
   @RegisterExtension
   final ActivityScenarioExtension<MainActivity> scenarioExtension =
       ActivityScenarioExtension.launch(MainActivity.class);
@@ -41,7 +40,7 @@ public class LoginTest {
   static final int userPasswordMinLength = 8;
 
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp(){
     if (mainActivity == null) {
       ActivityScenario<MainActivity> scenario = scenarioExtension.getScenario();
       scenario.onActivity(activity -> mainActivity = activity);
@@ -84,7 +83,7 @@ public class LoginTest {
   }
 
   @Test
-  void loginSuccessTest() throws Exception {
+  void loginSuccessTest(){
     onWebView()
         .withElement(findElement(Locator.ID, "input-username"))
         .perform(webKeys(randomUsername));
@@ -100,7 +99,7 @@ public class LoginTest {
     String differentPassword;
     do {
       differentPassword = generateRandomString(stringMaxLength);
-    } while (differentPassword == randomUserPassword);
+    } while (differentPassword.equals(randomUserPassword));
     onWebView()
         .withElement(findElement(Locator.ID, "input-username"))
         .perform(webKeys(randomUsername));
@@ -113,7 +112,7 @@ public class LoginTest {
   }
 
   @AfterAll
-  static void tearDown() throws Exception {
+  static void tearDown(){
     mainActivity.deleteDatabase("testDatabase");
   }
 }

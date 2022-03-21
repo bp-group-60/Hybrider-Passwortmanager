@@ -40,7 +40,7 @@ import android.content.Context;
 import android.webkit.WebView;
 
 @TestClassOrder(ClassOrderer.OrderAnnotation.class)
-public class AppHTMLTest {
+class AppHTMLTest {
   @RegisterExtension
   final ActivityScenarioExtension<MainActivity> scenarioExtension =
       ActivityScenarioExtension.launch(MainActivity.class);
@@ -225,7 +225,7 @@ public class AppHTMLTest {
 
   @Nested
   @Order(3)
-  class showPasswordButtonTest {
+  class ShowPasswordButtonTest {
 
     @Test
     void inAddWebsitePage() throws Exception {
@@ -297,7 +297,7 @@ public class AppHTMLTest {
 
   @Nested
   @Order(2)
-  class copyButtonTest {
+  class CopyButtonTest {
     ClipboardManager clipboard;
 
     @BeforeEach
@@ -337,7 +337,7 @@ public class AppHTMLTest {
 
   @Nested
   @Order(4)
-  class generateButtonTest {
+  class GenerateButtonTest {
     @Test
     void inAddWebsitePage() throws Exception {
       // go to add website page
@@ -402,7 +402,7 @@ public class AppHTMLTest {
 
   @Nested
   @Order(5)
-  class backButtonTest {
+  class BackButtonTest {
 
     @BeforeEach
     void startWebsiteDetailPage() throws Exception {
@@ -502,7 +502,7 @@ public class AppHTMLTest {
   @Nested
   @Order(7)
   @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-  class deleteWebsiteTest {
+  class DeleteWebsiteTest {
 
     @BeforeEach
     void startDelete() throws Exception {
@@ -563,11 +563,11 @@ public class AppHTMLTest {
   @Nested
   @Order(8)
   @TestClassOrder(ClassOrderer.OrderAnnotation.class)
-  class urlTest {
+  class UrlTest {
 
     @Nested
     @Order(1)
-    class inAddWebsitePage {
+    class InAddWebsitePage {
 
       @BeforeEach
       void init() throws Exception {
@@ -654,7 +654,7 @@ public class AppHTMLTest {
     @Nested
     @Order(2)
     @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-    class inEditWebsitePage {
+    class InEditWebsitePage {
 
       @BeforeEach
       void init() throws Exception {
@@ -724,7 +724,7 @@ public class AppHTMLTest {
   @Nested
   @Order(9)
   @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-  class deleteUserTest {
+  class DeleteUserTest {
     @BeforeEach
     void startDelete() throws Exception {
       // click delete button
@@ -806,7 +806,7 @@ public class AppHTMLTest {
   }
 
   @AfterAll
-  static void tearDown() throws Exception {
+  static void tearDown(){
     mainActivity.deleteDatabase("testDatabase");
   }
 }

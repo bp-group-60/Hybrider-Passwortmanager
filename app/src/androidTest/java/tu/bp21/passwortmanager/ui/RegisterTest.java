@@ -46,7 +46,7 @@ class RegisterTest {
   static final int loadDelay = 500;
 
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp(){
     if (mainActivity == null) {
       ActivityScenario<MainActivity> scenario = scenarioExtension.getScenario();
       scenario.onActivity(activity -> mainActivity = activity);
@@ -70,7 +70,7 @@ class RegisterTest {
 
   @Test
   @Order(1)
-  void registerSuccess() throws Exception {
+  void registerSuccess(){
     fillDataForm(defaultUsername, randomEmail, randomUserPassword, randomUserPassword);
     onWebView().withElement(findElement(Locator.ID, "submit-button")).perform(webClick());
     // should be in login page
@@ -102,38 +102,40 @@ class RegisterTest {
   }
 
   @Nested
-  class emailInvalidTest {
+  class EmailInvalidTest {
+    //shorter string to avoid long load on the automata to check regular expression at js side
+    int shortStringMaxLength = 8;
+
     @Test
     void emailNoDomain() throws Exception {
       String email =
-          generateRandomString(stringMaxLength) + "@" + generateRandomString(stringMaxLength);
-      fillDataForm(randomUsername, email, randomUserPassword, randomUserPassword);
+          generateRandomString(shortStringMaxLength) + "@" + generateRandomString(shortStringMaxLength);
+      onWebView().withElement(findElement(Locator.ID, "signup-email")).perform(webKeys(email));
       checkEmailFormatError();
     }
 
     @Test
     void emailWithShortDomain() throws Exception {
       String email =
-          generateRandomString(stringMaxLength)
+          generateRandomString(shortStringMaxLength)
               + "@"
-              + generateRandomString(stringMaxLength)
+              + generateRandomString(shortStringMaxLength)
               + "."
               + generateRandomString(domainMinLength - 1);
-      ;
-      fillDataForm(randomUsername, email, randomUserPassword, randomUserPassword);
+      onWebView().withElement(findElement(Locator.ID, "signup-email")).perform(webKeys(email));
       checkEmailFormatError();
     }
 
     @Test
     void emailWithLongDomain() throws Exception {
       String email =
-          generateRandomString(stringMaxLength)
+          generateRandomString(shortStringMaxLength)
               + "@"
-              + generateRandomString(stringMaxLength)
+              + generateRandomString(shortStringMaxLength)
               + "."
               + generateRandomString(domainMaxLength + 1, domainMaxLength + 1);
-      ;
-      fillDataForm(randomUsername, email, randomUserPassword, randomUserPassword);
+      onWebView().withElement(findElement(Locator.ID, "signup-email")).perform(webKeys(email));
+      Thread.sleep(3000);
       checkEmailFormatError();
     }
 
@@ -181,7 +183,7 @@ class RegisterTest {
   }
 
   @AfterAll
-  static void tearDown() throws Exception {
+  static void tearDown(){
     mainActivity.deleteDatabase("testDatabase");
   }
 }

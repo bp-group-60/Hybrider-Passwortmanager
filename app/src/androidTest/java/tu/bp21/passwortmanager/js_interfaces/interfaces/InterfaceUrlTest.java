@@ -52,7 +52,7 @@ class InterfaceUrlTest {
   }
 
   @BeforeEach
-  public void setUp() throws Exception {
+  void setUp() throws Exception {
     if (mainActivity == null) {
       ActivityScenario<MainActivity> scenario = scenarioExtension.getScenario();
       scenario.onActivity(activity -> mainActivity = activity);
@@ -107,7 +107,7 @@ class InterfaceUrlTest {
   void checkExpectedDB(String username, String websiteName, String webAddress) {
     Url expected = getWebsite(username, websiteName, webAddress);
 
-    assertTrue(expected != null);
+    assertNotNull(expected);
     assertEquals(expected.username, username);
     assertEquals(expected.websiteName, websiteName);
     assertEquals(expected.webAddress, webAddress);
@@ -139,7 +139,7 @@ class InterfaceUrlTest {
 
   @Nested
   @DisplayName("Tests for saveUrl")
-  class saveUrlTest {
+  class SaveUrlTest {
 
     @Test
     @DisplayName("Case: Success")
@@ -195,7 +195,7 @@ class InterfaceUrlTest {
 
   @Nested
   @DisplayName("Tests for deleteUrl")
-  class deleteUrlTest {
+  class DeleteUrlTest {
 
     @Test
     @DisplayName("Case: Success")
@@ -238,7 +238,7 @@ class InterfaceUrlTest {
 
   @Nested
   @DisplayName("Test for getUrlList")
-  class getUrlListTest {
+  class GetUrlListTest {
 
     @Test
     @DisplayName("Case: Success")

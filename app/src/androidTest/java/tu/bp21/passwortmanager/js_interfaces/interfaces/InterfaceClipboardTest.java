@@ -49,15 +49,14 @@ class InterfaceClipboardTest {
 
   @Nested
   @DisplayName("Tests for copyToClipboardWithTimeout")
-  class copyToClipboardWithTimeoutTest {
+  class CopyToClipboardWithTimeoutTest {
 
     @ParameterizedTest
     @CsvFileSource(
         resources = "/InterfaceClipboardTest/copyToClipboardWithTimeoutTest.csv",
         numLinesToSkip = 1)
     @DisplayName("Case: ")
-    void copyToClipboardWithTimeoutSuccess(String displayCase, String text, long timeout)
-        throws Exception {
+    void copyToClipboardWithTimeoutSuccess(String displayCase, String text, long timeout) {
 
       assumingThat(
           timeout != 0,

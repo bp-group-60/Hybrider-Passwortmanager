@@ -2,8 +2,6 @@ package tu.bp21.passwortmanager;
 
 import androidx.test.core.app.ActivityScenario;
 
-import static androidx.test.espresso.web.assertion.WebViewAssertions.*;
-
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -32,7 +30,7 @@ class MainActivityTest {
   static final String databaseName = "database";
 
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp(){
     if (mainActivity == null) {
       scenarioExtension.getScenario().onActivity(activity -> mainActivity = activity);
     }
@@ -41,7 +39,7 @@ class MainActivityTest {
   }
 
   @AfterEach
-  void tearDown() throws Exception {}
+  void tearDown(){}
 
   @Test
   void onCreateTest() {

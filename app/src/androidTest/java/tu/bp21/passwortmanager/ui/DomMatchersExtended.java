@@ -16,7 +16,7 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 /** Extends functionality of DomMatchers */
-public class DomMatchersExtended {
+class DomMatchersExtended {
 
   public static Matcher<Document> hasNoElementWithXpath(final String xpath) {
     return new HasNoElementWithXPathMatcher(xpath);

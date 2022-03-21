@@ -7,7 +7,7 @@ import org.junit.jupiter.api.*;
 import tu.bp21.passwortmanager.StringFunction;
 import tu.bp21.passwortmanager.db.entities.Website;
 
-public class WebsiteTest {
+class WebsiteTest {
 
   private Website websiteEntity;
   private Website wrongWebsiteEntity;
@@ -15,7 +15,7 @@ public class WebsiteTest {
   private byte[] password;
 
   @BeforeEach
-  public void setUp() throws Exception {
+  void setUp() throws Exception {
     username = "PasswordTestUser01";
     websiteName = "PasswordTestWebsite01";
     loginName = "PasswordTestLoginName01";
@@ -25,15 +25,8 @@ public class WebsiteTest {
     wrongWebsiteEntity = new Website(username, "wrong", loginName, password);
   }
 
-  @AfterEach
-  public void tearDown() throws Exception {
-    username = websiteName = loginName = "";
-    password = null;
-    websiteEntity = wrongWebsiteEntity = null;
-  }
-
   @Test
-  public void testToString() {
+  void testToString() {
     String expect = "[\"" + websiteName + "\",\"" + loginName + "\"]";
     assertEquals(expect, websiteEntity.toString());
     assertNotEquals(expect, wrongWebsiteEntity.toString());

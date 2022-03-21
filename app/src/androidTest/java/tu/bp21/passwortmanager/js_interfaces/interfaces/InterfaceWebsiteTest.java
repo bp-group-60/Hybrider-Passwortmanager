@@ -59,7 +59,7 @@ class InterfaceWebsiteTest {
   }
 
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp(){
     if (mainActivity == null) {
       ActivityScenario<MainActivity> scenario = scenarioExtension.getScenario();
       scenario.onActivity(activity -> mainActivity = activity);
@@ -170,7 +170,7 @@ class InterfaceWebsiteTest {
 
   @Nested
   @DisplayName("Test for createWebsite")
-  class createWebsiteTest {
+  class CreateWebsiteTest {
 
     @ParameterizedTest
     @CsvFileSource(resources = "/InterfaceWebsiteTest/createWebsiteSuccess.csv", numLinesToSkip = 1)
@@ -242,7 +242,7 @@ class InterfaceWebsiteTest {
 
   @Nested
   @DisplayName("Tests for updateWebsite")
-  class updateWebsiteTest {
+  class UpdateWebsiteTest {
 
     @ParameterizedTest
     @CsvFileSource(resources = "/InterfaceWebsiteTest/updateWebsiteSuccess.csv", numLinesToSkip = 1)
@@ -300,7 +300,7 @@ class InterfaceWebsiteTest {
 
   @Nested
   @DisplayName("Tests for deleteWebsite")
-  class deleteWebsiteTest {
+  class DeleteWebsiteTest {
 
     @Test
     @DisplayName("Case: Success")
@@ -346,7 +346,7 @@ class InterfaceWebsiteTest {
 
   @Nested
   @DisplayName("Tests for getLoginName")
-  class getLoginNameTest {
+  class GetLoginNameTest {
 
     @Test
     @DisplayName("Case: Standard")
@@ -387,7 +387,7 @@ class InterfaceWebsiteTest {
 
   @Nested
   @DisplayName("Tests for getWebsite")
-  class getWebsiteTest {
+  class GetWebsiteTest {
 
     @Test
     @DisplayName("Case: Standard")

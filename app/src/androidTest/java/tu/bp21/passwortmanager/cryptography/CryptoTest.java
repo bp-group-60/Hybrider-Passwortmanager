@@ -61,7 +61,7 @@ class CryptoTest {
 
   @Nested
   @DisplayName("Tests for encrypt")
-  class encryptTest {
+  class EncryptTest {
 
     @Test
     @DisplayName("Case: Default")
@@ -155,7 +155,7 @@ class CryptoTest {
 
   @Nested
   @DisplayName("Tests for decrypt")
-  class decryptTest {
+  class DecryptTest {
 
     @Test
     @DisplayName("Case: Default")
@@ -265,7 +265,7 @@ class CryptoTest {
 
   @Nested
   @DisplayName("Tests for computeHash")
-  class computeHashTest {
+  class ComputeHashTest {
     @Test
     @DisplayName("Case: Default")
     void computeHashDefault() {
@@ -325,7 +325,7 @@ class CryptoTest {
 
   @Nested
   @DisplayName("Test for generateUniqueIV")
-  class generateUniqueIVTest {
+  class GenerateUniqueIVTest {
 
     @Test
     @DisplayName("Case: Default")
@@ -392,7 +392,7 @@ class CryptoTest {
 
   @Nested
   @DisplayName("Test for generateKey")
-  class generateKeyTest {
+  class GenerateKeyTest {
 
     @Test
     @DisplayName("Case: Default")

@@ -106,7 +106,7 @@ class InterfaceUserTests {
 
   @Nested
   @DisplayName("Tests for deleteUser")
-  class deleteUserTest {
+  class DeleteUserTest {
 
     @Test
     @DisplayName("Case: Success")
