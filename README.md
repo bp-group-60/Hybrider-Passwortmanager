@@ -88,7 +88,8 @@ A dataflow-diagram is shwon below:<br>
 
 <!-- GETTING STARTED -->
 ## Getting Started
-For editing and building the project [Android Studio](https://developer.android.com/studio) comes with all reqirements and is therefore recommended.
+For editing and building the project [Android Studio](https://developer.android.com/studio) comes with almost all reqirements and is therefore recommended.
+Additional for compiling any c-compiler with make-command is nessesary.
 
 ### Installation
 1. Clone the repo
@@ -101,6 +102,7 @@ or just use the build in MS Visual Studio Code tools
 
 ### Building
 For building this project use gradle's default build configuration.
+
 
 ### Running
 To get proper functionality at least SDK 24 (Android 7) and a WebView version that supports ES6 and webassembly is required.
@@ -123,13 +125,6 @@ After starting the app on the phone you can:
 ## License
 
 Distributed under the MIT License. See [LICENSE](https://github.com/bp-group-60/Hybrider-Passwortmanager/blob/main/LICENSE) for more information.
-
-<!-- ACKNOWLEDGMENTS -->
-## Acknowledgments
-
-* [emscripten Tutorial](https://emscripten.org/docs/getting_started/Tutorial.html)
-
-
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
