@@ -96,7 +96,8 @@ class InterfaceUserTests {
   @CsvFileSource(resources = "/InterfaceUserTest/testUser.csv", numLinesToSkip = 1)
   void testCreateUser(String userToCreate, String userPasswordToCreate) {
     assertTrue(interfaceUser.createUser(userToCreate, randomEmail, userPasswordToCreate));
-    byte[] salt = Arrays.copyOf(userDataAccessObject.getUser(userToCreate).hashedUserPassword, saltLength);
+    byte[] salt =
+        Arrays.copyOf(userDataAccessObject.getUser(userToCreate).hashedUserPassword, saltLength);
     byte[] encryptedPassword = Crypto.computeHash(userPasswordToCreate, salt);
     assertTrue(userDataAccessObject.getUser(userToCreate) != null);
     assertEquals(userToCreate, userDataAccessObject.getUser(userToCreate).username);
