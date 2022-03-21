@@ -109,7 +109,7 @@ export function getGenerateRandomPasswordOnclick(page, length) {
     if(currentPasswordInputValue === ""){
      page.querySelector("#login-password").value = randomString;
     } else{
-     page.querySelector("#login-password").value = currentPasswordInputValue + identityFunction(currentPasswordInputValue);
+     page.querySelector("#login-password").value = identityFunction(currentPasswordInputValue) + randomString;
     }
 
   }
