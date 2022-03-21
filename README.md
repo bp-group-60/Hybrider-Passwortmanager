@@ -70,9 +70,11 @@ Room-Database:
 </details>
 
 <!-- ABOUT THE PROJECT -->
-## About The Project -- deprecated, transfer in wiki detailed explanation
+## About The Project
 
-The App is devided into 2 sections: the frontend and the backend. The frontend has a login/register site and the password-overview page to see, edit and add passwords. On the backend side, we have a `Java Dataflowmanager` to get the data from the `SQLite Datbase` and encrypt & decrypt the data in the `C-Cryption` section, so the requested informations can be forwarded to the frontend and been shown there.
+Hybrider-Passwortmanager is intended to show a modern representation of an Android app which uses as many different languages as possible.
+This is just an academic example and is created for data flow analysis with newly developed tools.
+To illustrate the possible security-critical scenarios, a possible modern representation of a password manager was chosen.
 
 A dataflow-diagram is shwon below:<br>
 [![](App_Schnittstellen-Graph.png)](https://raw.githubusercontent.com/bp-group-60/Hybrider-Passwortmanager/dev/App_Schnittstellen-Graph.png)
@@ -104,10 +106,7 @@ For building this project use gradle's default build configuration.
 ### Running
 To get proper functionality at least SDK 24 (Android 7) and a WebView version that supports ES6 and webassembly is required.
 
-<!-- USAGE EXAMPLES -->
-## Usage -- deprecated, transfer in wiki detailed explanation
-After starting the app on the phone, there is a login screen. If you dont have any account, you can create one using the register site and insert your username, email and masterpassword. The masterpassword will be hashed and used for verification during the login process. After a successful login, the user can see his password list with the application name and the username, which has been used there. The user is capable to add new passwords or select an entry. Adding a password requires an application name, a username and password. The app supports generating passwords to you. Optional the user can add URLs to the password entry.<br>
-When the user selects an password entry, he can copy the password into clipboard or edit or even delete the entry. While editing the entry, the user now can only change username, password and URLs. The password generation is also usable in the edit screen.
+
 
 _For more and detailed explaination of each part of every section, please visit the [Wiki](https://github.com/bp-group-60/Hybrider-Passwortmanager/wiki)_
 
