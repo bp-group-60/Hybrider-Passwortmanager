@@ -79,7 +79,7 @@ A dataflow-diagram is shwon below:<br>
 <!-- GETTING STARTED -->
 ## Getting Started
 For editing and building the project [Android Studio](https://developer.android.com/studio) comes with almost all reqirements and is therefore recommended.
-Additionally for compiling any c-compiler with make-command is nessesary.
+Additionally for compiling any c-compiler with make-command and the git command is nessesary.
 
 ### Installation
 1. Clone the repo
