@@ -355,7 +355,10 @@ class AppHTMLTest {
       Thread.sleep(loadDelay);
 
       onWebView().check(webContent(hasElementWithId("save-button")));
-      //clear the password field
+      //clear the fields
+      onWebView()
+              .withElement(findElement(Locator.CSS_SELECTOR, "input[placeholder=Loginname]"))
+              .perform(clearElement());
       onWebView()
               .withElement(findElement(Locator.CSS_SELECTOR, "input[placeholder=Passwort]")).perform(clearElement());
       testGenerateButton();
