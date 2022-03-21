@@ -103,13 +103,21 @@ export function getCommitButtonOnclick(page) {
 
 export function getGenerateRandomPasswordOnclick(page, length) {
   return () => {
-    page.querySelector("#login-password").value = generateRandomString(length);
+    let randomString = generateRandomString(length);
+    let currentPasswordInputValue = page.querySelector("#login-password").value;
+
+    if(currentPasswordInputValue === ""){
+     page.querySelector("#login-password").value = randomString;
+    } else{
+     page.querySelector("#login-password").value = currentPasswordInputValue + identityFunction(currentPasswordInputValue);
+    }
+
   }
 }
 
 export function getGenerateRandomUsernameOnclick(page, length) {
   return () => {
     let randomString = generateRandomString(length)
-    page.querySelector("#login-name").value = randomString + identityFunction(randomString);
+    page.querySelector("#login-name").value = randomString;
   }
 }
