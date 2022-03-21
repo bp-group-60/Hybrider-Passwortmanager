@@ -1,6 +1,5 @@
 package tu.bp21.passwortmanager;
 
-
 /** parameters used for cryptography algorithms and tests are defined here */
 public class Constants {
   // length in byte length
