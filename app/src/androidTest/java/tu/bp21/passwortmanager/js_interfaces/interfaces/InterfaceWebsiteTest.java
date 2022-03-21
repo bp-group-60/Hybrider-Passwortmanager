@@ -59,7 +59,7 @@ class InterfaceWebsiteTest {
   }
 
   @BeforeEach
-  void setUp(){
+  void setUp() {
     if (mainActivity == null) {
       ActivityScenario<MainActivity> scenario = scenarioExtension.getScenario();
       scenario.onActivity(activity -> mainActivity = activity);
