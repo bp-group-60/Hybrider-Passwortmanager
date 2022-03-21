@@ -6,6 +6,7 @@ import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.io.Bas
 
 import java.util.Arrays;
 
+import tu.bp21.passwortmanager.Constants;
 import tu.bp21.passwortmanager.cryptography.Crypto;
 import tu.bp21.passwortmanager.db.data_access_objects.UserDataAccessObject;
 import tu.bp21.passwortmanager.db.entities.User;
@@ -34,7 +35,7 @@ public class InterfaceUser {
 
   @JavascriptInterface
   public boolean createUser(String username, String email, String userPassword) {
-    byte[] salt = Crypto.generateSecureByteArray(16);
+    byte[] salt = Crypto.generateSecureByteArray(Constants.SALT_LENGTH);
     byte[] hashedUserPassword = Crypto.computeHash(userPassword, salt);
     User newUserEntity = new User(username, email, hashedUserPassword);
 
@@ -67,7 +68,7 @@ public class InterfaceUser {
   public String getSalt(String username) {
     User userEntity = userDataAccessObject.getUser(username);
     if (userEntity != null) {
-      byte[] salt = Arrays.copyOf(userEntity.hashedUserPassword, 16);
+      byte[] salt = Arrays.copyOf(userEntity.hashedUserPassword, Constants.SALT_LENGTH);
       return BaseEncoding.base16().encode(salt);
     }
     return "";

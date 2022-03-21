@@ -16,6 +16,7 @@ import org.junit.jupiter.params.provider.CsvFileSource;
 import java.util.Arrays;
 
 import de.mannodermaus.junit5.ActivityScenarioExtension;
+import tu.bp21.passwortmanager.Constants;
 import tu.bp21.passwortmanager.cryptography.Crypto;
 import tu.bp21.passwortmanager.MainActivity;
 import tu.bp21.passwortmanager.db.database.ApplicationDatabase;
@@ -38,6 +39,7 @@ class InterfaceUserTests {
   UserDataAccessObject userDataAccessObject;
   String randomEmail;
   static final int stringMaxLength = 20;
+  static final int saltLength = Constants.SALT_LENGTH;
 
   @AfterAll
   static void tearDown() {
@@ -94,7 +96,7 @@ class InterfaceUserTests {
   @CsvFileSource(resources = "/InterfaceUserTest/testUser.csv", numLinesToSkip = 1)
   void testCreateUser(String userToCreate, String userPasswordToCreate) {
     assertTrue(interfaceUser.createUser(userToCreate, randomEmail, userPasswordToCreate));
-    byte[] salt = Arrays.copyOf(userDataAccessObject.getUser(userToCreate).hashedUserPassword, 16);
+    byte[] salt = Arrays.copyOf(userDataAccessObject.getUser(userToCreate).hashedUserPassword, saltLength);
     byte[] encryptedPassword = Crypto.computeHash(userPasswordToCreate, salt);
     assertTrue(userDataAccessObject.getUser(userToCreate) != null);
     assertEquals(userToCreate, userDataAccessObject.getUser(userToCreate).username);

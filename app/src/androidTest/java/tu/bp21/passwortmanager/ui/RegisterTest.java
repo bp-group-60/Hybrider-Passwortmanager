@@ -24,6 +24,8 @@ import de.mannodermaus.junit5.ActivityScenarioExtension;
 import tu.bp21.passwortmanager.MainActivity;
 import tu.bp21.passwortmanager.db.database.ApplicationDatabase;
 import static tu.bp21.passwortmanager.StringFunction.*;
+import static tu.bp21.passwortmanager.ui.UITestConstaints.*;
+
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class RegisterTest {
@@ -38,12 +40,6 @@ class RegisterTest {
   String randomUsername;
   String randomEmail;
   String randomUserPassword;
-  static final int stringMaxLength = 20;
-  static final int domainMinLength = 2;
-  static final int domainMaxLength = 5;
-  static final int usernameMinLength = 3;
-  static final int userPasswordMinLength = 8;
-  static final int loadDelay = 500;
 
   @BeforeEach
   void setUp(){

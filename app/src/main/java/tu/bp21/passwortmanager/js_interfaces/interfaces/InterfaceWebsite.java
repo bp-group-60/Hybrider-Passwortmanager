@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import tu.bp21.passwortmanager.Constants;
 import tu.bp21.passwortmanager.cryptography.Crypto;
 import tu.bp21.passwortmanager.db.data_access_objects.WebsiteDataAccessObject;
 import tu.bp21.passwortmanager.db.entities.Website;
@@ -117,7 +118,7 @@ public class InterfaceWebsite {
 
   private byte[] createEncryptedPassword(
       String username, String websiteName, String loginPassword, String key) {
-    int ivSize = 12;
+    int ivSize = Constants.ENCRYPT_IV_LENGTH;
     ArrayList<String> ivList = getIVList(username, ivSize);
     byte[] iv = Crypto.generateUniqueIV(ivList, ivSize);
     byte[] associatedData = (username + websiteName).getBytes();

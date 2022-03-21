@@ -38,6 +38,8 @@ import static tu.bp21.passwortmanager.ui.DomMatchersExtended.hasNoElementWithXpa
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.webkit.WebView;
+import static tu.bp21.passwortmanager.ui.UITestConstaints.*;
+
 
 @TestClassOrder(ClassOrderer.OrderAnnotation.class)
 class AppHTMLTest {
@@ -56,12 +58,6 @@ class AppHTMLTest {
   static String defaultLoginPassword;
   static String defaultWebAddress1;
   static String defaultWebAddress2;
-  static final int stringMaxLength = 20;
-  static final int domainMinLength = 2;
-  static final int domainMaxLength = 5;
-  static final int usernameMinLength = 3;
-  static final int userPasswordMinLength = 8;
-  static final int loadDelay = 500;
 
   @BeforeEach
   void setUp() throws Exception {

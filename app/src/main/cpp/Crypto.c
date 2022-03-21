@@ -11,9 +11,9 @@
 
 JNIEXPORT jbyteArray JNICALL
 Java_tu_bp21_passwortmanager_cryptography_Crypto_crypt(JNIEnv *env, jobject thiz, jbyteArray input, jbyteArray aad, jbyteArray iv,
-                                          jbyteArray key) {
+                                          jbyteArray key, jint tag_length, jint iv_length) {
     int len_buffer, output_len;
-    int tag_len = 16;
+    int tag_len = tag_length;
     jsize input_len = (*env)->GetArrayLength(env, input);
     jsize aad_len = (*env)->GetArrayLength(env, aad);
     jsize iv_len;
@@ -55,7 +55,7 @@ Java_tu_bp21_passwortmanager_cryptography_Crypto_crypt(JNIEnv *env, jobject thiz
     //decrypt
     else{
         //iv receive from the first 16 elements of input and authentication tag at the last 16 elements
-        iv_len = 12;
+        iv_len = iv_length;
         input_len -= (iv_len + tag_len);
         output = calloc (input_len, sizeof (jbyte));
         //start decryption
@@ -91,11 +91,11 @@ Java_tu_bp21_passwortmanager_cryptography_Crypto_crypt(JNIEnv *env, jobject thiz
 
 JNIEXPORT jbyteArray JNICALL
 Java_tu_bp21_passwortmanager_cryptography_Crypto_generateKeyNative(JNIEnv *env, jobject thiz, jbyteArray input,
-                                                      jint input_length, jbyteArray salt, jint salt_length) {
+                                                      jint input_length, jbyteArray salt, jint salt_length,
+                                                                   jint output_length,
+                                                                   jint iterations) {
     jbyte  *input_ptr = (*env)->GetByteArrayElements(env , input, 0);
     jbyte  *salt_ptr = (*env)->GetByteArrayElements(env , salt, 0);
-    int output_length = 32;
-    int iterations = 1000000;
     jbyte *output = calloc (output_length, sizeof (jbyte));
 
     //generate key with sha3_256
@@ -129,31 +129,37 @@ Java_tu_bp21_passwortmanager_cryptography_Crypto_generateSecureByteArray(JNIEnv 
 
 JNIEXPORT jbyteArray JNICALL
 Java_tu_bp21_passwortmanager_cryptography_Crypto_hash(JNIEnv *env, jclass clazz, jbyteArray input,
-                                         jint input_length, jbyteArray salt, jint salt_length) {
+                                         jint input_length, jbyteArray salt, jint salt_length,
+                                                      jint param_n, jint param_r, jint param_p,
+                                                      jint output_length) {
     jbyte  *input_ptr = (*env)->GetByteArrayElements(env , input, 0);
     jbyte  *salt_ptr = (*env)->GetByteArrayElements(env , salt, 0);
-    size_t output_length = 64;
+
+    //store salt in the first salt_length elements of output
     jbyte *output = calloc (output_length + salt_length, sizeof (jbyte));
     memcpy(output, salt_ptr, salt_length);
     int success;
 
+    //init
     EVP_PKEY_CTX *ctx = EVP_PKEY_CTX_new_id(EVP_PKEY_SCRYPT, NULL);
     EVP_PKEY_derive_init(ctx);
     EVP_PKEY_CTX_set1_pbe_pass(ctx, input_ptr, input_length);
     EVP_PKEY_CTX_set1_scrypt_salt(ctx, salt_ptr, salt_length);
 
-    EVP_PKEY_CTX_set_scrypt_N(ctx, (int) pow(2, 18));
-    EVP_PKEY_CTX_set_scrypt_r(ctx, 8);
-    EVP_PKEY_CTX_set_scrypt_p(ctx, 1);
+    //set N, r and p parameters
+    EVP_PKEY_CTX_set_scrypt_N(ctx, (int) pow(2, param_n));
+    EVP_PKEY_CTX_set_scrypt_r(ctx, param_r);
+    EVP_PKEY_CTX_set_scrypt_p(ctx, param_p);
 
+    //finish
     success = EVP_PKEY_derive(ctx, &output[salt_length], &output_length);
-    //__android_log_print(ANDROID_LOG_INFO, "MyTag", "The value is %d", i);
 
     EVP_PKEY_CTX_free(ctx);
 
     if(success<=0)
         return NULL;
 
+    //store in jbyteArray for return
     jbyteArray output_array = (jbyteArray) (*env)->NewByteArray(env, output_length+salt_length);
     (*env)->SetByteArrayRegion(env, output_array, 0, output_length+salt_length, (jbyte *) output);
 

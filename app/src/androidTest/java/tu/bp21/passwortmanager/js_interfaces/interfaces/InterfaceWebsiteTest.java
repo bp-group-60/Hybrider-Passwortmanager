@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import de.mannodermaus.junit5.ActivityScenarioExtension;
+import tu.bp21.passwortmanager.Constants;
 import tu.bp21.passwortmanager.cryptography.Crypto;
 import tu.bp21.passwortmanager.MainActivity;
 import tu.bp21.passwortmanager.db.data_access_objects.UrlDataAccessObject;
@@ -50,8 +51,8 @@ class InterfaceWebsiteTest {
   byte[] key;
   String keyAsHex;
   static final int stringMaxLength = 100;
-  static final int saltSize = 16;
-  static final int ivSize = 12;
+  static final int saltSize = Constants.SALT_LENGTH;
+  static final int ivSize = Constants.ENCRYPT_IV_LENGTH;
 
   @AfterAll
   static void tearDown() throws Exception {

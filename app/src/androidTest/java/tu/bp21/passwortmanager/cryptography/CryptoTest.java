@@ -16,6 +16,7 @@ import java.util.Random;
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import static tu.bp21.passwortmanager.Constants.*;
 
 class CryptoTest {
 
@@ -36,14 +37,14 @@ class CryptoTest {
   @BeforeAll
   static void setUp() {
     random = new Random();
-    ivSize = 12;
-    keySize = 32;
-    hashSize = 64;
-    saltSize = 16;
+    ivSize = ENCRYPT_IV_LENGTH;
+    keySize = ENCRYPT_KEY_LENGTH;
+    hashSize = HASH_OUTPUT_LENGTH;
+    saltSize = SALT_LENGTH;
     stringMaxLength = 40;
-    scryptParamN = 18;
-    scryptParamR = 8;
-    scryptParamP = 1;
+    scryptParamN = SCRYPT_PARAM_N;
+    scryptParamR = SCRYPT_PARAM_R;
+    scryptParamP = SCRYPT_PARAM_P;
   }
 
   @Test
