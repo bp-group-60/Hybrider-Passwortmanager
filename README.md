@@ -95,7 +95,7 @@ Java-11 is prerequired for Android Studio. Additionally for compiling any c-comp
 	 ```
 2. Import in IDE (Android Studio)
 
-or just use the _Get from Version Control..._ in the Open Project Window
+	or just use the _Get from Version Control..._ option in the Open Project Window
 
 ### Building
 For building this project use gradle's default build configuration.
