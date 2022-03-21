@@ -1,7 +1,7 @@
 package tu.bp21.passwortmanager.ui;
 
 /** constaints used to run UI tests */
-class UITestConstaints {
+class UITestConstants {
   static final int stringMaxLength = 20;
   // domain name for website or email
   static final int domainMinLength = 2;
